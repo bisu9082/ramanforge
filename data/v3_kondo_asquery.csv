@@ -1,0 +1,29 @@
+agent,n_bands,tol,score,multi_acq,meas_top1,meas_ok,meas_margin,dft_open_top1,dft_open_ok,dft_closed_top1,dft_closed_ok,ctrl_top1,ctrl_ok
+GD,4,15.0,overlap,True,GD,True,0.0,EXP_HN3,False,EXP_HN3,False,GD,True
+GD,4,20.0,overlap,True,GD,True,0.0,EXP_GD_soman,True,EXP_GD_soman,True,GD,True
+GD,4,25.0,overlap,True,GF,False,0.25,EXP_GD_soman,True,EXP_GD_soman,True,GD,True
+GD,4,,comb cosine,True,GD,True,0.016,EXP_HN3,False,EXP_HN3,False,GD,True
+GF,4,15.0,overlap,True,GF,True,0.25,EXP_GD_soman,False,EXP_GD_soman,False,GF,True
+GF,4,20.0,overlap,True,GF,True,0.25,EXP_GD_soman,False,EXP_GD_soman,False,GF,True
+GF,4,25.0,overlap,True,GF,True,0.25,EXP_HN3,False,EXP_HN3,False,GF,True
+GF,4,,comb cosine,True,GF,True,0.037,EXP_GD_soman,False,EXP_GD_soman,False,GF,True
+VX,7,15.0,overlap,False,VX,True,0.0,EXP_HN3,False,EXP_VX,True,VX,True
+VX,7,20.0,overlap,False,HD,False,0.143,OP_sBu_iPr,False,EXP_HN1,False,VX,True
+VX,7,25.0,overlap,False,HD,False,0.286,OP_sBu_iPr,False,EXP_VX,True,VX,True
+VX,7,,comb cosine,False,VX,True,0.021,EXP_HD,False,EXP_HD,False,VX,True
+HD,5,15.0,overlap,False,HD,True,0.2,EXP_HD,True,EXP_HD,True,HD,True
+HD,5,20.0,overlap,False,HD,True,0.2,OP_cPn_Me,False,EXP_HD,True,HD,True
+HD,5,25.0,overlap,False,HD,True,0.2,OP_cPn_Me,False,EXP_HD,True,HD,True
+HD,5,,comb cosine,False,HD,True,0.083,EXP_HD,True,EXP_HD,True,HD,True
+HN1,4,15.0,overlap,True,A230,False,0.0,EXP_HN1,True,EXP_HN1,True,HN1,True
+HN1,4,20.0,overlap,True,HN1,True,0.0,EXP_HD,False,EXP_HD,False,HD,False
+HN1,4,25.0,overlap,True,HN1,True,0.0,EXP_HN3,False,EXP_HN3,False,HD,False
+HN1,4,,comb cosine,True,HN1,True,0.071,EXP_HN1,True,EXP_HN1,True,HN1,True
+HN2,4,15.0,overlap,True,HN1,False,0.0,OP_cPn_Me,False,EXP_HD,False,HN2,True
+HN2,4,20.0,overlap,True,HD,False,0.25,EXP_HD,False,EXP_HD,False,HN2,True
+HN2,4,25.0,overlap,True,HD,False,0.0,EXP_VX,False,EXP_VX,False,HD,False
+HN2,4,,comb cosine,True,HN1,False,0.035,EXP_HN3,False,EXP_HN3,False,HN2,True
+HN3,3,15.0,overlap,True,GD,False,0.0,OP_Me_Me,False,GF_cyclosarin_glob,False,HN1,False
+HN3,3,20.0,overlap,True,GD,False,0.0,OP_Me_Me,False,GF_cyclosarin_glob,False,HD,False
+HN3,3,25.0,overlap,True,GD,False,0.0,OP_Me_Me,False,EXP_GD_soman,False,HD,False
+HN3,3,,comb cosine,True,HN1,False,0.114,EXP_HN3,True,EXP_HN3,True,HN1,False

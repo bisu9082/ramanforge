@@ -1,0 +1,31 @@
+\begin{table}[htbp]
+\centering
+\caption{Abstention AUC stratified by the class deleted from the library. Under the
+leave-one-class-out condition the class removed is the query's own, so this is a
+stratification by deletion. $n$ is the number of in-library queries in the stratum, each
+compared against the same number of class-absent queries. Produced by
+\texttt{code/v3\_abstention\_bycls.py}.}
+\label{tab:si-abstbycls}
+\small
+\begin{tabular}{lrrrrrrr}
+\toprule
+Deleted class & $n$ & top-1 cosine & margin & peak-to-sidelobe & library $z$ & residual & band fraction \\
+\midrule
+All three (pooled) & 27 & 0.83 & 0.78 & 0.85 & 0.78 & 0.80 & 0.77 \\
+\addlinespace
+Blister & 6 & 1.00 & 0.75 & 1.00 & 1.00 & 1.00 & 0.53 \\
+Nerve & 7 & 0.76 & 1.00 & 1.00 & 0.76 & 0.76 & 1.00 \\
+Novichok & 14 & 0.70 & 0.67 & 0.71 & 0.71 & 0.66 & 0.66 \\
+\bottomrule
+\end{tabular}
+
+\begin{flushleft}\footnotesize The pooled figure averages strata that behave differently.
+Deleting the nerve agents is detected: three of the six scores separate that deletion
+perfectly on the 7 queries available. Deleting the Novichok
+agents is not: no score exceeds 0.71, and the
+A-series supplies 14 of the thirty queries, so it dominates the
+pooled value. The abstention failure reported in Section~\ref{si:absten} is therefore
+specific to the A-series rather than general, which is consistent with the identification
+result: the A-series is also where the computed library is least accurate. Each stratum
+rests on a few queries and these are point estimates without intervals.\end{flushleft}
+\end{table}

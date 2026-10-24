@@ -1,0 +1,52 @@
+{\footnotesize
+\begin{longtable}{lrrr|lrrr}
+\caption{Vibrational analysis of every member of the library actually used. $N_\mathrm{real}$
+is the number of real harmonic modes, $N_\mathrm{imag}$ the number of imaginary modes, and
+$\nu_\mathrm{min}$ the lowest real wavenumber. Produced by \texttt{code/v3\_freqcheck.py}
+from the 54 entries that the analysis loads, which include the VX calculation and the
+corrected GF and A-232 geometries.}\label{tab:si-freq}\\
+\toprule
+Job & $N_\mathrm{real}$ & $N_\mathrm{imag}$ & $\nu_\mathrm{min}$ (\wn) & Job & $N_\mathrm{real}$ & $N_\mathrm{imag}$ & $\nu_\mathrm{min}$ (\wn) \\
+\midrule
+\endfirsthead
+\multicolumn{8}{l}{\footnotesize\emph{Table \ref{tab:si-freq}, continued}}\\
+\toprule
+Job & $N_\mathrm{real}$ & $N_\mathrm{imag}$ & $\nu_\mathrm{min}$ (\wn) & Job & $N_\mathrm{real}$ & $N_\mathrm{imag}$ & $\nu_\mathrm{min}$ (\wn) \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+EXP\_A230 & 78 & 0 & 28.1 & OP\_Me\_sBu & 57 & 0 & 31.3 \\
+EXP\_A232\_Eglob & 81 & 0 & 13.1 & OP\_cHx\_Et & 78 & 0 & 22.1 \\
+EXP\_A234 & 90 & 0 & 18.1 & OP\_cPn\_Et & 69 & 0 & 25.0 \\
+EXP\_A242 & 111 & 0 & 39.2 & OP\_cPn\_Me & 60 & 0 & 30.2 \\
+EXP\_GD\_soman & 75 & 0 & 25.8 & OP\_cPn\_iPr & 78 & 0 & 26.9 \\
+EXP\_HD & 39 & 0 & 27.1 & OP\_cPn\_nPr & 78 & 0 & 24.1 \\
+EXP\_HN1 & 60 & 0 & 27.4 & OP\_iBu\_Et & 66 & 0 & 10.8 \\
+EXP\_HN2 & 51 & 0 & 45.0 & OP\_iBu\_iPr & 75 & 0 & 27.0 \\
+EXP\_HN3 & 60 & 0 & 23.4 & OP\_iBu\_nPr & 75 & 0 & 15.3 \\
+EXP\_VX & 120 & 0 & 15.4 & OP\_iPr\_Et & 57 & 0 & 23.3 \\
+EtGB & 39 & 0 & 43.2 & OP\_iPr\_cPn & 78 & 0 & 18.5 \\
+GB\_sarin & 48 & 0 & 22.4 & OP\_iPr\_iBu & 75 & 0 & 19.6 \\
+GF\_cyclosarin\_glob & 69 & 0 & 33.2 & OP\_iPr\_iPr & 66 & 0 & 15.7 \\
+OP\_Et\_Et & 48 & 0 & 32.4 & OP\_iPr\_nPr & 66 & 0 & 33.4 \\
+OP\_Et\_cHx & 78 & 0 & 29.3 & OP\_iPr\_sBu & 75 & 0 & 25.5 \\
+OP\_Et\_cPn & 69 & 0 & 24.1 & OP\_nPr\_Et & 57 & 0 & 28.0 \\
+OP\_Et\_iBu & 66 & 0 & 13.7 & OP\_nPr\_cPn & 78 & 0 & 26.0 \\
+OP\_Et\_iPr & 57 & 0 & 29.5 & OP\_nPr\_iBu & 75 & 0 & 10.4 \\
+OP\_Et\_nPr & 57 & 0 & 45.0 & OP\_nPr\_iPr & 66 & 0 & 21.2 \\
+OP\_Et\_sBu & 66 & 0 & 31.6 & OP\_nPr\_nPr & 66 & 0 & 17.1 \\
+OP\_Me\_Et & 39 & 0 & 72.6 & OP\_nPr\_sBu & 75 & 0 & 26.5 \\
+OP\_Me\_Me & 30 & 0 & 72.2 & OP\_sBu\_Et & 66 & 0 & 24.2 \\
+OP\_Me\_cHx & 69 & 0 & 30.7 & OP\_sBu\_Me & 57 & 0 & 8.8 \\
+OP\_Me\_cPn & 60 & 0 & 30.3 & OP\_sBu\_iPr & 75 & 0 & 25.4 \\
+OP\_Me\_iBu & 57 & 0 & 35.1 & OP\_sBu\_nPr & 75 & 0 & 24.1 \\
+OP\_Me\_iPr & 48 & 0 & 48.0 & iBuGB & 57 & 0 & 4.9 \\
+OP\_Me\_nPr & 48 & 0 & 57.5 & nPrGB & 48 & 0 & 30.6 \\
+\end{longtable}}
+
+\begin{flushleft}\footnotesize No structure in the library has an imaginary frequency, so
+all 54 geometries are true minima on the B3LYP/6-311++G(d,p) surface. The lowest real
+wavenumbers (5--73\,\wn) are soft torsions
+that fall below the 250\,\wn{} lower bound of the analysis window and therefore do not
+enter the spectral comparison.\end{flushleft}

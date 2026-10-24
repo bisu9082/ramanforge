@@ -115,7 +115,7 @@ for ag,col in [("HN3",P["dark_teal"]),("HN2",P["warm_red"])]:
     r = [x for x in R if x["meta"]["agent"]==ag and np.abs(x["df"]["RawData"].values-np.round(x["df"]["RawData"].values)).max()<1e-6][0]
     s = r["df"]["DarkSubed"].values[FP].astype(float); s = s-asls(s); s = s/s.max()
     ax.plot(rs[FP], s+(0 if ag=="HN2" else 1.15), color=col, lw=1.6, label=f"{ag} ({r['meta']['IntTime']:.0f} ms)")
-ax.set_xlabel("Raman shift (cm$^{-1}$)"); ax.set_ylabel("normalised intensity (offset)")
+ax.set_xlabel("Raman shift (cm$^{-1}$)"); ax.set_ylabel("normalized intensity (offset)")
 ax.set_yticks([]); ax.legend(frameon=False, loc="upper right")
 ax.annotate("993.6", xy=(993.6,1.0), xytext=(1150,0.75), fontsize=13, color=P["rose"],
             arrowprops=dict(arrowstyle="->", color=P["rose"]))

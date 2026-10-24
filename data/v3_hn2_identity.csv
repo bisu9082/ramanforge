@@ -1,0 +1,12 @@
+group,reference_cm1,assignment,observed_cm1,residual_cm1,sigma_min,sigma_max,in_all_three
+benzene,606,"$\nu_6$, ring deformation",605.6,-0.4,15.2,19.5,True
+benzene,992,"$\nu_1$, ring breathing",993.6,1.6,399.3,468.3,True
+benzene,1178,"$\nu_9$, C--H in-plane bend",1176.3,-1.7,33.3,38.9,True
+benzene,1586,"$\nu_8$, ring stretch",1585.4,-0.6,21.8,26.1,True
+monosubstituted ring,702,required if the ring were substituted,,,1.0,1.6,False
+monosubstituted ring,787,required if the ring were substituted,,,0.3,1.3,False
+monosubstituted ring,1030,required if the ring were substituted,,,0.1,0.9,False
+Kondo HN2,388,skeletal,390.5,2.5,0.4,0.8,False
+Kondo HN2,664,tert-amine,667.7,3.7,2.6,4.0,False
+Kondo HN2,729,C--Cl,733.0,4.0,3.5,5.6,True
+Kondo HN2,1448,N--C,1447.6,-0.4,3.9,4.2,True

@@ -6,7 +6,10 @@ Their Table~1 reports assigned
 bands only, so the comparison is one-way: for each band they report we ask whether this
 work has a measured band at the same position, within the 18\,\wn{} resolution they quote
 for 1064\,nm. The absence of a partner is therefore not evidence of disagreement. Bands
-are those detected by the criterion of Section~\ref{si:preproc}.}
+are those detected by the criterion of Section~\ref{si:preproc} applied to the mean of
+each agent's retained acquisitions: \texttt{scipy.signal.find\_peaks} with a minimum
+prominence of the larger of 0.05 and five times the noise standard deviation estimated
+above 1600\,\wn{}, and a minimum separation of two grid points.}
 \label{tab:si-kondo}
 \small
 \begin{tabular}{llrrrc}
@@ -55,12 +58,16 @@ HN3 & 722 & C-Cl & 720 & $-1.5$ & \checkmark \\
 
 \begin{flushleft}\footnotesize 22 of 31 reported bands are reproduced,
 with a residual mean of -0.9\,\wn{} and an RMS of 5.5\,\wn{},
-below the 5.73\,\wn{} sampling of this measurement; excluding the two residuals
-larger than 10\,\wn{} the RMS is 2.3\,\wn{}.
-Both large residuals have a stated cause. For HD, Kondo give the C--Cl band as 734\,\wn{}
-at 785\,nm and 746\,\wn{} at 1064\,nm and note in their text that the 734 and
-756\,\wn{} bands merge at 1064\,nm; the 733\,\wn{} band measured here resolves the
-lower of the pair. For HN1 their two excitations differ by 19\,\wn{} for the same band
-(768 and 787\,\wn{}), and the 770\,\wn{} measured here matches the former. HN2 is the
-only agent that reproduces none of the bands reported for it.\end{flushleft}
+below the 5.73\,\wn{} sampling of this measurement. Three matches carry residuals
+larger than 10\,\wn{}, two of them bands Kondo et al.\ themselves place differently under
+their two excitations, so none is a clean agreement and none is counted as one below:
+tightening the tolerance to 10\,\wn{} removes exactly these and leaves
+19 of 31 with an RMS of
+2.29\,\wn{}, which is the figure quoted in the
+text. For HD they give the C--Cl band as 734\,\wn{} at 785\,nm and 746\,\wn{} at
+1064\,nm and note that the 734 and 756\,\wn{} bands merge at 1064\,nm; for HN1 the two
+excitations differ by 19\,\wn{} for the same band (768 and 787\,\wn{}). The vial
+labeled HN2 is the only one that reproduces none of the bands reported for it at this
+prominence floor; Section~\ref{si:hn2} shows that two of its four are present when the
+floor is referred to the local noise instead of to the dominant band.\end{flushleft}
 \end{table}

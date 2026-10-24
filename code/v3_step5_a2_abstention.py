@@ -287,7 +287,7 @@ def main():
 
     # ================================================================ figure
     SHOW = ["S1_top1", "S4_libz", "S5_resid"]
-    NICE = {"S1_top1": "top-1 cosine", "S4_libz": "library-normalised z",
+    NICE = {"S1_top1": "top-1 cosine", "S4_libz": "library-normalized z",
             "S5_resid": "unmixing residual"}
     fig = plt.figure(figsize=(20, 11))
     gs = fig.add_gridspec(2, 3, hspace=0.46, wspace=0.32,

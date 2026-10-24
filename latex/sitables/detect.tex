@@ -1,6 +1,6 @@
 \begin{table}[htbp]
 \centering
-\caption{Sensitivity of the frequency calibration to the band-detection criterion and to the pairing tolerance. The criterion in the first row is the one used throughout this work.}
+\caption{Sensitivity of the frequency calibration to the band-detection criterion and to the pairing tolerance. The criterion in the first row is the one used throughout this work. The last criterion scales the threshold to each spectrum's own noise, because the measured spectra differ in noise by more than an order of magnitude and a single absolute prominence therefore admits many more peaks from the noisiest of them; it removes 57 of the 176 detected bands and gives the lowest penalized RMSE of the four, while leaving the scale factors where they are.}
 \label{tab:si-detect}
 \footnotesize
 \resizebox{\textwidth}{!}{%
@@ -20,5 +20,5 @@ prominence $>$ max(0.05, $5\sigma$) per agent, separation 2 points & 20 & 1.016 
 \end{tabular}
 }
 
-\begin{flushleft}\footnotesize The scale factors move by at most 0.2\% and the paired RMSE stays between 8.2 and 10.6\,\wn{} across all six combinations, so neither the detection threshold nor the tolerance drives the calibration. The penalised RMSE charges every unpaired band a fixed 35\,\wn{} so that the six cells remain comparable; it is stable near 30\,\wn{} and is the honest upper bound on the positional disagreement, the paired RMSE being the value over bands that found a partner.\end{flushleft}
+\begin{flushleft}\footnotesize The scale factors move by at most 0.2\% and the paired RMSE stays between 8.2 and 10.6\,\wn{} across all six combinations, so neither the detection threshold nor the tolerance drives the calibration. The penalized RMSE charges every unpaired band a fixed 35\,\wn{} so that the six cells remain comparable; it is stable near 30\,\wn{} and is the honest upper bound on the positional disagreement, the paired RMSE being the value over bands that found a partner.\end{flushleft}
 \end{table}

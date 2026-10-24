@@ -19,3 +19,6 @@ authors:
     given-names: Ku
     email: bisu9082@gmail.com
 license: MIT
+version: "1.2.0"
+date-released: "2026-10-24"
+repository-code: "https://github.com/bisu9082/ramanforge"

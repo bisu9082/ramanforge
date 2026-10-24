@@ -204,7 +204,7 @@ A-242 & 3 & 2 & 5356--24634 & 23176 & 153 & 3674 & 15 \\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage
 
-\subsection{Data-quality criterion and the exclusion of HN2}
+\subsection{Data-quality criterion and the one vial that fails it}
 
 A criterion was fixed before any identification was attempted: a measured spectrum is
 retained if at least four bands reach 10\% of its strongest band within
@@ -227,7 +227,7 @@ GF & 22 & 15 & 9 & 491 & 0.210 & retained \\
 VX & 21 & 20 & 17 & 317 & 0.100 & retained \\
 HD & 7 & 7 & 7 & 36 & 0.280 & retained \\
 HN1 & 17 & 8 & 4 & 454 & 0.260 & retained \\
-HN2 & 8 & 1 & 1 & 643 & 0.810 & \textbf{excluded} \\
+HN2 & 8 & 1 & 1 & 643 & 0.810 & \textbf{fails} \\
 HN3 & 7 & 7 & 6 & 88 & 0.260 & retained \\
 A-230 & 10 & 10 & 10 & 28 & 0.180 & retained \\
 A-232 & 18 & 16 & 8 & 302 & 0.170 & retained \\
@@ -236,7 +236,7 @@ A-242 & 15 & 13 & 11 & 153 & 0.180 & retained \\
 \bottomrule
 \end{tabular}
 
-\begin{flushleft}\footnotesize HN2 fails the criterion, and the reason is spectral content rather than acquisition quality: its signal-to-noise ratio is the highest of the eleven agents and its count rate the second highest. The previous version of this work attributed the exclusion to a poor measurement, which these figures do not support. Section~S6 gives the independent evidence from the computed library.\end{flushleft}
+\begin{flushleft}\footnotesize The vial labeled HN2 is the one failure, and the reason is spectral content rather than acquisition quality: its signal-to-noise ratio is the highest of the eleven vials and its count rate the second highest. The previous version of this work attributed the failure to a poor measurement, which these figures do not support. Failing the criterion does not remove the vial from the analysis: it is retained in both libraries and among the thirty queries, so that the two libraries face an identical query set. It is set aside where its unknown identity would leave a quantity undefined: from the per-agent window analyses, from the in-library and class-absent conditions of Section~S7, where it is reported as a condition of its own, and from the correlation against molecular size in Figure~\ref{fig:si-step4}. It contributes no band pair to the frequency calibration, which is therefore identical with and without it (Table~\ref{tab:si-loao}). Section~S6 gives the independent evidence from the computed library and Section~S11 the external evidence.\end{flushleft}
 \end{table}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage
@@ -270,8 +270,7 @@ acquisitions and exceeds six local standard deviations in at least half of them.
 the upper edge of the 600--850\,\wn{} window, the second inside the 1150--1400\,\wn{}
 window and the third at the foot of the C=N stretching region. A sign fixed across every
 acquisition and every agent is an instrumental property. Masking and interpolating the
-three raises the separation between within-class and between-class similarity from 0.090
-to 0.122.
+three raises the separation between within-class and between-class similarity from 0.090 to 0.123.
 
 \textbf{The remaining analyst freedom is bounded.} Table~\ref{tab:si-preproc} gives the
 full grid.
@@ -341,7 +340,7 @@ of the corresponding optimized geometry; all agree.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 {\small
 \begin{longtable}{ll l >{\ttfamily\footnotesize}p{5.4cm}}
-\caption{Composition of the 54-member computed spectral library. GF occupies the cyclohexyl/methyl cell of the analog grid and is therefore both a measured agent and a grid member; it is counted once. HN2 was measured but failed the data-quality criterion (Table~\ref{tab:si-quality}) and was retained in the library without being queried; VX has a single genuine acquisition and is likewise retained without being queried.}\label{tab:si-library}\\
+\caption{Composition of the 54-member computed spectral library. GF occupies the cyclohexyl/methyl cell of the analog grid and is therefore both a measured agent and a grid member; it is counted once. The vial labeled HN2 fails the data-quality criterion (Table~\ref{tab:si-quality}) but is retained in both libraries and among the queries, so that the two libraries face an identical query set; VX has a single genuine acquisition and is retained in the library without being queried.}\label{tab:si-library}\\
 \toprule
 ORCA job & Molecule & Role & SMILES \\
 \midrule
@@ -481,9 +480,13 @@ problem. The calculations used to test higher levels of theory
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%  table: freq
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-{\small
+{\footnotesize
 \begin{longtable}{lrrr|lrrr}
-\caption{Vibrational analysis of every library member. $N_\mathrm{real}$ is the number of real harmonic modes, $N_\mathrm{imag}$ the number of imaginary modes, and $\nu_\mathrm{min}$ the lowest real wavenumber.}\label{tab:si-freq}\\
+\caption{Vibrational analysis of every member of the library actually used. $N_\mathrm{real}$
+is the number of real harmonic modes, $N_\mathrm{imag}$ the number of imaginary modes, and
+$\nu_\mathrm{min}$ the lowest real wavenumber. Produced by \texttt{code/v3\_freqcheck.py}
+from the 54 entries that the analysis loads, which include the VX calculation and the
+corrected GF and A-232 geometries.}\label{tab:si-freq}\\
 \toprule
 Job & $N_\mathrm{real}$ & $N_\mathrm{imag}$ & $\nu_\mathrm{min}$ (\wn) & Job & $N_\mathrm{real}$ & $N_\mathrm{imag}$ & $\nu_\mathrm{min}$ (\wn) \\
 \midrule
@@ -495,18 +498,19 @@ Job & $N_\mathrm{real}$ & $N_\mathrm{imag}$ & $\nu_\mathrm{min}$ (\wn) & Job & $
 \endhead
 \bottomrule
 \endfoot
-EXP\_A230 & 78 & 0 & 28.1 & OP\_cHx\_Et & 78 & 0 & 22.1 \\
-EXP\_A232 & 81 & 0 & 32.2 & OP\_cPn\_Et & 69 & 0 & 25.0 \\
-EXP\_A234 & 90 & 0 & 18.1 & OP\_cPn\_Me & 60 & 0 & 30.2 \\
-EXP\_A242 & 111 & 0 & 39.2 & OP\_cPn\_iPr & 78 & 0 & 26.9 \\
-EXP\_GD\_soman & 75 & 0 & 25.8 & OP\_cPn\_nPr & 78 & 0 & 24.1 \\
-EXP\_HD & 39 & 0 & 27.1 & OP\_iBu\_Et & 66 & 0 & 10.8 \\
-EXP\_HN1 & 60 & 0 & 27.4 & OP\_iBu\_iPr & 75 & 0 & 27.0 \\
-EXP\_HN2 & 51 & 0 & 45.0 & OP\_iBu\_nPr & 75 & 0 & 15.3 \\
-EXP\_HN3 & 60 & 0 & 23.4 & OP\_iPr\_Et & 57 & 0 & 23.3 \\
+EXP\_A230 & 78 & 0 & 28.1 & OP\_Me\_sBu & 57 & 0 & 31.3 \\
+EXP\_A232\_Eglob & 81 & 0 & 13.1 & OP\_cHx\_Et & 78 & 0 & 22.1 \\
+EXP\_A234 & 90 & 0 & 18.1 & OP\_cPn\_Et & 69 & 0 & 25.0 \\
+EXP\_A242 & 111 & 0 & 39.2 & OP\_cPn\_Me & 60 & 0 & 30.2 \\
+EXP\_GD\_soman & 75 & 0 & 25.8 & OP\_cPn\_iPr & 78 & 0 & 26.9 \\
+EXP\_HD & 39 & 0 & 27.1 & OP\_cPn\_nPr & 78 & 0 & 24.1 \\
+EXP\_HN1 & 60 & 0 & 27.4 & OP\_iBu\_Et & 66 & 0 & 10.8 \\
+EXP\_HN2 & 51 & 0 & 45.0 & OP\_iBu\_iPr & 75 & 0 & 27.0 \\
+EXP\_HN3 & 60 & 0 & 23.4 & OP\_iBu\_nPr & 75 & 0 & 15.3 \\
+EXP\_VX & 120 & 0 & 15.4 & OP\_iPr\_Et & 57 & 0 & 23.3 \\
 EtGB & 39 & 0 & 43.2 & OP\_iPr\_cPn & 78 & 0 & 18.5 \\
 GB\_sarin & 48 & 0 & 22.4 & OP\_iPr\_iBu & 75 & 0 & 19.6 \\
-GF\_cyclosarin & 69 & 0 & 25.5 & OP\_iPr\_iPr & 66 & 0 & 15.7 \\
+GF\_cyclosarin\_glob & 69 & 0 & 33.2 & OP\_iPr\_iPr & 66 & 0 & 15.7 \\
 OP\_Et\_Et & 48 & 0 & 32.4 & OP\_iPr\_nPr & 66 & 0 & 33.4 \\
 OP\_Et\_cHx & 78 & 0 & 29.3 & OP\_iPr\_sBu & 75 & 0 & 25.5 \\
 OP\_Et\_cPn & 69 & 0 & 24.1 & OP\_nPr\_Et & 57 & 0 & 28.0 \\
@@ -521,10 +525,13 @@ OP\_Me\_cPn & 60 & 0 & 30.3 & OP\_sBu\_iPr & 75 & 0 & 25.4 \\
 OP\_Me\_iBu & 57 & 0 & 35.1 & OP\_sBu\_nPr & 75 & 0 & 24.1 \\
 OP\_Me\_iPr & 48 & 0 & 48.0 & iBuGB & 57 & 0 & 4.9 \\
 OP\_Me\_nPr & 48 & 0 & 57.5 & nPrGB & 48 & 0 & 30.6 \\
-OP\_Me\_sBu & 57 & 0 & 31.3 &  &  &  &  \\
 \end{longtable}}
 
-\begin{flushleft}\footnotesize No structure in the library has an imaginary frequency, so all 54 geometries are true minima on the B3LYP/6-311++G(d,p) surface. The lowest real wavenumbers (5--73\,\wn) are soft torsions that fall below the 250\,\wn{} lower bound of the analysis window and therefore do not enter the spectral comparison.\end{flushleft}
+\begin{flushleft}\footnotesize No structure in the library has an imaginary frequency, so
+all 54 geometries are true minima on the B3LYP/6-311++G(d,p) surface. The lowest real
+wavenumbers (5--73\,\wn) are soft torsions
+that fall below the 250\,\wn{} lower bound of the analysis window and therefore do not
+enter the spectral comparison.\end{flushleft}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage
 
@@ -565,7 +572,7 @@ A-242 & 2 & 33.7 & 32.2--35.2 & 0.91 & 18 \\
 \bottomrule
 \end{tabular}
 
-\begin{flushleft}\footnotesize Of the 32 genuine acquisitions, 28 yielded a converged fit ($R^2 > 0.8$); the remaining 4 did not and are excluded from this table. Over the 28 the median is 21.7\,\wn{} with an interquartile range of 18.2--26.5\,\wn{}. We adopt $\Gamma$ = 22\,\wn{}. The extremes are not trustworthy: HN2 offers a single band, and HD and VX a single acquisition each. This is an apparent width that includes the instrument response function. No identification result was consulted in obtaining it.\end{flushleft}
+\begin{flushleft}\footnotesize Of the 32 genuine acquisitions, 28 yielded a converged fit ($R^2 > 0.8$); the remaining 4 did not and are excluded from this table. Over the 28 the median is 21.7\,\wn{} with an interquartile range of 18.2--26.5\,\wn{}. We adopt $\Gamma$ = 22\,\wn{}. The extremes are not trustworthy: the vial labeled HN2 has only one band above the 10\% criterion of Table~\ref{tab:si-quality}, so its fitted width rests on weak features, and HD and VX have a single acquisition each. This is an apparent width that includes the instrument response function. No identification result was consulted in obtaining it.\end{flushleft}
 \end{table}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage
@@ -723,13 +730,7 @@ tolerances.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{table}[htbp]
 \centering
-\caption{Sensitivity of the frequency calibration to the band-detection criterion and
-to the pairing tolerance. The criterion in the first row is the one used throughout this
-work. The last criterion scales the threshold to each spectrum's own noise, because the
-measured spectra differ in noise by more than an order of magnitude and a single absolute
-prominence therefore admits many more peaks from the noisiest of them; it removes 57 of
-the 176 detected bands and gives the lowest penalized RMSE of the four, while leaving the
-scale factors where they are.}
+\caption{Sensitivity of the frequency calibration to the band-detection criterion and to the pairing tolerance. The criterion in the first row is the one used throughout this work. The last criterion scales the threshold to each spectrum's own noise, because the measured spectra differ in noise by more than an order of magnitude and a single absolute prominence therefore admits many more peaks from the noisiest of them; it removes 57 of the 176 detected bands and gives the lowest penalized RMSE of the four, while leaving the scale factors where they are.}
 \label{tab:si-detect}
 \footnotesize
 \resizebox{\textwidth}{!}{%
@@ -749,7 +750,7 @@ prominence $>$ max(0.05, $5\sigma$) per agent, separation 2 points & 20 & 1.016 
 \end{tabular}
 }
 
-\begin{flushleft}\footnotesize The scale factors move by at most 0.2\% and the paired RMSE stays between 8.2 and 10.6\,\wn{} across all six combinations, so neither the detection threshold nor the tolerance drives the calibration. The penalised RMSE charges every unpaired band a fixed 35\,\wn{} so that the six cells remain comparable; it is stable near 30\,\wn{} and is the honest upper bound on the positional disagreement, the paired RMSE being the value over bands that found a partner.\end{flushleft}
+\begin{flushleft}\footnotesize The scale factors move by at most 0.2\% and the paired RMSE stays between 8.2 and 10.6\,\wn{} across all six combinations, so neither the detection threshold nor the tolerance drives the calibration. The penalized RMSE charges every unpaired band a fixed 35\,\wn{} so that the six cells remain comparable; it is stable near 30\,\wn{} and is the honest upper bound on the positional disagreement, the paired RMSE being the value over bands that found a partner.\end{flushleft}
 \end{table}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage
@@ -759,7 +760,8 @@ prominence $>$ max(0.05, $5\sigma$) per agent, separation 2 points & 20 & 1.016 
 
 The calibration is fitted on band positions from all agents, so a reader may reasonably
 ask whether an agent's own bands carry it. Table~\ref{tab:si-loao} refits the two scale
-factors with each agent held out in turn.
+factors with each agent held out in turn, and Table~\ref{tab:si-loaoident} reruns the whole
+identification under each of the eleven held-out calibrations that result.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%  table: loao
@@ -836,14 +838,26 @@ not.\end{flushleft}
 
 A multiplicative frequency scale factor is degenerate with a multiplicative error in the
 instrument's wavenumber axis, and an \emph{additive} axis offset is not excluded by the
-two-region fit. An additive offset is the error that would most favour this study's
+two-region fit. An additive offset is the error that would most favor this study's
 conclusion, because it cancels in a measured-to-measured comparison and not in a
-measured-to-computed one. This section reports the two tests we ran on it.
+measured-to-computed one. This section reports the three tests we ran on it.
+
+One property of the adopted map should be stated before the tests. The branch is taken on
+the unscaled harmonic wavenumber, so the map is discontinuous at the boundary: it sends
+800$^-$ to 812.8\,\wn{} and 800$^+$ to 792.0\,\wn{}, a 20.8\,\wn{} overlap. Four library
+entries --- GD, GF, A-232 and A-242 --- have a pair of modes inside that overlap and have
+their order reversed by it, and the overlap lies inside the 600--850\,\wn{} window on which
+the diagnosis of Section~\ref{si:ident} rests. The affine map below is monotone and has no
+such region, so it provides the control: Table~\ref{tab:si-affwindow} recomputes the
+window-resolved contrast under both. The localisation is unchanged, so the discontinuity is
+a defect of the adopted map rather than the origin of the result. We report it, and we note
+that the affine map also fits the band positions better; we retain the two-region map
+because it is the one under which every other number in this work was computed, and because
+the identification is 13 of 30 under either.
 
 \begin{table}[htbp]
 \centering
-\caption{Three calibration models fitted to the same 81 band pairs with the same
-non-circular objective (band positions only). The affine model has the same number of
+\caption{Three calibration models fitted to the same band set with the same non-circular objective (band positions only); the two-region map pairs 81 of them and the affine map 80. The affine model has the same number of
 free parameters as the adopted two-region scaling and fits better.}
 \label{tab:si-affine}
 \small
@@ -894,8 +908,42 @@ imposed axis error of $-$20 to $+$30\,\wn{}, five times the pixel spacing, and t
 similarity to the correct entry varies only between 0.649 and 0.674. The fitted scale
 factors absorb the offset; the identification does not move. Rebuilding the library under
 the affine calibration of Table~\ref{tab:si-affine} likewise gives 13 of 30 with a
-self-similarity of 0.666. A wavenumber-standard measurement remains worth having for any
+self-similarity of 0.666; Table~\ref{tab:si-offsetscan} gives the scan in full. A wavenumber-standard measurement remains worth having for any
 replication, but an uncalibrated axis does not account for the result reported here.\end{flushleft}
+\end{table}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{table}[htbp]
+\centering
+\caption{The window diagnosis under both calibrations. The adopted two-region map is
+discontinuous at 800\,\wn{}, where it sends 800$^-$ to 812.8 and 800$^+$ to 792.0; four
+library entries have a mode pair inside that overlap and have their order reversed by it.
+The affine map of Table~\ref{tab:si-affine} is monotone. Both columns are computed with
+the same spectra, the same window definitions and the same ten agents. Produced by
+\texttt{code/v3\_affine\_window.py}.}
+\label{tab:si-affwindow}
+\small
+\begin{tabular}{lrrrrrr}
+\toprule
+ & \multicolumn{3}{c}{Two-region (adopted)} & \multicolumn{3}{c}{Affine} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+Window (\wn) & P & no P & $\Delta$ & P & no P & $\Delta$ \\
+\midrule
+250--600 & 0.810 & 0.675 & $-0.135$ & 0.772 & 0.662 & $-0.109$ \\
+600--850 & 0.636 & 0.912 & $+0.276$ & 0.645 & 0.916 & $+0.271$ \\
+850--1150 & 0.840 & 0.793 & $-0.047$ & 0.837 & 0.808 & $-0.029$ \\
+1150--1400 & 0.814 & 0.755 & $-0.058$ & 0.806 & 0.752 & $-0.055$ \\
+1400--1800 & 0.758 & 0.557 & $-0.201$ & 0.777 & 0.583 & $-0.194$ \\
+\bottomrule
+\end{tabular}
+
+\begin{flushleft}\footnotesize The diagnosis does not depend on the map. Under the
+adopted calibration the 600--850\,\wn{} window gives $\Delta = +0.276$ against
+at most $0.201$ in absolute value elsewhere; under the affine map it gives
+$\Delta = +0.271$ against at most $0.194$. In both cases 600--850\,\wn{}
+is the only window in which the phosphorus-free agents score higher than the
+phosphorus-containing ones, and in both cases it is the largest contrast in the row. The
+discontinuity is therefore a defect of the adopted map that should be stated, but it does
+not generate the localisation it sits inside.\end{flushleft}
 \end{table}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1011,21 +1059,21 @@ without the HN2 vial, whose contents are not established.
 \toprule
 Subset & Quantity & Agents correct & 95\% CI \\
 \midrule
-All nine agents & Measured library, molecular & 9/9 & [0.66, 1.00] \\
-All nine agents & Computed library, molecular (11-member) & 4/9 & [0.14, 0.79] \\
-All nine agents & Computed library, molecular (54-member) & 4/9 & [0.14, 0.79] \\
-All nine agents & Measured library, class & 9/9 & [0.66, 1.00] \\
-All nine agents & Computed library, class & 8/9 & [0.52, 1.00] \\
-HN2 excluded (eight agents) & Measured library, molecular & 8/8 & [0.63, 1.00] \\
-HN2 excluded (eight agents) & Computed library, molecular (11-member) & 4/8 & [0.16, 0.84] \\
-HN2 excluded (eight agents) & Computed library, molecular (54-member) & 4/8 & [0.16, 0.84] \\
-HN2 excluded (eight agents) & Measured library, class & 8/8 & [0.63, 1.00] \\
-HN2 excluded (eight agents) & Computed library, class & 8/8 & [0.63, 1.00] \\
+All nine vials & Measured library, molecular & 9/9 & [0.66, 1.00] \\
+All nine vials & Computed library, molecular (11-member) & 4/9 & [0.14, 0.79] \\
+All nine vials & Computed library, molecular (54-member) & 4/9 & [0.14, 0.79] \\
+All nine vials & Measured library, class & 9/9 & [0.66, 1.00] \\
+All nine vials & Computed library, class & 8/9 & [0.52, 1.00] \\
+Without the HN2 vial (eight) & Measured library, molecular & 8/8 & [0.63, 1.00] \\
+Without the HN2 vial (eight) & Computed library, molecular (11-member) & 4/8 & [0.16, 0.84] \\
+Without the HN2 vial (eight) & Computed library, molecular (54-member) & 4/8 & [0.16, 0.84] \\
+Without the HN2 vial (eight) & Measured library, class & 8/8 & [0.63, 1.00] \\
+Without the HN2 vial (eight) & Computed library, class & 8/8 & [0.63, 1.00] \\
 \bottomrule
 \end{tabular}
 }
 
-\begin{flushleft}\footnotesize The thirty acquisitions are repeated interrogations of nine sealed vials recorded within a single hour, so the effective sample size is the number of agents. On that unit the paired comparison between the two libraries gives, excluding HN2, $b = 4$ discordant pairs in favour of the measured library and $c = 0$ against, an exact two-sided $p = 0.12$ at the molecular level; including HN2, $b = 5$, $c = 0$, $p = 0.062$. At the class level, excluding HN2, the two libraries do not disagree on any agent. The molecular contrast is therefore a consistent direction on a sample too small to reach conventional significance, and we report it as such.\end{flushleft}
+\begin{flushleft}\footnotesize The thirty acquisitions are repeated interrogations of nine sealed vials recorded within a single hour, so the effective sample size is the number of agents. On that unit the paired comparison between the two libraries gives, excluding HN2, $b = 4$ discordant pairs in favor of the measured library and $c = 0$ against, an exact two-sided $p = 0.12$ at the molecular level; including HN2, $b = 5$, $c = 0$, $p = 0.062$. At the class level, excluding HN2, the two libraries do not disagree on any agent. The molecular contrast is therefore a consistent direction on a sample too small to reach conventional significance, and we report it as such.\end{flushleft}
 \end{table}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1054,31 +1102,116 @@ Computed margin & 0.056 & 0.052 \\
 \bottomrule
 \end{tabular}
 
-\begin{flushleft}\footnotesize Excluding HN2 raises the computed-library self-similarity from 0.674 to 0.742, so the deficit against the measured library falls from 0.309 to 0.239, and it removes the entire class-level difference between the two libraries. The HN2 acquisitions also carry an atypically large measured margin, which inflates the measured mean. We quote the HN2-excluded values in the abstract and the conclusions and retain the full set here.\end{flushleft}
+\begin{flushleft}\footnotesize Excluding HN2 raises the computed-library self-similarity from 0.674 to 0.742, so the deficit against the measured library falls from 0.309 to 0.239, and it removes the entire class-level difference between the two libraries. The HN2 acquisitions also carry an atypically large measured margin, which inflates the measured mean. The main text quotes the full-set values, with the HN2-excluded values given alongside at each headline; Section~\ref{si:hn2sens} gives the comparison in full.\end{flushleft}
 \end{table}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{HN2}
+\subsection{The vial labeled HN2}
 \label{si:hn2}
 
-The three HN2 acquisitions are assigned to a Novichok agent at a similarity to their own
-computed entry of 0.057. A measured library identifies the HN2 vial correctly, because a
-replicate of that vial is in it; only the computed library can state that the material is
-not the free base. Those two results are simultaneously true only if the vial does not
-contain the compound its label names.
+The three acquisitions of this vial are assigned to a Novichok agent at a similarity to
+their own computed entry of 0.057, the lowest value anywhere in this work. A measured
+library identifies the vial correctly, because a replicate of that vial is in it; only the
+computed library signals that something is wrong. This section asks what.
 
-The external comparison of Section~\ref{si:kondo} settles the point without an assay.
-Kondo et al.\ report four assigned bands for HN2 at 1064\,\wn{} excitation: 729\,\wn{}
-(C--Cl), 664\,\wn{} (tertiary amine), 1448\,\wn{} (N--C) and 388\,\wn{}. The vial
-measured here reproduces none of them, while the six other agents in common reproduce
-twenty-two of twenty-seven (Table~\ref{tab:si-kondo}). Its spectrum is instead dominated
-by a single band at 994\,\wn{} carrying 80\% of the normalized intensity, with weak
-partners at 1176 and 1585\,\wn{}. A strong band near 1000\,\wn{} accompanied by one near
-1590\,\wn{} is the ring-breathing and ring-stretching signature of a monosubstituted
-aromatic ring, which no nitrogen mustard carries in either the free base or the
-hydrochloride, and which protonation of a tertiary amine does not create. The vial does
-not contain HN2. We have not established what it does contain, and we report this as
-evidence about the sample rather than about the method.
+\textbf{The four strong bands are liquid benzene.} Table~\ref{tab:si-hn2identity} and
+Figure~\ref{fig:si-hn2} give the comparison, computed from the three acquisitions
+separately rather than from their mean. The observed positions are 605.6, 993.6, 1176.3
+and 1585.4\,\wn{}, against 606 ($\nu_6$), 992 ($\nu_1$, ring breathing), 1178 ($\nu_9$)
+and 1586\,\wn{} ($\nu_8$) for liquid benzene: a maximum residual of 1.7\,\wn{}, less
+than one third of the 5.73\,\wn{} sampling, with benzene's intensity order. The
+assignment is settled by what is absent. A monosubstituted ring puts the ring-breathing
+mode near 1002--1004\,\wn{} rather than 992 and adds a band near 1030\,\wn{}; toluene
+requires 1004, 1030 and 787, chlorobenzene 1002 and 704, pyridine 991 and 1030. In these
+spectra 702, 787 and 1030\,\wn{} sit at 1.6, 1.3 and 0.9 standard deviations of the local
+noise. Benzene is the only one of these that fits, and it fits to within a third of a
+pixel on every band.
+
+\textbf{Two of Kondo's four HN2 bands are present underneath.} Scored against the local
+noise of each acquisition rather than against the absolute prominence floor used elsewhere,
+733.0\,\wn{} (their 729, C--Cl) and 1447.6\,\wn{} (their 1448, N--C) exceed three
+standard deviations in all three acquisitions, and 667.7\,\wn{} (their 664) does so in two
+of three; only 388\,\wn{} is absent. They do not clear the 0.05 prominence floor because
+that floor is referenced to the benzene band, which carries 80\% of the intensity of this
+spectrum. The instrument's automatic exposure control compounds this: it set 119\,ms for
+this vial against 1014\,ms for HN1 and 5840\,ms for HN3, so a minor component is driven
+below detection by the dynamic range available, not by its absence.
+
+\begin{table}[htbp]
+\centering
+\caption{What the vial labeled HN2 contains. Each reference position is compared with the
+nearest detected band in each of the three acquisitions separately, and the prominence of
+that band is expressed in units of that acquisition's own noise, estimated above
+1600\,\wn{}. The last column marks positions matched within 18\,\wn{} at three standard
+deviations or better in all three acquisitions. Produced by
+\texttt{code/v3\_hn2\_identity.py}.}
+\label{tab:si-hn2identity}
+\footnotesize
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llrrrc}
+\toprule
+Reference (\wn) & Assignment & Observed (\wn) & Residual (\wn) & Prominence ($\sigma$) & In all three \\
+\midrule
+\multicolumn{6}{l}{\emph{Liquid benzene}} \\
+\quad 606 & $\nu_6$, ring deformation & 605.6 & $-0.4$ & 15.2--19.5 & \checkmark \\
+\quad 992 & $\nu_1$, ring breathing & 993.6 & $+1.6$ & 399.3--468.3 & \checkmark \\
+\quad 1178 & $\nu_9$, C--H in-plane bend & 1176.3 & $-1.7$ & 33.3--38.9 & \checkmark \\
+\quad 1586 & $\nu_8$, ring stretch & 1585.4 & $-0.6$ & 21.8--26.1 & \checkmark \\
+\addlinespace
+\multicolumn{6}{l}{\emph{Monosubstituted ring}} \\
+\quad 702 & required if the ring were substituted & --- & --- & 1.0--1.6 & $\times$ \\
+\quad 787 & required if the ring were substituted & --- & --- & 0.3--1.3 & $\times$ \\
+\quad 1030 & required if the ring were substituted & --- & --- & 0.1--0.9 & $\times$ \\
+\addlinespace
+\multicolumn{6}{l}{\emph{HN2, Kondo et al.}} \\
+\quad 388 & skeletal & 390.5 & $+2.5$ & 0.4--0.8 & $\times$ \\
+\quad 664 & tert-amine & 667.7 & $+3.7$ & 2.6--4.0 & $\times$ \\
+\quad 729 & C--Cl & 733.0 & $+4.0$ & 3.5--5.6 & \checkmark \\
+\quad 1448 & N--C & 1447.6 & $-0.4$ & 3.9--4.2 & \checkmark \\
+\bottomrule
+\end{tabular}}
+
+\begin{flushleft}\footnotesize The four strong bands are those of liquid benzene, to
+within 1.7\,\wn{}, and in benzene's
+intensity order. The three positions a monosubstituted ring would require are all below
+1.6$\sigma$, which separates benzene
+from toluene, chlorobenzene, pyridine and polystyrene, each of which has a strong band near
+1030\,\wn{}. Of the four bands Kondo et al.\ report for HN2, two are present at three
+standard deviations or better in every acquisition; they fall below the absolute prominence
+floor of 0.05 used elsewhere in this work only because that floor is referenced to the
+benzene band, which carries 80\,\% of the intensity of this spectrum. The vial therefore
+does not contain neat HN2; what it does contain is benzene, with weak reproducible features
+at HN2 band positions that these data can neither confirm nor
+exclude.\end{flushleft}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{hn2_identity.png}
+\caption{The vial labeled HN2. Above, the measured mean spectrum with the four
+Raman-active fundamentals of liquid benzene marked. Below, the same spectrum at
+thirteenfold vertical magnification, with the four bands Kondo et al.\ report for HN2
+marked beneath the trace and their prominence given in units of the local noise, together
+with the three positions a monosubstituted ring would require. The dotted line is five
+standard deviations of the local noise; the dashed line is the absolute prominence floor of
+0.05 used elsewhere in this work, which is referenced to the benzene band and therefore
+cannot see a minor component. Produced by \texttt{code/v3\_fig\_hn2.py}.}
+\label{fig:si-hn2}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+
+\textbf{What this establishes, and what it does not.} The material measured was benzene
+and not neat HN2, which is what the protocol of Section~\ref{si:preproc} specifies and
+what the rest of this work assumes. HN2 dissolved in that benzene is consistent with the
+data and is neither confirmed nor excluded by them. We therefore do not claim that the
+label is wrong, only that the measurement is not of the neat agent; a vial of solvent
+mistaken for the agent and a dilute solution of the agent are both consistent with what we
+observe, and an orthogonal assay, or a re-measurement of the same vial at an exposure fixed
+near that used for HN3, would distinguish them. We report this as evidence about the sample
+rather than about the method, and note that it was the computed library, not the measured
+one, that exposed it.
 
 \subsection{Where the computed library loses}
 
@@ -1096,15 +1229,19 @@ Table~\ref{tab:si-regbyagent} gives the per-agent values.
 \centering
 \includegraphics[width=\textwidth]{si_spectra.png}
 \caption{Measured (upward, black) and calibrated computed (downward, red) Raman spectrum
-of each of the eleven agents, all of which now have a computed library entry. The measured trace is the mean of that agent's genuine acquisitions and both
+of each of the eleven vials, all of which have a computed library entry. The measured trace
+is the mean of that vial's genuine acquisitions and both
 traces are normalized to unit maximum. The shaded band is the 600--850\,\wn{} window. The
-number beside each agent is the cosine over the full 250--1800\,\wn{} range and the number
-in the box is the cosine over the shaded window alone. The calibration is the one used
+number beside each label is the cosine over the full 250--1800\,\wn{} range and the number
+in the box is the cosine over the shaded window alone; both are recomputed by the figure
+script from the same library the identification uses. The calibration is the one used
 throughout, $s_{\mathrm{low}}$ = 1.016, $s_{\mathrm{high}}$ = 0.990 and $\Gamma$ = 22\,\wn{},
-with no parameter fitted to identification. The window is where the six
+with no parameter fitted to identification. The window is where the seven
 phosphorus-containing agents lose and the three that contain none do not: compare
-(b), (d) and (f) with (g), (h) and (i). HN2 (j) is the vial discussed in
-Section~\ref{si:hn2} and is shown for completeness; it was never queried.}
+(a)--(g) with (h), (i) and (j). Panel (k) is the vial labeled HN2, discussed in
+Section~\ref{si:hn2}; its computed entry is the HN2 free base, which the vial does not
+contain, and the panel is shown for completeness. Produced by
+\texttt{code/v3\_fig\_si\_spectra.py}.}
 \label{fig:si-spectra}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1161,7 +1298,7 @@ A-242 & yes & 0.791 & \textbf{0.471} & 0.804 & 0.749 & 0.717 \\
 \end{tabular}
 }
 
-\begin{flushleft}\footnotesize The phosphorus-containing agents span 0.323 to 0.964 in the 600--850\,\wn{} window against 0.857--0.970 for the three that contain no phosphorus. Conformational flexibility does not order this: VX is the best of the phosphorus agents in that window and GF the worst, while a GFN2 conformer census over all eleven agents gives no association between conformational entropy and this cosine (Pearson $r$ = +0.23, $n$ = 10).\end{flushleft}
+\begin{flushleft}\footnotesize The phosphorus-containing agents span 0.323 to 0.964 in the 600--850\,\wn{} window against 0.857--0.970 for the three that contain no phosphorus. These data do not detect an ordering by conformational flexibility: a GFN2 conformer census over all eleven computed molecules gives no association between conformational entropy and this cosine (Pearson $r$ = +0.23, $n$ = 10, 95\% interval roughly $-0.45$ to $+0.75$). The interval excludes nothing, and the two extremes of the comparison are VX, which has a single genuine acquisition and is never queried, and the post-correction GF. Whether a Boltzmann-weighted ensemble spectrum closes the deficit is untested here.\end{flushleft}
 \end{table}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage
@@ -1193,7 +1330,7 @@ Window (\wn) & P-containing & No P & $\Delta$ & $p$ & Bonferroni & Holm \\
 \end{tabular}
 }
 
-\begin{flushleft}\footnotesize No window survives correction. The smallest uncorrected $p$ is not the 600--850\,\wn{} window but 1400--1800\,\wn{}, where the ordering is reversed. With six against three molecules the smallest two-sided $p$ the design can produce is 0.024, so this test has essentially no power and we do not quote a $p$ value in support of the localisation. The argument rests on the effect size, $\Delta = +0.276$ in the 600--850\,\wn{} window against $|\Delta| \leq 0.201$ elsewhere, and on the sign reversal in all four other windows.\end{flushleft}
+\begin{flushleft}\footnotesize No window survives correction. The smallest uncorrected $p$ is not the 600--850\,\wn{} window but 1400--1800\,\wn{}, where the ordering is reversed. With seven against three molecules the smallest two-sided $p$ the design can produce is 0.017 and is precisely the value reached in the 1400--1800\,\wn{} window, so this test has essentially no power and we do not quote a $p$ value in support of the localization. The argument rests on the effect size, $\Delta = +0.276$ in the 600--850\,\wn{} window against $|\Delta| \leq 0.201$ elsewhere, and on the sign reversal in all four other windows.\end{flushleft}
 \end{table}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage
@@ -1201,7 +1338,8 @@ Window (\wn) & P-containing & No P & $\Delta$ & $p$ & Bonferroni & Holm \\
 \subsection{The Novichok agents}
 
 Table~\ref{tab:si-nov} compares the four A-series agents with one another and with
-themselves in each library.
+themselves in each library, and Table~\ref{tab:si-topk} reports where the correct entry
+ranks when the search is allowed to return a hit list rather than a single answer.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%  table: nov
@@ -1251,8 +1389,7 @@ Worst rank of correct entry & 46 & 1 \\
 \begin{flushleft}\footnotesize Rank distribution for the computed library: rank 1 for 13
 acquisitions, rank 2 for 3, rank 4 for 3, rank 5 for 3, rank 11 for 1, rank 14 for 4, and
 ranks 43, 45 and 46 for one each. Allowing three candidates instead of one recovers three
-of the seventeen errors and no more; for seven of the thirty the correct entry is not in
-the top ten. The deficit is therefore not a matter of narrow misses throughout.
+of the seventeen errors and no more; for eight of the thirty the correct entry is not in the top ten. The deficit is therefore not a matter of narrow misses throughout.
 
 It is a matter of narrow misses in part. Six of the seventeen errors are decided by a
 margin below 0.01: the three A-234 acquisitions assigned to A-232 at margins of 0.0003 to
@@ -1268,7 +1405,7 @@ worse with margins above 0.01.\end{flushleft}
 
 Two explanations of the result do not involve the calculation at all. The first is that
 full-profile cosine is the wrong instrument: at a broadening of 22\,\wn{} a cosine is close
-to a monotone function of the band-position residual, and the residual reported here is 0.6
+to a monotone function of the band-position residual, and the residual reported here is 0.47
 of that width, where the sensitivity is greatest. The second is that the deficit is a
 lineshape mismatch, since a single global $\Gamma$ is applied to library entries whose
 measured widths span 9.2 to 48.4\,\wn{}. Both are tested here and neither survives.
@@ -1310,7 +1447,7 @@ Band-position Dice, 35\,\wn{} tolerance & 25/30 & 0.898 & 10/30 & 9/30 & 2/9 & 0
 \end{tabular}
 }
 
-\begin{flushleft}\footnotesize No metric rescues the computed library. The adopted metric gives 13 of 30, the best of the twelve is 16 of 30 (Full-profile cosine), and every peak-list metric, which is what commercial library search actually uses, lies between 8 and 11 of 30. The measured library reaches 25 to 30 of 30 under all twelve, so the peak-list implementations are sound and the collapse is a property of the computed library and not of the comparison. The similarity metric is therefore excluded as an explanation of the result.\end{flushleft}
+\begin{flushleft}\footnotesize No metric rescues the computed library. The adopted metric gives 13 of 30, the best of the twelve is 16 of 30 (Full-profile cosine), and every peak-list metric, which is what commercial library search actually uses, lies between 8 and 11 of 30. The measured library reaches 25 to 30 of 30 under the eight metrics for which it is defined --- the four linewidth variants are a property of the computed synthesis only --- so the peak-list implementations are sound and the collapse is a property of the computed library and not of the comparison. No metric tested accounts for the result.\end{flushleft}
 \end{table}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage
@@ -1320,7 +1457,9 @@ Band-position Dice, 35\,\wn{} tolerance & 25/30 & 0.898 & 10/30 & 9/30 & 2/9 & 0
 Table~\ref{tab:si-decomp} replaces one attribute of the computed line list at a time with
 the measured value and resynthesizes the spectrum in the 600--850\,\wn{} window, taking the
 measured spectrum itself as the reference. Table~\ref{tab:si-unmatched} then quantifies
-what the substitutions cannot reach.
+what the substitutions cannot reach, and Table~\ref{tab:si-aslssym} repeats the comparison
+with the baseline correction and the normalization applied to both sides alike, so that no
+step of the preprocessing is asymmetric between them.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%  table: decomp
@@ -1361,7 +1500,7 @@ A-242 & $\bullet$ & 9/13/11 & 0.446 & 0.513 & 0.478 & 0.537 & 0.585 & 0.598 \\
 \centering
 \caption{Bands inside the 600--850\,\wn{} window that find no partner in the other library within 35\,\wn{}, expressed as a share of the intensity carried in that window.}
 \label{tab:si-unmatched}
-\small
+\footnotesize
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{lrrrrr}
 \toprule
@@ -1381,7 +1520,7 @@ A-242 & 7 & 5 & 4 & 31\% & 38\% \\
 \end{tabular}
 }
 
-\begin{flushleft}\footnotesize Measured bands almost always find a computed partner: the share is zero for GD, HN1, HN3, A-230 and A-234. The asymmetry runs the other way. The calculation places on average 35\% of the window intensity in bands the measurement does not show, rising to 50\% for GF, which is one of the misassigned agents. The deficit in this window is therefore not that the calculation misplaces the measured bands but that it distributes intensity over a band set the measurement does not have. A-232 and HN2 are anomalous in both directions and are discussed separately in Sections~S5 and~S8.\end{flushleft}
+\begin{flushleft}\footnotesize Measured bands almost always find a computed partner: the share is zero for GD, HN1, HN3, A-230 and A-234. The asymmetry runs the other way. The calculation places on average 27\% of the window intensity in bands the measurement does not show, and 75\% for A-232 and 50\% for GF, two of the misassigned agents. The deficit in this window is therefore not that the calculation misplaces the measured bands but that it distributes intensity over a band set the measurement does not have. The vial labeled HN2 pairs no band at all, so both of its shares are 100\% by construction; including it raises the mean to 35\%, and we quote the figure without it. A-232 is anomalous in both directions and is discussed separately in Section~S8.\end{flushleft}
 \end{table}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage
@@ -1391,10 +1530,10 @@ A-242 & 7 & 5 & 4 & 31\% & 38\% \\
 \centering
 \caption{The preprocessing applied symmetrically. The baseline correction and the
 dead-pixel interpolation are applied to the measurement only in the adopted pipeline,
-because the computed spectrum is synthesised and has no baseline. A Lorentzian line list
+because the computed spectrum is synthesized and has no baseline. A Lorentzian line list
 does, however, build a pseudo-continuum from its own wings, which the measured spectrum
 has had removed. Here the identical AsLS ($\lambda = 10^{4}$, $p = 0.01$) and the same
-three interpolated pixels are applied to the synthesised computed spectra as well.}
+three interpolated pixels are applied to the synthesized computed spectra as well.}
 \label{tab:si-aslssym}
 \small
 \begin{tabular}{lrrrrrcr}
@@ -1412,7 +1551,7 @@ AsLS + dead pixels & 0.700 & 0.657 & 0.729 & 0.678 & 0.612 & 13/30 & 0.644 \\
 \begin{flushleft}\footnotesize Removing the Lorentzian pseudo-continuum from the computed
 spectra lowers the agreement in every window and leaves the identification at 13 of 30.
 The asymmetry in the adopted pipeline therefore works slightly in the computed library's
-favour, not against it, and it does not generate the deficit this paper reports. The
+favor, not against it, and it does not generate the deficit this paper reports. The
 dead-pixel treatment changes nothing at three decimal places, which is expected: the
 three pixels lie at 813.7, 1220.6 and 1634.4\,\wn{} and none is near a dominant computed
 band.\end{flushleft}
@@ -1493,7 +1632,7 @@ A-242 & 3 & OP\_sBu\_Me ($\times$3) & 0.590 & 0.005 & -1.87 \\
 \bottomrule
 \end{tabular}
 
-\begin{flushleft}\footnotesize Class-level accuracy under this condition is 0 by construction. The workflow does not signal the absence: the similarities and margins it returns fall inside the ranges it returns when the answer is present, which is why no threshold on them separates the two conditions (Table~\ref{tab:si-absten}).\end{flushleft}
+\begin{flushleft}\footnotesize Class-level accuracy under this condition is 0 by construction. The workflow does not signal the absence: the similarities and margins it returns fall inside the ranges it returns when the answer is present, which is why no threshold on them separates the two conditions without error (Table~\ref{tab:si-absten}).\end{flushleft}
 \end{table}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage
@@ -1526,14 +1665,17 @@ band-match fraction & 0.833 & 0.538 & 0.333 & 0.770 & no & 0.824 & no & 74\% & 9
 \end{tabular}
 }
 
-\begin{flushleft}\footnotesize Against the computed library no score separates the two conditions. Driving the class-absent acceptance to zero requires a conjunction of the library-normalized $z$ and the top-1 cosine, and costs 63\% of the legitimate queries. Against the measured library three scores separate completely and a top-1 cosine threshold of 0.729 accepts 27 of 27 and declines 27 of 27. That threshold is an upper bound obtained on one instrument, one session and one vial per agent, and is not a transferable operating value; the contrast between the libraries is the result.\end{flushleft}
+\begin{flushleft}\footnotesize Against the computed library no score separates the two conditions without error. Driving the class-absent acceptance to zero requires a conjunction of the library-normalized $z$ and the top-1 cosine, and costs 63\% of the legitimate queries. Against the measured library three scores separate completely: in the plain top-1 cosine the lowest in-library value is 0.842 and the highest class-absent value 0.729, so the two populations are disjoint and any threshold in between accepts all 27 and declines all 27. That interval is an upper bound obtained on one instrument, one session and one vial per agent, and is not a transferable operating value; the contrast between the libraries is the result.\end{flushleft}
 \end{table}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage
 
 Because the thirty acquisitions interrogate nine vials, an area under the curve computed
 over acquisitions overstates the evidence. Table~\ref{tab:si-aucci} recomputes it with the
-agent as the resampling unit and attaches bootstrap intervals.
+agent as the resampling unit and attaches bootstrap intervals, and
+Table~\ref{tab:si-abstsize} repeats the comparison with the computed library restricted to
+the same eleven candidates the measured library offers, so that the contrast cannot be an
+artifact of candidate count.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%  table: aucci
@@ -1548,17 +1690,17 @@ agent as the resampling unit and attaches bootstrap intervals.
 \toprule
 Score & Measured AUC & 95\% CI & Computed AUC & 95\% CI \\
 \midrule
-top-1 cosine & 1.000 & [1.000, 1.000] & 0.766 & [0.639, 0.927] \\
-margin & 0.923 & [0.829, 1.000] & 0.763 & [0.547, 0.976] \\
-peak-to-sidelobe & 0.900 & [0.782, 1.000] & 0.790 & [0.596, 1.000] \\
-library-normalized $z$ & 1.000 & [1.000, 1.000] & 0.723 & [0.618, 0.886] \\
-unmixing residual & 1.000 & [1.000, 1.000] & 0.741 & [0.619, 0.904] \\
-band-match fraction & 0.848 & [0.741, 0.957] & 0.729 & [0.542, 0.895] \\
+top-1 cosine & 1.000 & [1.000, 1.000] & 0.829 & [0.724, 0.969] \\
+margin & 0.909 & [0.812, 1.000] & 0.775 & [0.530, 0.997] \\
+peak-to-sidelobe & 0.985 & [0.964, 1.000] & 0.852 & [0.613, 1.000] \\
+library-normalized $z$ & 1.000 & [1.000, 1.000] & 0.775 & [0.691, 0.929] \\
+unmixing residual & 1.000 & [1.000, 1.000] & 0.798 & [0.702, 0.953] \\
+band-match fraction & 0.824 & [0.718, 0.946] & 0.770 & [0.557, 0.933] \\
 \bottomrule
 \end{tabular}
 }
 
-\begin{flushleft}\footnotesize Resampling agents rather than acquisitions removes the threefold inflation that treating the thirty acquisitions as independent would introduce. On the measured library three scores separate the two conditions completely and the bootstrap never breaks that separation. On the computed library the best score reaches 0.790 and no score separates the two conditions on the observed data; the intervals are wide, so this is a statement about what nine agents can establish and not a proof that no score could separate them.\end{flushleft}
+\begin{flushleft}\footnotesize Resampling agents rather than acquisitions does not change the point estimates, which are rank statistics over all pairs; it widens the intervals, by removing the threefold inflation that treating the acquisitions as independent would introduce. On the measured library three scores separate the two conditions completely and the bootstrap never breaks that separation. On the computed library the best score reaches 0.852 and no score separates the two conditions without error on the observed data; the intervals are wide, so this is a statement about what nine vials can establish and not a proof that no score could separate them. The vial labeled HN2 is a condition of its own in Section~S7 and is excluded here too, so that the interval and the point estimate describe the same quantity.\end{flushleft}
 \end{table}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage
@@ -1566,7 +1708,7 @@ band-match fraction & 0.848 & [0.741, 0.957] & 0.729 & [0.542, 0.895] \\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{table}[htbp]
 \centering
-\caption{Abstention with the candidate count equalised. In the adopted analysis the
+\caption{Abstention with the candidate count equalized. In the adopted analysis the
 computed library offers 54 candidates and the measured library 11, and the top-1 score is
 an extreme-value statistic over the candidate set. Here the computed library is restricted
 to the same eleven measured agents so that both conditions present the same number of
@@ -1589,15 +1731,54 @@ Band-match fraction & 0.746 & 0.824 & no & no \\
 \end{tabular}
 
 \begin{flushleft}\footnotesize With the candidate counts equal, no score separates the two
-conditions against the computed library and three separate them completely against the
-measured library, which is the same conclusion the 54-candidate analysis reaches. The
-single ordinary top-1 cosine threshold of 0.729 still accepts 27 of 27 in-library queries
-and declines 27 of 27 class-absent ones against the measured library. The candidate count
+conditions against the computed library without error and three separate them completely against the
+measured library, which is the same conclusion the 54-candidate analysis reaches. The two measured-library populations remain disjoint in the plain top-1 cosine, 0.842 at the lowest when the class is present against 0.729 at the highest when it has been removed. The candidate count
 is therefore not what produces the contrast. Two scores move appreciably under the
 restriction --- the peak-to-sidelobe ratio loses most of its AUC, from 0.852 to 0.554,
 because it is defined against the spread of the remaining candidates --- but no score
 crosses the separability threshold in either direction.\end{flushleft}
 \end{table}
+
+\subsection{Which deletion is detected}
+\label{si:abstbycls}
+
+The pooled AUC of Table~\ref{tab:si-absten} averages three deletions that are not equally
+hard, and the average conceals the difference. Table~\ref{tab:si-abstbycls} separates them.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{table}[htbp]
+\centering
+\caption{Abstention AUC stratified by the class deleted from the library. Under the
+leave-one-class-out condition the class removed is the query's own, so this is a
+stratification by deletion. $n$ is the number of in-library queries in the stratum, each
+compared against the same number of class-absent queries. Produced by
+\texttt{code/v3\_abstention\_bycls.py}.}
+\label{tab:si-abstbycls}
+\small
+\begin{tabular}{lrrrrrrr}
+\toprule
+Deleted class & $n$ & top-1 cosine & margin & peak-to-sidelobe & library $z$ & residual & band fraction \\
+\midrule
+All three (pooled) & 27 & 0.83 & 0.78 & 0.85 & 0.78 & 0.80 & 0.77 \\
+\addlinespace
+Blister & 6 & 1.00 & 0.75 & 1.00 & 1.00 & 1.00 & 0.53 \\
+Nerve & 7 & 0.76 & 1.00 & 1.00 & 0.76 & 0.76 & 1.00 \\
+Novichok & 14 & 0.70 & 0.67 & 0.71 & 0.71 & 0.66 & 0.66 \\
+\bottomrule
+\end{tabular}
+
+\begin{flushleft}\footnotesize The pooled figure averages strata that behave differently.
+Deleting the nerve agents is detected: three of the six scores separate that deletion
+perfectly on the 7 queries available. Deleting the Novichok
+agents is not: no score exceeds 0.71, and the
+A-series supplies 14 of the thirty queries, so it dominates the
+pooled value. The abstention failure reported in Section~\ref{si:absten} is therefore
+specific to the A-series rather than general, which is consistent with the identification
+result: the A-series is also where the computed library is least accurate. Each stratum
+rests on a few queries and these are point estimates without intervals.\end{flushleft}
+\end{table}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
 
 \section{Raising the level of theory}
 \label{si:theory}
@@ -1780,7 +1961,12 @@ reoptimized from the search minimum at B3LYP/6-311++G(d,p) with \texttt{TightOpt
 and the \texttt{\%elprop Polar 1} block, identical to the rest of the library. A third
 calculation, the lowest-energy $Z$ conformer of A-232, separates the conformer
 contribution from the configurational one. All three terminated normally with no imaginary
-frequency.
+frequency. Figure~\ref{fig:si-step4} shows the effect of the correction resolved by window
+and the window cosine against molecular size; Table~\ref{tab:si-a232} decomposes the A-232
+improvement into its conformer and configurational parts, Table~\ref{tab:si-geomwindow}
+gives the window-resolved cosines behind panel (a), and
+Table~\ref{tab:si-calibsens} asks how much of the resulting identification depends on
+whether the frequency scale is refitted afterwards.
 
 \begin{figure}[htbp]
 \centering
@@ -1789,10 +1975,13 @@ frequency.
 calibration held at its pre-correction values. A-232 improves in the 600--850\,\wn{}
 window and GF deteriorates in it while gaining as much again in 850--1150\,\wn{};
 correcting a structural error does not move the agreement in a consistent direction.
-(b) The 600--850\,\wn{} window cosine against heavy-atom count. VX and A-242 have
-sixteen heavy atoms each and differ by 0.48 in that window, which removes molecular size
-as an explanation: the correlation falls from $r$ = $-$0.71 over the nine agents
-available before VX was computed to $r$ = $-$0.41 over all ten.}
+(b) The 600--850\,\wn{} window cosine of the adopted corrected library against heavy-atom
+count, the count taken from each agent's optimized geometry. VX and A-242 have
+sixteen heavy atoms each and differ by 0.49 in that window, which removes molecular size
+as an explanation: the correlation falls from $r$ = $-$0.66 over the nine agents
+available before VX was computed to $r$ = $-$0.35 over all ten. Produced by
+\texttt{code/v3\_fig\_step4.py}; the vial labeled HN2 is excluded, since its contents
+are unknown and its heavy-atom count is therefore undefined.}
 \label{fig:si-step4}
 \end{figure}
 
@@ -1853,8 +2042,8 @@ consistent direction.\end{flushleft}
 \begin{table}[htbp]
 \centering
 \caption{Sensitivity of the corrected library to the calibration. The two columns differ
-only in whether the frequency scale is refitted after the corrected spectra enter the
-library.}
+only in the frequency scale: the left holds it at the pre-correction values, the right
+refits it to the corrected library, a change of 0.2 per cent.}
 \label{tab:si-calibsens}
 \small
 \begin{tabular}{lcc}
@@ -1867,12 +2056,65 @@ HN1 assignment & EXP\_HN1 (\checkmark) & EXP\_HN3 ($\times$) \\
 \bottomrule
 \end{tabular}
 
-\begin{flushleft}\footnotesize A 0.2\,\% change in the scale factors moves the molecular
-total by three of thirty, flipping all three HN1 acquisitions, whose
-pre-correction margin was 0.022. The refitted values are the ones reported throughout,
-because the calibration procedure is defined before the identification is computed and is
-not permitted to depend on it.\end{flushleft}
+\begin{flushleft}\footnotesize A 0.2\,\% change in the scale factors moves the
+molecular total by 3 of 30 and flips all three HN1
+acquisitions, whose pre-correction margin was 0.022. The refitted values are the ones
+reported throughout, because the calibration procedure is defined before the
+identification is computed and is not permitted to depend on it. That the outcome of the
+computed library is not determined to the precision at which its calibration is
+determined is itself a result about the library.\end{flushleft}
 \end{table}
+
+\subsection{What a single conformer represents}
+\label{si:confpop}
+
+The library holds one structure per molecule, and Section~\ref{si:ident} attributes the
+deficit to the computed spectra. The deposited ensembles allow a bound on how much of that
+attribution belongs to the single-conformer approximation rather than to the electronic
+structure. Table~\ref{tab:si-confpop} gives the Boltzmann weight at 298\,K of the structure
+the library actually uses.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{table}[htbp]
+\centering
+\caption{What fraction of the 298\,K population the single structure in the library
+carries. Conformer energies are the GFN2 metadynamic ensembles deposited under
+\texttt{conformers/}; $\Delta E_2$ is the energy of the second conformer above the
+minimum, $p$ the Boltzmann weight of the minimum and $N_\mathrm{eff}$ the inverse
+participation ratio of the weights. Produced by
+\texttt{code/v3\_conformer\_population.py}.}
+\label{tab:si-confpop}
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Agent & Conformers & $\Delta E_2$ (kcal\,mol$^{-1}$) & $p$ (\%) & $N_\mathrm{eff}$ \\
+\midrule
+GD & 12 & 0.88 & 58.8 & 2.7 \\
+GF & 28 & 0.56 & 58.9 & 2.4 \\
+VX & 727 & 0.16 & 5.2 & 72.4 \\
+HD & 36 & 0.40 & 28.3 & 7.4 \\
+HN1 & 153 & 0.13 & 3.1 & 90.0 \\
+HN3 & 139 & 0.23 & 9.7 & 41.8 \\
+A-230 & 26 & 0.10 & 19.9 & 9.5 \\
+A-232 & 53 & 0.31 & 24.0 & 9.9 \\
+A-234 & 171 & 0.04 & 5.8 & 40.5 \\
+A-242 & 267 & 0.02 & 4.9 & 49.5 \\
+\bottomrule
+\end{tabular}
+
+\begin{flushleft}\footnotesize For 5 of the ten agents the structure the library
+uses carries under a tenth of the room-temperature population, and for HN1 it carries
+3.1\,\%. The two G-agents are the exception, at 59\,\%. These are GFN2 weights and inherit
+that method's error --- Table~\ref{tab:si-a232} documents a 3.55\,kcal\,mol$^{-1}$ GFN2
+error on one configurational coordinate in this set --- so they bound the problem rather
+than quantify it. What they establish is that a single-conformer library spectrum is not a
+good representation of a neat liquid for most of these molecules, and that Boltzmann
+averaging is the untested part of the standard treatment with the most room to move. We
+did not run it: an ensemble spectrum requires a frequency calculation per populated
+conformer, which for VX alone is of order a hundred.\end{flushleft}
+\end{table}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
 
 \section{Measurement repeatability}
 \label{si:repeat}
@@ -1880,7 +2122,52 @@ not permitted to depend on it.\end{flushleft}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%  table: sessionsim
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Table~\ref{tab:si-sessionsim} gives the pairwise similarities on which this section rests.
+Table~\ref{tab:si-sessionsim} gives the pairwise similarities on which this section
+rests, pooled over all pairs. Table~\ref{tab:si-repeat} gives the same quantity per vial,
+which is the form a reader needs, because the pooled mean conceals two vials that are not
+stationary across their own repeats.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{table}[htbp]
+\centering
+\caption{Within-vial repeatability, per vial. Each entry is the cosine between two
+acquisitions of the same sealed vial, taken minutes apart in one session; the count rate is
+the detector rate the instrument's automatic exposure control settled on for each
+acquisition. Produced by \texttt{code/v3\_repeatability.py}.}
+\label{tab:si-repeat}
+\small
+\begin{tabular}{lrrrrrr}
+\toprule
+Vial & Acq. & Min & Median & Max & Count rate (s$^{-1}$) & Spread \\
+\midrule
+GD & 4 & 0.998 & 0.999 & 1.000 & 16576--30941 & 1.9$\times$ \\
+GF & 3 & 1.000 & 1.000 & 1.000 & 40392--44056 & 1.1$\times$ \\
+VX & 1 & \multicolumn{3}{c}{---} & 19124 & --- \\
+HD & 1 & \multicolumn{3}{c}{---} & 410 & --- \\
+HN1 & 3 & 1.000 & 1.000 & 1.000 & 35474--35912 & 1.0$\times$ \\
+HN2 & 3 & 0.999 & 1.000 & 1.000 & 282656--294412 & 1.0$\times$ \\
+HN3 & 3 & 0.998 & 0.999 & 0.999 & 5257--6253 & 1.2$\times$ \\
+A-230 & 3 & 0.958 & 0.960 & 0.964 & 380--398 & 1.0$\times$ \\
+A-232 & 3 & 1.000 & 1.000 & 1.000 & 6427--6583 & 1.0$\times$ \\
+A-234 & 5 & 0.805 & 0.915 & 1.000 & 1949--23538 & 12.1$\times$ \\
+A-242 & 3 & 0.911 & 0.923 & 0.996 & 264--5996 & 22.7$\times$ \\
+\bottomrule
+\end{tabular}
+
+\begin{flushleft}\footnotesize The pooled mean over all same-vial pairs is 0.967, which
+is not the useful number. Two vials are not stationary across their own repeats:
+A-234 falls to 0.805 and A-242 to
+0.911, against 0.998 or better for the six vials
+that are stationary. In both cases the count rate rises by more than an order of magnitude
+between the first acquisition and the rest and then settles, so the spectra of the early
+acquisitions are of a different state of the sample, not a noisier measurement of the same
+one. A within-vial difference of 0.195 is larger than the decision margin
+of the measured library, 0.219, so these acquisitions are not interchangeable and are
+treated separately in Section~\ref{si:ident}.\end{flushleft}
+\end{table}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+
 
 \begin{table}[htbp]
 \centering
@@ -1897,7 +2184,7 @@ Different class & 332 & 0.469 \\
 \bottomrule
 \end{tabular}
 
-\begin{flushleft}\footnotesize Computed on the 32 genuine acquisitions only; the derived copies present in the delivered files were excluded, which the previous version of this analysis did not do. Mann--Whitney: same agent against same class $p = 4.0e-18$, same class against different class $p = 3.8e-24$. The spectra are determined by the material rather than by the session. All acquisitions were taken within a single hour on one instrument, so day-to-day reproducibility remains untested.\end{flushleft}
+\begin{flushleft}\footnotesize Computed on the 32 genuine acquisitions only; the derived copies present in the delivered files were excluded, which the previous version of this analysis did not do. The three groups are the 37, 127 and 332 pairwise comparisons that 32 acquisitions of eleven vials admit, so they are not independent observations and we quote no test on them; the separation is larger than any plausible dependence correction and is reported as an effect size. The spectra are determined by the material rather than by the session. All acquisitions were taken within a single hour on one instrument, so day-to-day reproducibility remains untested. Table~\ref{tab:si-repeat} gives the same-vial column per vial, which is the form in which it should be read.\end{flushleft}
 \end{table}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage
@@ -1910,12 +2197,14 @@ The measurements reported here were made in one laboratory on one instrument, an
 frequency calibration of the computed library is fitted to them. An external reference is
 therefore worth more than any internal consistency check. Kondo et al.\ published Raman
 spectra of twenty-two authentic chemical warfare agents measured on a portable instrument
-at 785\,nm and at 1064\,nm, with material synthesised in house and confirmed by nuclear
+at 785\,nm and at 1064\,nm, with material synthesized in house and confirmed by nuclear
 magnetic resonance and gas chromatography--mass spectrometry at a purity above
 98\% (Kondo et al., \textit{Forensic Sci. Int.} \textbf{291}, 23--38, 2018;
 \url{https://doi.org/10.1016/j.forsciint.2018.07.032}). Seven of their agents are in this set, and their 1064\,nm
 excitation is the one used here. To our knowledge this is the only independent measured
 reference for authentic agents at this excitation.
+
+\subsection{The comparison}
 
 Table~\ref{tab:si-kondo} and Figure~\ref{fig:si-kondo} give the comparison. Twenty-two of
 the thirty-one bands Kondo et al.\ report for the seven agents in common are reproduced
@@ -1923,13 +2212,32 @@ here, with a residual mean of $-0.9$\,\wn{} and an RMS of 5.5\,\wn{}, which is b
 5.73\,\wn{} sampling of this measurement and well inside the 15--18\,\wn{} resolution they
 quote at 1064\,nm.
 
+A count of matches is not interpretable without a chance level, since a dense band list
+will match an arbitrary wavenumber often enough. Two baselines are given in
+Table~\ref{tab:si-kondostats}. The positional baseline is the fraction of the
+250--1800\,\wn{} axis lying within the tolerance of one of the agent's own detected bands,
+which is the rate at which a wavenumber drawn at random would match. The cross-agent
+baseline matches each published list against the ten other measured spectra in this set,
+and asks whether a list matches the right agent more often than a wrong one; it is the
+harder of the two and the relevant one. At the 18\,\wn{} tolerance Kondo quote, 22 of 31
+is 0.71 against a cross-agent baseline of 0.47, which is a weak separation. At a 10\,\wn{}
+tolerance the count falls only to 19 of 31, 0.61, while the cross-agent baseline falls to
+0.29 and the residual RMS to 2.29\,\wn{}. The agreement is therefore carried by the tight
+matches and not by the loose tolerance, and the 10\,\wn{} figures are the ones we rely on.
+A bootstrap over the matched residuals puts the additive component of the axis difference
+at $-0.09$\,\wn{} with a 95\% interval of $-1.07$ to $+0.96$\,\wn{} at that tolerance, so
+no offset between the two laboratories' wavenumber axes is detected at the level of one
+grid point.
+
 Two consequences follow. First, the wavenumber axis of this work agrees with an
 independent measurement of the same compounds to within one pixel, so the 10.4\,\wn{}
 residual between measurement and calculation reported in Section~\ref{si:calib} is not an
 artifact of this instrument's calibration. The attribution of that residual to the
-calculation does not rest on internal evidence alone. Second, HN2 is the only agent that
-reproduces none of the bands reported for it, while the six others reproduce twenty-two
-of twenty-seven. This is discussed in Section~\ref{si:hn2}.
+calculation does not rest on internal evidence alone. Second, the vial labeled HN2 is the only one that
+reproduces none of the bands reported for it at this prominence floor, while the six others
+reproduce twenty-two of twenty-seven. Section~\ref{si:hn2} shows that two of its four are
+in fact present when the floor is referred to the local noise, and identifies the material
+that masks them.
 
 \begin{table}[htbp]
 \centering
@@ -1939,7 +2247,10 @@ Their Table~1 reports assigned
 bands only, so the comparison is one-way: for each band they report we ask whether this
 work has a measured band at the same position, within the 18\,\wn{} resolution they quote
 for 1064\,nm. The absence of a partner is therefore not evidence of disagreement. Bands
-are those detected by the criterion of Section~\ref{si:preproc}.}
+are those detected by the criterion of Section~\ref{si:preproc} applied to the mean of
+each agent's retained acquisitions: \texttt{scipy.signal.find\_peaks} with a minimum
+prominence of the larger of 0.05 and five times the noise standard deviation estimated
+above 1600\,\wn{}, and a minimum separation of two grid points.}
 \label{tab:si-kondo}
 \small
 \begin{tabular}{llrrrc}
@@ -1988,14 +2299,18 @@ HN3 & 722 & C-Cl & 720 & $-1.5$ & \checkmark \\
 
 \begin{flushleft}\footnotesize 22 of 31 reported bands are reproduced,
 with a residual mean of -0.9\,\wn{} and an RMS of 5.5\,\wn{},
-below the 5.73\,\wn{} sampling of this measurement; excluding the two residuals
-larger than 10\,\wn{} the RMS is 2.3\,\wn{}.
-Both large residuals have a stated cause. For HD, Kondo give the C--Cl band as 734\,\wn{}
-at 785\,nm and 746\,\wn{} at 1064\,nm and note in their text that the 734 and
-756\,\wn{} bands merge at 1064\,nm; the 733\,\wn{} band measured here resolves the
-lower of the pair. For HN1 their two excitations differ by 19\,\wn{} for the same band
-(768 and 787\,\wn{}), and the 770\,\wn{} measured here matches the former. HN2 is the
-only agent that reproduces none of the bands reported for it.\end{flushleft}
+below the 5.73\,\wn{} sampling of this measurement. Three matches carry residuals
+larger than 10\,\wn{}, two of them bands Kondo et al.\ themselves place differently under
+their two excitations, so none is a clean agreement and none is counted as one below:
+tightening the tolerance to 10\,\wn{} removes exactly these and leaves
+19 of 31 with an RMS of
+2.29\,\wn{}, which is the figure quoted in the
+text. For HD they give the C--Cl band as 734\,\wn{} at 785\,nm and 746\,\wn{} at
+1064\,nm and note that the 734 and 756\,\wn{} bands merge at 1064\,nm; for HN1 the two
+excitations differ by 19\,\wn{} for the same band (768 and 787\,\wn{}). The vial
+labeled HN2 is the only one that reproduces none of the bands reported for it at this
+prominence floor; Section~\ref{si:hn2} shows that two of its four are present when the
+floor is referred to the local noise instead of to the dominant band.\end{flushleft}
 \end{table}
 
 \begin{figure}[htbp]
@@ -2003,10 +2318,155 @@ only agent that reproduces none of the bands reported for it.\end{flushleft}
 \includegraphics[width=\textwidth]{kondo_comparison.png}
 \caption{Measured mean spectra with the band positions of Kondo et al.\ marked beneath
 each trace: blue where this work reproduces the band within 18\,\wn{}, orange where it
-does not. HN2, in orange, is the only agent that reproduces none
-of them.}
+does not. The vial labeled HN2, in orange, is the only one that reproduces none
+of them. Produced by \texttt{code/v3\_fig\_kondo.py}.}
 \label{fig:si-kondo}
 \end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{table}[htbp]
+\centering
+\caption{Chance levels and tolerance sensitivity for the comparison of
+Table~\ref{tab:si-kondo}. \emph{Positional} is the fraction of the 250--1800\,\wn{} axis
+within the tolerance of one of the agent's own detected bands, which is the rate at which a
+randomly placed wavenumber matches. \emph{Cross-agent} matches each published list against
+the ten other measured spectra in this set. The interval on the mean residual is a
+bootstrap percentile interval over the matched residuals, 10\,000 resamples. Produced by
+\texttt{code/v3\_kondo\_stats.py}.}
+\label{tab:si-kondostats}
+\small
+\begin{tabular}{rrrrrrr}
+\toprule
+& & & \multicolumn{2}{c}{Chance level} & & \\
+\cmidrule(lr){4-5}
+Tol.\ (\wn) & Reproduced & Rate & Positional & Cross-agent & RMS (\wn) & Mean (\wn), 95\% CI \\
+\midrule
+ 5 & 19/31 & 0.61 & 0.06 & 0.12 & 2.29 & $-0.09$ \ [$-1.08$, $+0.99$] \\
+10 & 19/31 & 0.61 & 0.13 & 0.29 & 2.29 & $-0.09$ \ [$-1.07$, $+0.96$] \\
+15 & 21/31 & 0.68 & 0.19 & 0.42 & 4.30 & $-0.18$ \ [$-2.12$, $+1.66$] \\
+18 & 22/31 & 0.71 & 0.23 & 0.47 & 5.48 & $-0.92$ \ [$-3.32$, $+1.24$] \\
+25 & 22/31 & 0.71 & 0.30 & 0.55 & 5.48 & $-0.92$ \ [$-3.33$, $+1.23$] \\
+\bottomrule
+\end{tabular}
+
+\begin{flushleft}\footnotesize The 18\,\wn{} row is the tolerance Kondo et al.\ quote and is
+the one used in Table~\ref{tab:si-kondo}; it is also the row with the weakest separation
+from chance. The two tighter rows are the informative ones: the count falls by three while
+the cross-agent baseline falls by a factor of 1.6 and the residual RMS by a factor of 2.4.
+Of the four bands reported for the vial labeled HN2, none is reproduced at any tolerance
+in this table, against 22 of 27 for the other six agents at 18\,\wn{} (Fisher exact,
+$p$ = 0.0040).\end{flushleft}
+\end{table}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+
+\subsection{Published band lists as queries: a cross-provenance control}
+\label{si:xprov}
+
+The head-to-head result of Section~\ref{si:ident} matches each acquisition against other
+interrogations of the same sealed vial in the same session. Kondo's band lists are the only
+queries available here that come from different material measured in a different
+laboratory, and using them as queries tests how much of the measured library's advantage is
+transferable.
+
+Two complications must be handled together. A published list is far sparser than an
+acquisition --- three to seven assigned bands against a full profile --- and it carries no
+intensities. Sparsity alone would cost accuracy in either arm, so the external result is
+reported beside a control in which each agent's own measured spectrum is reduced to its
+$n$ most prominent bands, $n$ being that agent's published band count, and queried against
+the measured library in the same way. The difference between the external and the
+self-sparsified result is what provenance costs; the difference between the self-sparsified
+result and the 30 of 30 of Section~\ref{si:ident} is what sparsity costs. Two scores are
+used, since Kondo report no intensities: the fraction of query bands having a library band
+within a tolerance, and the cosine between unit-amplitude Lorentzian combs at
+$\Gamma = 22$\,\wn{}. Table~\ref{tab:si-xprov} gives the result.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{table}[htbp]
+\centering
+\caption{Published band lists as queries. Left, all seven agents Kondo et al.\ and this
+work have in common. Right, the five of those with more than one acquisition, for which the
+control is not circular: HD and VX have a single acquisition each, so for those two the
+control query and the library entry derive from the same spectrum and the control is
+trivially correct. Produced by \texttt{code/v3\_kondo\_asquery.py}.}
+\label{tab:si-xprov}
+\small
+\begin{tabular}{lrrrrrcrrr}
+\toprule
+& & \multicolumn{4}{c}{All seven} & & \multicolumn{3}{c}{Five multi-acquisition} \\
+\cmidrule(lr){3-6}\cmidrule(lr){8-10}
+Score & Tol.\ (\wn) & Meas. & DFT (54) & DFT (11) & Control & & Meas. & DFT (54) & Control \\
+\midrule
+Comb cosine    & ---  & 5/7 & 3/7 & 3/7 & 6/7 & & 3/5 & 2/5 & 4/5 \\
+Band overlap   & 15   & 4/7 & 2/7 & 3/7 & 6/7 & & 2/5 & 1/5 & 4/5 \\
+Band overlap   & 20   & 4/7 & 1/7 & 2/7 & 5/7 & & 3/5 & 1/5 & 3/5 \\
+Band overlap   & 25   & 3/7 & 1/7 & 3/7 & 4/7 & & 2/5 & 1/5 & 2/5 \\
+\bottomrule
+\end{tabular}
+
+\begin{flushleft}\footnotesize Three readings. First, the measured library's absolute
+performance is not transferable: on external queries it is correct in three to five of
+seven, against 30 of 30 on queries of its own provenance, and most of that loss is sparsity
+rather than provenance, since the self-sparsified control reaches four to six of seven.
+Second, what survives is the direction: the measured library is correct roughly twice as
+often as the computed library on the same external queries, under both scores and at every
+tolerance. Third, none of these differences is significant on its own with seven queries,
+and we report them as a bound on transferability rather than as a measurement. The vial
+labeled HN2 is never returned for Kondo's HN2 list under any score or tolerance, while the
+self-sparsified control query built from that vial returns the vial's own entry, which is
+the behavior expected of an internally consistent reference carrying the wrong
+label.\end{flushleft}
+\end{table}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+
+\subsection{Sensitivity of the headline result to the vial labeled HN2}
+\label{si:hn2sens}
+
+Three of the thirty queries are acquisitions of a vial whose label this section shows to be
+unsupported. They are retained in the analysis so that both libraries face an identical
+query set, and every headline figure is also reported without them. The two are compared in
+Table~\ref{tab:si-hn2sens}. Removing the three queries raises the computed library's
+molecular accuracy from 43.3 to 48.1\% and its class accuracy from 83.3 to 92.6\%, because
+all three were computed-library failures; the exclusion therefore works against the claim
+made in this paper rather than for it. No conclusion changes. The abstention analysis of
+Section~\ref{si:absten} already treats these three acquisitions as a separate condition and
+never counts them among its twenty-seven in-library cases, so it is unaffected.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{table}[htbp]
+\centering
+\caption{Every headline figure with and without the three acquisitions of the vial labeled
+HN2. The libraries are identical in the two columns; only the query set differs. Produced by
+\texttt{code/v3\_hn2\_sensitivity.py}, whose full output is deposited as
+\texttt{data/v3\_hn2\_sensitivity.log}.}
+\label{tab:si-hn2sens}
+\small
+\begin{tabular}{lrr}
+\toprule
+Quantity & Full query set & Without the vial \\
+\midrule
+Queries & 30, nine vials & 27, eight vials \\
+\addlinespace
+Measured library, molecular top-1 & 30/30 \ (100\%) & 27/27 \ (100\%) \\
+Computed library, molecular top-1, closed set & 13/30 \ (43.3\%) & 13/27 \ (48.1\%) \\
+Computed library, molecular top-1, open set & 13/30 \ (43.3\%) & 13/27 \ (48.1\%) \\
+Measured library, class top-1 & 30/30 \ (100\%) & 27/27 \ (100\%) \\
+Computed library, class top-1, closed set & 25/30 \ (83.3\%) & 25/27 \ (92.6\%) \\
+\addlinespace
+Per agent, computed library (majority of acquisitions) & 4/9 & 4/8 \\
+Best of the twelve metrics, computed library & 16/30 & 16/27 \\
+Adopted metric, computed library & 13/30 & 13/27 \\
+\addlinespace
+Abstention, measured library, in-library accepted & 27/27 & unchanged \\
+Abstention, measured library, class-absent declined & 27/27 & unchanged \\
+Abstention, computed library, best AUC & 0.852 & unchanged \\
+\bottomrule
+\end{tabular}
+\end{table}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage
 
@@ -2016,7 +2476,7 @@ of them.}
 The preprocessing module, the analysis scripts that generate every table and figure in
 this work, the calibrated computed library, and the ORCA inputs and outputs are deposited
 at \url{https://github.com/bisu9082/ramanforge}, at the tagged release
-\texttt{v1.1.0} from which every number in this work was produced.
+\texttt{v1.2.0} from which every number in this work was produced.
 
 Raw acquisition files of the authentic agents are not included in that deposit. They are
 analytical data on Schedule 1 chemicals generated in an OPCW designated laboratory, and

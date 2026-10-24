@@ -26,6 +26,13 @@ SUPERSEDED = {"GF_cyclosarin": "superseded by GF_cyclosarin_glob (global minimum
               "EXP_A232": "superseded by EXP_A232_Eglob (E configuration)",
               "GB_sarin_fast": "duplicate re-run of GB_sarin"}
 
+# The three entries above are not distractors: each is an earlier calculation of a measured
+# agent, kept in the deposit so the superseded geometries can be inspected. The agent and
+# the role are recorded explicitly, since the current job-to-agent map no longer names them.
+RETIRED = {"GF_cyclosarin": ("GF", "measured agent (superseded entry)"),
+           "EXP_A232": ("A232", "measured agent (superseded entry)"),
+           "GB_sarin_fast": ("GB", "measured agent (duplicate run)")}
+
 
 def xyz_from_out(path):
     """Element symbols and coordinates from the INPUT FILE echo of an ORCA output."""
@@ -109,8 +116,10 @@ def main():
         if not smi:
             nfail += 1
         rows.append(dict(orca_job=j,
-                         agent=job2agent.get(j, ""),
-                         role=("measured agent" if j in job2agent else "analog distractor"),
+                         agent=job2agent.get(j, RETIRED.get(j, ("", ""))[0]),
+                         role=("measured agent" if j in job2agent
+                               else RETIRED[j][1] if j in RETIRED
+                               else "analog distractor"),
                          in_library=("yes" if j in inlib else "no"),
                          superseded_note=SUPERSEDED.get(j, ""),
                          n_modes=len(peaks),

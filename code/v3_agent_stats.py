@@ -80,6 +80,10 @@ arows = []
 for libtag, path in SRC.items():
     if not os.path.exists(path): continue
     S = pd.read_csv(path)
+    # The abstention analysis treats the vial labeled HN2 as a condition of its own and
+    # never counts it among the in-library cases (Section S7). The same convention is
+    # applied here, so that the interval and the point estimate describe the same quantity.
+    S = S[S.agent != "HN2"]
     have = [c for c in SC if c in S.columns]
     ags = sorted(S.agent.unique())
     print(f"\n[{libtag} library]  {len(ags)} agents, {len(S)} acquisitions")

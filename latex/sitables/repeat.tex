@@ -1,0 +1,37 @@
+\begin{table}[htbp]
+\centering
+\caption{Within-vial repeatability, per vial. Each entry is the cosine between two
+acquisitions of the same sealed vial, taken minutes apart in one session; the count rate is
+the detector rate the instrument's automatic exposure control settled on for each
+acquisition. Produced by \texttt{code/v3\_repeatability.py}.}
+\label{tab:si-repeat}
+\small
+\begin{tabular}{lrrrrrr}
+\toprule
+Vial & Acq. & Min & Median & Max & Count rate (s$^{-1}$) & Spread \\
+\midrule
+GD & 4 & 0.998 & 0.999 & 1.000 & 16576--30941 & 1.9$\times$ \\
+GF & 3 & 1.000 & 1.000 & 1.000 & 40392--44056 & 1.1$\times$ \\
+VX & 1 & \multicolumn{3}{c}{---} & 19124 & --- \\
+HD & 1 & \multicolumn{3}{c}{---} & 410 & --- \\
+HN1 & 3 & 1.000 & 1.000 & 1.000 & 35474--35912 & 1.0$\times$ \\
+HN2 & 3 & 0.999 & 1.000 & 1.000 & 282656--294412 & 1.0$\times$ \\
+HN3 & 3 & 0.998 & 0.999 & 0.999 & 5257--6253 & 1.2$\times$ \\
+A-230 & 3 & 0.958 & 0.960 & 0.964 & 380--398 & 1.0$\times$ \\
+A-232 & 3 & 1.000 & 1.000 & 1.000 & 6427--6583 & 1.0$\times$ \\
+A-234 & 5 & 0.805 & 0.915 & 1.000 & 1949--23538 & 12.1$\times$ \\
+A-242 & 3 & 0.911 & 0.923 & 0.996 & 264--5996 & 22.7$\times$ \\
+\bottomrule
+\end{tabular}
+
+\begin{flushleft}\footnotesize The pooled mean over all same-vial pairs is 0.967, which
+is not the useful number. Two vials are not stationary across their own repeats:
+A-234 falls to 0.805 and A-242 to
+0.911, against 0.998 or better for the six vials
+that are stationary. In both cases the count rate rises by more than an order of magnitude
+between the first acquisition and the rest and then settles, so the spectra of the early
+acquisitions are of a different state of the sample, not a noisier measurement of the same
+one. A within-vial difference of 0.195 is larger than the decision margin
+of the measured library, 0.219, so these acquisitions are not interchangeable and are
+treated separately in Section~\ref{si:ident}.\end{flushleft}
+\end{table}

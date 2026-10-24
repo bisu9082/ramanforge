@@ -29,6 +29,13 @@ P = dict(warm_red="#C94F4A", amber="#E8943A", gold="#F0C040", teal="#4AACB0",
 plt.rcParams.update({"axes.labelsize": 16, "xtick.labelsize": 15, "ytick.labelsize": 15,
                      "legend.fontsize": 13, "font.size": 15, "font.family": "DejaVu Sans"})
 
+# Queries may be restricted for the HN2 label sensitivity analysis (Section S11.3).
+# RF_EXCL_QUERY is a comma-separated list of agent codes whose acquisitions are dropped
+# from the query set; the libraries are untouched. Unset by default, so the deposited data
+# files always correspond to the full query set. v3_hn2_sensitivity.py drives it and
+# suppresses every write, so a sensitivity run cannot overwrite a deposited result.
+EXCL_QUERY = tuple(a for a in os.environ.get("RF_EXCL_QUERY", "").split(",") if a)
+
 GAMMA = 22.0          # measured value from STEP 2
 CUT = 800.0           # boundary between the low- and high-frequency scale factors (as in v2)
 HCK = 1.4388
@@ -206,7 +213,7 @@ def main():
     dft = {k: synth_native(v, X, SL, SH) for k, v in lib.items()}
 
     # ---- query set: identical under both conditions ----
-    queryable = [a for a in AGENTS if len(acq[a]) >= 2]      # a measured self-entry must exist
+    queryable = [a for a in AGENTS if len(acq[a]) >= 2 and a not in EXCL_QUERY]  # a measured self-entry must exist
     queries = [(a, r, s) for a in queryable for r, s in acq[a]]
     print(f"common queries {len(queries)} / {len(queryable)} agents "
           f"(HD·VX have 1 acquisition, excluded from queries, kept in the library)\n")
@@ -316,6 +323,7 @@ def main():
 
     PF = [a for a in ags9 if a in ("GD", "GF", "VX", "A230", "A232", "A234", "A242")]
     NOP = [a for a in ags9 if a in ("HD", "HN1", "HN3")]
+    N_PF, N_NOP = len(PF), len(NOP)
     from scipy.stats import mannwhitneyu
     print("\nP-containing vs P-free, per-region measured↔computed cosine difference (P-free − P-containing):")
     pf_rows = []
@@ -428,9 +436,9 @@ def main():
     yy = np.arange(len(PF))[::-1]
     ax.barh(yy + 0.19, PF["pf"], 0.36, color=P["warm_red"])
     ax.barh(yy - 0.19, PF["nop"], 0.36, color=P["sage"])
-    ax.text(0.025, yy[0] + 0.19, "P-containing (n = 6)", va="center", ha="left",
+    ax.text(0.025, yy[0] + 0.19, f"P-containing (n = {N_PF})", va="center", ha="left",
             fontsize=11, color="white", fontweight="bold")
-    ax.text(0.025, yy[0] - 0.19, "no phosphorus (n = 3)", va="center", ha="left",
+    ax.text(0.025, yy[0] - 0.19, f"no phosphorus (n = {N_NOP})", va="center", ha="left",
             fontsize=11, color="white", fontweight="bold")
     for i, r in enumerate(PF.itertuples()):
         y0 = yy[i]

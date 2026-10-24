@@ -1,72 +1,52 @@
+"""
+Graphical abstract. Writes figures/graphical_abstract.png and .pdf.
+
+Six conditions, all on the same thirty acquisitions under the same metric: the result as
+reported, the best of the twelve similarity metrics, the affine wavenumber calibration, the
+imposed axis offset, symmetric preprocessing, and the calibration refitted with each agent
+held out. The counts are those of Sections 3.1 and 3.3-3.5 and of Tables S-metrics,
+S-affine, S-offsetscan, S-aslssym and S-loaoident; they are written out here rather than
+recomputed, since each comes from a different script.
+"""
+import os
 import matplotlib; matplotlib.use("Agg")
 import matplotlib.pyplot as plt, numpy as np
-from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
-from matplotlib.lines import Line2D
-BLUE="#2a78d6"; ORANGE="#eb6834"; INK="#1a1a19"; INK2="#5c5b55"; GRID="#e6e4dd"; BG="#fcfcfb"
-X=np.load("/tmp/ga_X.npy"); A="A232"
-meas=np.load(f"/tmp/ga_meas_{A}.npy"); rep=np.load(f"/tmp/ga_rep2_{A}.npy"); dft=np.load(f"/tmp/ga_dft_{A}.npy")
-meas/=meas.max(); rep/=rep.max(); dft/=dft.max()
+from matplotlib.patches import FancyBboxPatch
+BLUE="#2a78d6"; ORANGE="#eb6834"; INK="#1a1a19"; INK2="#5c5b55"; GRID="#dedcd5"; BG="#fcfcfb"
+# Elsevier recommends roughly 1328 x 531 px for the graphical abstract (2.5:1).
+fig=plt.figure(figsize=(12.5,5.0), dpi=200, facecolor=BG)
+ax=fig.add_axes([0.085,0.20,0.885,0.58]); ax.set_facecolor(BG)
 
-fig=plt.figure(figsize=(12.5,5.0),dpi=200,facecolor=BG)
-fig.text(0.030,0.930,"A computed Raman library does not replace measured reference spectra",
-         fontsize=16,color=INK,fontweight="bold",va="bottom")
-fig.text(0.030,0.875,"Eleven authentic chemical warfare agents at 1064 nm  ·  same queries, same pipeline, same metric  ·  only the library differs",
-         fontsize=9.8,color=INK2,va="bottom")
+COND=["as reported","best of 12\nsimilarity metrics","affine wavenumber\ncalibration",
+      "axis offset imposed\n$-$20 to $+$30 cm$^{-1}$","preprocessing applied\nsymmetrically",
+      "calibration refitted\nleaving each agent out"]
+COMP=[13,16,13,13,13,13]
+x=np.arange(len(COND))
+ax.fill_between([-0.55,len(COND)-0.45],[13,13],[30,30],color=ORANGE,alpha=0.055,zorder=0)
+ax.plot([-0.55,len(COND)-0.45],[30,30],color=BLUE,lw=2.6,zorder=3)
+ax.plot(x,COMP,"-",color=ORANGE,lw=2.0,alpha=0.5,zorder=2)
+ax.scatter(x,COMP,s=190,color=ORANGE,edgecolor="white",linewidth=2.0,zorder=4)
+for xi,v in zip(x,COMP):
+    ax.annotate(f"{v}",(xi,v),textcoords="offset points",xytext=(0,-22),
+                ha="center",fontsize=11.5,color=ORANGE,fontweight="bold")
+ax.text(-0.42,30.75,"measured reference library   30 / 30",fontsize=12,color=BLUE,
+        va="bottom",fontweight="bold")
+ax.text(len(COND)-0.52,21.3,"the gap no repair closes",fontsize=11.5,color=ORANGE,
+        ha="right",style="italic")
+ax.set_xticks(x); ax.set_xticklabels(COND,fontsize=9.3,color=INK2,linespacing=1.45)
+ax.set_xlim(-0.55,len(COND)-0.45); ax.set_ylim(8,33.5)
+ax.set_yticks([10,15,20,25,30]); ax.tick_params(colors=INK2,labelsize=9.5,length=0)
+ax.set_ylabel("acquisitions identified\ncorrectly  (of 30)",fontsize=10.5,color=INK,linespacing=1.4)
+ax.grid(True,axis="y",color=GRID,lw=0.8); ax.set_axisbelow(True)
+for s_ in ("top","right","bottom","left"): ax.spines[s_].set_visible(False)
 
-# -- left: the query, aligned to the mid-height of the two panels
-axq=fig.add_axes([0.030,0.300,0.200,0.420]); axq.set_facecolor(BG)
-axq.plot(X,meas,color=INK,lw=1.6); axq.fill_between(X,0,meas,color=INK,alpha=0.07)
-axq.set_xlim(250,1800); axq.set_ylim(-0.03,1.12); axq.set_yticks([])
-axq.set_xticks([400,800,1200,1600]); axq.tick_params(colors=INK2,labelsize=8.2,length=2)
-for s in ("top","right","left"): axq.spines[s].set_visible(False)
-axq.spines["bottom"].set_color(GRID)
-fig.text(0.030,0.760,"QUERY",fontsize=8.6,color=INK2,fontweight="bold")
-fig.text(0.030,0.728,"one acquisition of an authentic agent",fontsize=9.4,color=INK)
-fig.text(0.030,0.218,"Raman shift (cm$^{-1}$)",fontsize=8.4,color=INK2)
-fig.text(0.030,0.190,"the thin black trace is this query, repeated on both panels;\nthe thick coloured trace is the library entry it is compared with",fontsize=8.6,color=INK2,va="top",linespacing=1.5)
-
-def panel(y, ref, col, title, cosv):
-    ax=fig.add_axes([0.320,y,0.360,0.200]); ax.set_facecolor(BG)
-    ax.fill_between(X,meas,ref,color=col,alpha=0.20,zorder=1)
-    ax.plot(X,ref,color=col,lw=2.6,alpha=0.95,zorder=2)
-    ax.plot(X,meas,color=INK,lw=1.2,zorder=3)
-    ax.set_xlim(250,1800); ax.set_ylim(-0.05,1.15)
-    ax.set_yticks([]); ax.set_xticks([400,800,1200,1600])
-    ax.tick_params(colors=INK2,labelsize=8.2,length=2)
-    for s in ("top","right","left"): ax.spines[s].set_visible(False)
-    ax.spines["bottom"].set_color(GRID)
-    ax.text(0.0,1.08,title,transform=ax.transAxes,fontsize=10.4,color=col,
-            fontweight="bold",va="bottom")
-    ax.text(1.0,1.08,f"cosine {cosv}",transform=ax.transAxes,fontsize=10.4,color=col,
-            ha="right",va="bottom",fontweight="bold")
-    return ax
-pt=panel(0.520, rep,  BLUE,   "measured reference library", "1.00")
-pb=panel(0.195, dft,  ORANGE, "computed library",           "0.65")
-pb.text(0.0,-0.22,"shaded area is the disagreement  ·  A-232 shown; the set mean is 0.67 against 0.98 for the measured library",
-        transform=pb.transAxes,fontsize=8.4,color=INK2,va="top")
-
-
-def score(y,val,col,lab,sub):
-    ax=fig.add_axes([0.745,y,0.233,0.200]); ax.axis("off")
-    ax.add_patch(FancyBboxPatch((0.02,0.08),0.96,0.84,
-        boxstyle="round,pad=0.02,rounding_size=0.07",transform=ax.transAxes,
-        facecolor=col,alpha=0.10,edgecolor=col,linewidth=1.5))
-    ax.text(0.095,0.50,val,transform=ax.transAxes,fontsize=26,color=col,fontweight="bold",va="center")
-    ax.text(0.545,0.62,lab,transform=ax.transAxes,fontsize=9.3,color=INK,va="center")
-    ax.text(0.545,0.37,sub,transform=ax.transAxes,fontsize=8.3,color=INK2,va="center")
-score(0.520,"30/30",BLUE,  "acquisitions","identified correctly")
-score(0.195,"13/30",ORANGE,"acquisitions","and no repair closes it")
-
-for y in (0.620,0.295):
-    fig.add_artist(FancyArrowPatch((0.243,y),(0.305,y),transform=fig.transFigure,
-        arrowstyle="-|>",mutation_scale=13,color=INK2,lw=1.3,alpha=0.55))
-    fig.add_artist(FancyArrowPatch((0.692,y),(0.738,y),transform=fig.transFigure,
-        arrowstyle="-|>",mutation_scale=13,color=INK2,lw=1.3,alpha=0.55))
-
-fig.text(0.030,0.052,"Computed library: B3LYP/6-311++G(d,p), 54 members, calibrated on band positions alone with no parameter fitted to identification.",
-         fontsize=9.0,color=INK2)
-fig.text(0.030,0.018,"The best of twelve similarity metrics reaches 16 of 30; two corrected structures, an affine wavenumber axis, a $\pm$30 cm$^{-1}$ offset scan and symmetric preprocessing all leave it at 13.",
-         fontsize=9.0,color=INK2)
-fig.savefig("/mnt/user-data/outputs/graphical_abstract.png",dpi=240,facecolor=BG)
-fig.savefig("/mnt/user-data/outputs/graphical_abstract.pdf",facecolor=BG)
-print("saved")
+fig.text(0.085,0.905,"A computed Raman library does not replace measured reference spectra",
+         fontsize=15.5,color=INK,fontweight="bold",va="bottom")
+fig.text(0.085,0.845,"Eleven vials of authentic chemical warfare agent  ·  1064 nm  ·  identical pipeline, grid and metric; only the library differs",
+         fontsize=10.3,color=INK2,va="bottom")
+fig.text(0.085,0.055,"Every entry is the same thirty acquisitions under the same metric, after two wrong computed structures were corrected.",
+         fontsize=9.6,color=INK2)
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+fig.savefig(os.path.join(ROOT, "figures", "graphical_abstract.png"), dpi=200, facecolor=BG)
+fig.savefig(os.path.join(ROOT, "figures", "graphical_abstract.pdf"), facecolor=BG)
+print("saved figures/graphical_abstract.png and .pdf")

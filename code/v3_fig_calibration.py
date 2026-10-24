@@ -189,7 +189,7 @@ def main():
     ax.set_ylabel("refitted scale factor")
     ax.set_title("No agent drives the calibration", fontsize=15)
     ax.text(0.97, 0.52, f"$s_\\mathrm{{low}}$ range {N.s_low.max()-N.s_low.min():.3f}\n"
-                        f"$s_\\mathrm{{high}}$ invariant",
+                        f"$s_\\mathrm{{high}}$ range {N.s_high.max()-N.s_high.min():.3f}",
             transform=ax.transAxes, ha="right", fontsize=11.5, color=P["brown"],
             bbox=dict(fc="white", ec="0.82", boxstyle="round,pad=0.4"))
     ax.legend(frameon=False, fontsize=11.5, ncol=2, loc="upper center",

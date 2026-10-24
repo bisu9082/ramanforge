@@ -60,7 +60,7 @@ def main():
 
     fig = plt.figure(figsize=(20, 10.5))
     gs = fig.add_gridspec(2, 3, hspace=0.46, wspace=0.46,
-                          left=0.105, right=0.930, top=0.875, bottom=0.085)
+                          left=0.105, right=0.930, top=0.945, bottom=0.085)
 
     # ---------- a : verdict on all ten pairs ----------
     ax = fig.add_subplot(gs[0, 0])
@@ -78,7 +78,9 @@ def main():
     ax.set_xlim(-0.42, 0.42)
     ax.set_xlabel("$\\Delta$ cosine, 600–850 cm$^{-1}$")
     ax.set_title("Ten agent–correction trials", fontsize=15.5)
-    ax.text(0.97, 0.06, "1 improved\n3 degraded", transform=ax.transAxes, ha="right",
+    _nimp = int((T.delta > 0.10).sum()); _ndeg = int((T.delta < -0.10).sum())
+    ax.text(0.97, 0.055, f"{_nimp} improved\n{_ndeg} degraded",
+            transform=ax.transAxes, ha="right",
             fontsize=12.5, style="italic", color=P["brown"])
     letter(ax, "a", -0.34)
 
@@ -95,7 +97,7 @@ def main():
         r = B[B.agent == ag].iloc[0]
         ax.axvline(r.measured, color="0.7", lw=1.0, ls=":")
         ax.set_xlabel("Raman shift (cm$^{-1}$)")
-        ax.set_ylabel("normalised intensity")
+        ax.set_ylabel("normalized intensity")
         cb = R[(R.agent == ag) & (R.variant == "V2_tightP")].iloc[0]
         d = cb["new_600–850"] - cb["base_600–850"]
         ax.set_title(f"{NICE[ag]}   {cb['base_600–850']:.3f} $\\rightarrow$ "
@@ -158,12 +160,18 @@ def main():
     ax.set_title("A one-directional shift meets scattered errors",
                  fontsize=15.5, pad=12)
     ax.text(0, -0.82, "measured", fontsize=11, color="0.35", ha="center", va="bottom")
+    def _rng(v, fmt="{:+.1f}"):
+        lo, hi = fmt.format(float(v.min())), fmt.format(float(v.max()))
+        return (lo + " … " + hi).replace("-", "$-$").replace("+", "$+$")
+    _nup = int((B["shift"] > 1.0).sum())
     ax.text(0.985, 0.98,
-            "baseline error   $-$50 … $+$55\nshift applied      0 … $+$23",
+            "baseline error   " + _rng(B.err_base) +
+            "\nshift applied      " + _rng(B["shift"]),
             transform=ax.transAxes, ha="right", va="top", fontsize=11.5,
             family="DejaVu Sans Mono", color=P["brown"], linespacing=1.5,
             bbox=dict(fc="white", ec="0.82", boxstyle="round,pad=0.4"))
-    ax.text(0.03, 0.80, "the shift never points downward", transform=ax.transAxes,
+    ax.text(0.03, 0.80, f"the shift is upward in {_nup} of {len(B)}",
+            transform=ax.transAxes,
             ha="left", va="top", fontsize=11, style="italic", color=P["brown"])
     hb, = ax.plot([], [], "o", ms=8, mfc="white", mec=P["brown"], mew=2)
     ht, = ax.plot([], [], "o", ms=8, color=P["dark_teal"])
@@ -210,15 +218,15 @@ def main():
     ax.plot([0.02, 0.99], [0.145, 0.145], color="0.8", lw=1,
             transform=ax.transAxes, clip_on=False)
     ax.text(0.03, 0.115,
-            "Global scale factors 1.018–1.024 / 0.988 and global position\n"
-            "RMSE 12.3–13.3 cm$^{-1}$ across all ten runs: no global\n"
-            "correction reaches a molecule-specific error.",
+            f"Global scale factors {R.s_low.min():.3f}–{R.s_low.max():.3f} / "
+            f"{R.s_high.min():.3f}–{R.s_high.max():.3f} and global position\n"
+            f"RMSE {R.pos_rmse.min():.1f}–{R.pos_rmse.max():.1f} cm$^{{-1}}$ across all ten "
+            "runs: no global\ncorrection reaches a molecule-specific error.",
             fontsize=11.5, color=P["brown"], style="italic", va="top",
             transform=ax.transAxes, linespacing=1.5)
     letter(ax, "f", -0.08)
 
-    fig.suptitle("No generalisable fix: the one apparent success does not transfer to its "
-                 "nearest neighbour", fontsize=19, y=0.955)
+    # No figure-level title: the manuscript caption carries it.
     out = os.path.join(ROOT, "figures", "v3_fig_b2.png")
     fig.savefig(out, dpi=200)
     print("saved figures/v3_fig_b2.png")

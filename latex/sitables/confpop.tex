@@ -1,0 +1,38 @@
+\begin{table}[htbp]
+\centering
+\caption{What fraction of the 298\,K population the single structure in the library
+carries. Conformer energies are the GFN2 metadynamic ensembles deposited under
+\texttt{conformers/}; $\Delta E_2$ is the energy of the second conformer above the
+minimum, $p$ the Boltzmann weight of the minimum and $N_\mathrm{eff}$ the inverse
+participation ratio of the weights. Produced by
+\texttt{code/v3\_conformer\_population.py}.}
+\label{tab:si-confpop}
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Agent & Conformers & $\Delta E_2$ (kcal\,mol$^{-1}$) & $p$ (\%) & $N_\mathrm{eff}$ \\
+\midrule
+GD & 12 & 0.88 & 58.8 & 2.7 \\
+GF & 28 & 0.56 & 58.9 & 2.4 \\
+VX & 727 & 0.16 & 5.2 & 72.4 \\
+HD & 36 & 0.40 & 28.3 & 7.4 \\
+HN1 & 153 & 0.13 & 3.1 & 90.0 \\
+HN3 & 139 & 0.23 & 9.7 & 41.8 \\
+A-230 & 26 & 0.10 & 19.9 & 9.5 \\
+A-232 & 53 & 0.31 & 24.0 & 9.9 \\
+A-234 & 171 & 0.04 & 5.8 & 40.5 \\
+A-242 & 267 & 0.02 & 4.9 & 49.5 \\
+\bottomrule
+\end{tabular}
+
+\begin{flushleft}\footnotesize For 5 of the ten agents the structure the library
+uses carries under a tenth of the room-temperature population, and for HN1 it carries
+3.1\,\%. The two G-agents are the exception, at 59\,\%. These are GFN2 weights and inherit
+that method's error --- Table~\ref{tab:si-a232} documents a 3.55\,kcal\,mol$^{-1}$ GFN2
+error on one configurational coordinate in this set --- so they bound the problem rather
+than quantify it. What they establish is that a single-conformer library spectrum is not a
+good representation of a neat liquid for most of these molecules, and that Boltzmann
+averaging is the untested part of the standard treatment with the most room to move. We
+did not run it: an ensemble spectrum requires a frequency calculation per populated
+conformer, which for VX alone is of order a hundred.\end{flushleft}
+\end{table}

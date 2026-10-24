@@ -19,6 +19,16 @@ CLS = dict(GD="Nerve", GF="Nerve", VX="Nerve", HD="Vesicant", HN1="Vesicant",
            A234="Novichok", A242="Novichok")
 CCOL = {"Nerve": P["warm_red"], "Vesicant": P["amber"], "Novichok": P["dusty"]}
 
+# Library composition, read from the library itself rather than written in by hand.
+sys.path.insert(0, ROOT); sys.path.insert(0, os.path.join(ROOT, "scripts"))
+import v3_step3_headtohead as _H
+import collections as _collections
+_LIB = _H.load_library()
+_NLIB = len(_LIB)
+_NAG = len([k for k in _LIB if k in set(_H.JOB.values())])
+_NCLS = _collections.Counter(_H.cls_of(k) for k in _LIB)
+_NMEAS = len(_H.AGENTS)
+
 
 def box(ax, x, y, w, h, text, fc, ec=None, fs=12, tc="k", bold=False):
     ax.add_patch(FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.006,rounding_size=0.012",
@@ -56,11 +66,11 @@ def main():
     ax.text(0.012, yC - 0.075, "CALCULATION", fontsize=13, fontweight="bold",
             color=P["brown"], transform=ax.transAxes)
 
-    meas = [("11 authentic agents\nneat, sealed vials", P["pale_teal"]),
+    meas = [("11 vials of authentic agent\nneat, sealed", P["pale_teal"]),
             ("Raman, 1064 nm\nraw detector counts", P["pale_teal"]),
             (f"{PRE['n_genuine']} genuine of 55 files\n23 derived, excluded", P["pale_teal"]),
             ("preprocessing\nspecified in full", P["teal"])]
-    comp = [("SMILES\n53 molecules", "#EBDFD2"),
+    comp = [(f"SMILES\n{_NLIB} molecules", "#EBDFD2"),
             ("B3LYP/6-311++G(d,p)\nORCA, NumFreq", "#EBDFD2"),
             ("harmonic lines\n+ Raman activities", "#EBDFD2"),
             ("calibration\n3 corrections", P["tan"])]
@@ -97,16 +107,13 @@ def main():
         if n[i] < 3:
             ax.text(i, 0.45, "not\nqueried", ha="center", va="center", fontsize=9.5,
                     color="white", fontweight="bold")
-        if a == "VX":
-            ax.text(i, n[i] + 0.75, "no DFT\nentry", ha="center", va="bottom",
-                    fontsize=10, color=P["warm_red"], fontweight="bold", linespacing=1.3)
         if a == "HN2":
-            ax.text(i, n[i] + 0.75, "not HN2\n(see text)", ha="center", va="bottom",
+            ax.text(i, n[i] + 0.75, "label not\nsupported", ha="center", va="bottom",
                     fontsize=10, color=P["warm_red"], fontweight="bold", linespacing=1.3)
     ax.set_xticks(xx); ax.set_xticklabels([NICE[a] for a in ORDER], fontsize=12)
     ax.set_ylabel("genuine acquisitions", fontsize=14)
     ax.set_ylim(0, 7.4); ax.set_yticks([0, 2, 4, 6])
-    ax.set_title("Eleven authentic agents, three toxicological classes", fontsize=15)
+    ax.set_title("Eleven vials, three toxicological classes", fontsize=15)
     hs = [plt.Rectangle((0, 0), 1, 1, fc=CCOL[c]) for c in ["Nerve", "Vesicant", "Novichok"]]
     ax.legend(hs, ["nerve", "vesicant", "Novichok"], frameon=False, fontsize=11.5,
               ncol=3, loc="upper left", bbox_to_anchor=(0.0, 1.0))
@@ -117,14 +124,16 @@ def main():
     ax.text(0.5, 1.02, "The two libraries", ha="center", fontsize=15,
             transform=ax.transAxes)
     box(ax, 0.02, 0.50, 0.44, 0.34,
-        "MEASURED\n\n11 entries\none per agent",
+        f"MEASURED\n\n{_NMEAS} entries\none per vial",
         P["pale_teal"], fs=12)
     box(ax, 0.54, 0.50, 0.44, 0.34,
-        "COMPUTED\n\n53 entries\n10 agents + 43 analogues",
+        f"COMPUTED\n\n{_NLIB} entries\n{_NAG} agents + {_NLIB - _NAG} analogs",
         P["tan"], fs=12)
     ax.text(0.5, 0.40,
-            "45 nerve  /  4 vesicant  /  4 Novichok\n"
-            "85% of the computed library carries the nerve-agent label",
+            f"{_NCLS['Nerve']} nerve  /  {_NCLS['Blister']} vesicant  /  "
+            f"{_NCLS['Novichok']} Novichok\n"
+            f"{100 * _NCLS['Nerve'] / _NLIB:.0f}% of the computed library carries the "
+            "nerve-agent label",
             ha="center", va="top", fontsize=11.5, color=P["brown"],
             transform=ax.transAxes, linespacing=1.6)
     ax.text(0.5, 0.10, "A query is never present in the library\nit is matched against.",

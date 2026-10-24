@@ -1,0 +1,12 @@
+agent,job,n_conformers,p_global_pct,n_effective,second_kcal
+GD,EXP_GD_soman,12,58.8,2.7,0.88
+GF,GF_cyclosarin,28,58.9,2.4,0.56
+VX,EXP_VX,727,5.2,72.4,0.16
+HD,EXP_HD,36,28.3,7.4,0.4
+HN1,EXP_HN1,153,3.1,90.0,0.13
+HN3,EXP_HN3,139,9.7,41.8,0.23
+A-230,EXP_A230,26,19.9,9.5,0.1
+A-232,EXP_A232_E,53,24.0,9.9,0.31
+A-234,EXP_A234,171,5.8,40.5,0.04
+A-242,EXP_A242,267,4.9,49.5,0.02
+the HN2 vial,EXP_HN2,66,8.4,29.8,0.21

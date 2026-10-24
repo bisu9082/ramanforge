@@ -31,10 +31,12 @@ def window_cosines(query, peaks, X):
 
 
 def main():
+    import pandas as pd
     X, acq = H.load_measured()
     mean = {a: np.mean([s for _, s in acq[a]], 0) for a in H.AGENTS}
     pre = H.load_library()
     hdr = [f"{lo}-{hi}" for lo, hi in REGIONS] + ["Mean"]
+    rows = []
     print(f"calibration held at s_low={S_LOW}, s_high={S_HIGH}\n")
     print(f"{'':24s}" + "".join(f"{h:>12s}" for h in hdr))
     for agent, published, globmin in PAIRS:
@@ -47,6 +49,10 @@ def main():
         print(f"{lab + ', global minimum':24s}" + "".join(f"{x:12.3f}" for x in b))
         print(f"{'  change':24s}" + "".join(f"{y - x:+12.3f}" for x, y in zip(a, b)))
         print()
+        rows.append(dict(agent=lab, state="published", **dict(zip(hdr, a))))
+        rows.append(dict(agent=lab, state="global minimum", **dict(zip(hdr, b))))
+    pd.DataFrame(rows).to_csv(os.path.join(ROOT, "data", "v3_geomwindow.csv"), index=False)
+    print("saved data/v3_geomwindow.csv")
 
 
 if __name__ == "__main__":

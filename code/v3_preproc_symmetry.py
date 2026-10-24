@@ -3,7 +3,7 @@ v3 symmetric-preprocessing check for the SI.
 
 Produces SI table \\label{tab:si-aslssym}: the AsLS baseline correction and the dead-pixel
 interpolation, which the adopted pipeline applies to the measurement only, are applied to
-the synthesised computed spectra as well, and the per-region measured-vs-computed cosines,
+the synthesized computed spectra as well, and the per-region measured-vs-computed cosines,
 the molecular top-1 and the self-cosine are recomputed under each condition.
 """
 import os, sys, json

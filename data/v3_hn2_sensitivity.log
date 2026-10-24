@@ -1,0 +1,198 @@
+=== FULL QUERY SET ===
+measured acquisitions 32 / 11 agents
+DFT library 54 agents (VX included, GF·A232 global-minimum geometry)
+
+[calibration] s_low=1.016 s_high=0.990  position RMSE=10.4 cm-1 (81 paired bands)  Γ=22 fixed
+[calibration] nested LOAO: s_low 1.014–1.016 (±0.10%), s_high 0.988–0.996 (±0.40%)
+
+common queries 30 / 9 agents (HD·VX have 1 acquisition, excluded from queries, kept in the library)
+
+====================================================================
+A1  measured library vs computed library: same queries, same metrics
+====================================================================
+condition                           molecule top-1           class
+measured library (11 agents)        30/30 = 100.0%      30/30 = 100.0%
+computed library (11, closed)     13/30 =  43.3%      25/30 =  83.3%
+computed library (54, open)        13/30 =  43.3%      25/30 =  83.3%
+
+Per agent (molecule top-1, per acquisition):
+       n   meas    dft  meas_self  dft_self  meas_margin  dft_margin
+agent                                                               
+A230   3  100.0  100.0      0.970     0.801        0.134       0.048
+A232   3  100.0    0.0      1.000     0.652        0.119       0.035
+A234   5  100.0    0.0      0.941     0.722        0.085       0.007
+A242   3  100.0  100.0      0.958     0.706        0.261       0.117
+GD     4  100.0  100.0      0.999     0.853        0.210       0.098
+GF     3  100.0    0.0      1.000     0.517        0.290       0.083
+HN1    3  100.0    0.0      1.000     0.831        0.065       0.004
+HN2    3  100.0    0.0      1.000     0.057        0.832       0.090
+HN3    3  100.0  100.0      0.999     0.830        0.064       0.037
+
+Mean self-cosine (similarity to the correct entry):
+  measured library 0.983   computed library 0.674   difference +0.309
+Mean margin (1st − 2nd):
+  measured 0.219   computed 0.056
+
+computed library errors, 17 cases:
+  GF#1 → EXP_GD_soman  (self 0.515, top margin +0.083)
+  GF#2 → EXP_GD_soman  (self 0.517, top margin +0.082)
+  GF#3 → EXP_GD_soman  (self 0.518, top margin +0.083)
+  HN1#1 → EXP_HN3  (self 0.832, top margin +0.004)
+  HN1#2 → EXP_HN3  (self 0.831, top margin +0.004)
+  HN1#3 → EXP_HN3  (self 0.831, top margin +0.004)
+  HN2#1 → EXP_A242  (self 0.057, top margin +0.090)
+  HN2#2 → EXP_A242  (self 0.058, top margin +0.090)
+  HN2#3 → EXP_A242  (self 0.057, top margin +0.092)
+  A232#1 → EXP_A242  (self 0.648, top margin +0.036)
+  A232#2 → EXP_A242  (self 0.652, top margin +0.033)
+  A232#3 → EXP_A242  (self 0.655, top margin +0.035)
+  A234#1 → GF_cyclosarin_glob  (self 0.680, top margin +0.008)
+  A234#2 → GF_cyclosarin_glob  (self 0.717, top margin +0.024)
+  A234#3 → EXP_A232_Eglob  (self 0.737, top margin +0.000)
+  A234#4 → EXP_A232_Eglob  (self 0.741, top margin +0.000)
+  A234#5 → EXP_A232_Eglob  (self 0.737, top margin +0.000)
+
+A-series: separation margin from siblings (self − best sibling):
+  A230: measured best sibling 0.847   computed best sibling 0.928
+  A232: measured best sibling 0.881   computed best sibling 0.928
+  A234: measured best sibling 0.881   computed best sibling 0.925
+  A242: measured best sibling 0.710   computed best sibling 0.844
+
+Per-region domain gap (reproducibility ceiling − measured↔computed):
+   region  dft_cos  repro_cos  weight   gap
+  250–600    0.770      0.905   0.202 0.136
+  600–850    0.719      0.982   0.292 0.263
+ 850–1150    0.826      0.982   0.166 0.156
+1150–1400    0.796      0.982   0.124 0.186
+1400–1800    0.698      0.989   0.216 0.291
+
+P-containing vs P-free, per-region measured↔computed cosine difference (P-free − P-containing):
+  250–600      P-series 0.810  P-free 0.675  Δ -0.135  p=0.967
+  600–850      P-series 0.636  P-free 0.912  Δ +0.276  p=0.058
+  850–1150     P-series 0.840  P-free 0.793  Δ -0.047  p=0.808
+  1150–1400    P-series 0.814  P-free 0.755  Δ -0.058  p=0.867
+  1400–1800    P-series 0.758  P-free 0.557  Δ -0.201  p=1.000
+
+saved figures/v3_fig_headtohead.png + data/v3_headtohead.csv, v3_nested_calibration.csv, v3_aseries_margins.csv, v3_headtohead_meta.json
+[calibration] s=(1.016, 0.990)  Γ_base=22
+
+measured Γ per agent: A230 17.8, A232 24.7, A234 27.8, A242 33.7, GD 19.0, GF 17.5, HD 48.4, HN1 21.7, HN2 9.2, HN3 22.5, VX 38.9
+median 21.7
+
+queries 30 / 9 agents
+
+cosine, Γ=22                       molecule 13/30  (53 agents 13/30)  class 25/30  per agent 4/9  self 0.674  margin 0.056
+cosine, Γ=30                       molecule 16/30  (53 agents 16/30)  class 25/30  per agent 5/9  self 0.688  margin 0.043
+cosine, Γ=40                       molecule 16/30  (53 agents 16/30)  class 26/30  per agent 5/9  self 0.692  margin 0.030
+cosine, Γ=50                       molecule 16/30  (53 agents 16/30)  class 26/30  per agent 5/9  self 0.688  margin 0.020
+cosine, Γ=per-agent                molecule 12/30  (53 agents 12/30)  class 26/30  per agent 4/9  self 0.670  margin 0.051
+first-derivative cosine, Γ=22      molecule 10/30  (53 agents 10/30)  class 19/30  per agent 3/9  self 0.350  margin 0.132
+shift-tolerant cosine ±3px, Γ=22   molecule 16/30  (53 agents 16/30)  class 27/30  per agent 5/9  self 0.720  margin 0.040
+peak-list HQI, tol=10              molecule  8/30  (53 agents  4/30)  class 13/30  per agent 2/9  self 0.122  margin 0.055
+peak-list HQI, tol=20              molecule 11/30  (53 agents 11/30)  class 25/30  per agent 3/9  self 0.232  margin 0.057
+peak-list HQI, tol=35              molecule 11/30  (53 agents 11/30)  class 27/30  per agent 3/9  self 0.326  margin 0.071
+band-position Dice, tol=20         molecule  8/30  (53 agents  6/30)  class 25/30  per agent 2/9  self 0.459  margin 0.078
+band-position Dice, tol=35         molecule 10/30  (53 agents  9/30)  class 27/30  per agent 2/9  self 0.622  margin 0.050
+
+saved data/v3_t118_metrics.csv
+
+baseline (cosine Γ=22): molecule 13/30, per agent 4/9
+best     (cosine, Γ=30): molecule 16/30, per agent 5/9
+
+
+=== WITHOUT HN2 ===
+measured acquisitions 32 / 11 agents
+DFT library 54 agents (VX included, GF·A232 global-minimum geometry)
+
+[calibration] s_low=1.016 s_high=0.990  position RMSE=10.4 cm-1 (81 paired bands)  Γ=22 fixed
+[calibration] nested LOAO: s_low 1.014–1.016 (±0.10%), s_high 0.988–0.996 (±0.40%)
+
+common queries 27 / 8 agents (HD·VX have 1 acquisition, excluded from queries, kept in the library)
+
+====================================================================
+A1  measured library vs computed library: same queries, same metrics
+====================================================================
+condition                           molecule top-1           class
+measured library (11 agents)        27/27 = 100.0%      27/27 = 100.0%
+computed library (11, closed)     13/27 =  48.1%      25/27 =  92.6%
+computed library (54, open)        13/27 =  48.1%      25/27 =  92.6%
+
+Per agent (molecule top-1, per acquisition):
+       n   meas    dft  meas_self  dft_self  meas_margin  dft_margin
+agent                                                               
+A230   3  100.0  100.0      0.970     0.801        0.134       0.048
+A232   3  100.0    0.0      1.000     0.652        0.119       0.035
+A234   5  100.0    0.0      0.941     0.722        0.085       0.007
+A242   3  100.0  100.0      0.958     0.706        0.261       0.117
+GD     4  100.0  100.0      0.999     0.853        0.210       0.098
+GF     3  100.0    0.0      1.000     0.517        0.290       0.083
+HN1    3  100.0    0.0      1.000     0.831        0.065       0.004
+HN3    3  100.0  100.0      0.999     0.830        0.064       0.037
+
+Mean self-cosine (similarity to the correct entry):
+  measured library 0.981   computed library 0.742   difference +0.239
+Mean margin (1st − 2nd):
+  measured 0.150   computed 0.052
+
+computed library errors, 14 cases:
+  GF#1 → EXP_GD_soman  (self 0.515, top margin +0.083)
+  GF#2 → EXP_GD_soman  (self 0.517, top margin +0.082)
+  GF#3 → EXP_GD_soman  (self 0.518, top margin +0.083)
+  HN1#1 → EXP_HN3  (self 0.832, top margin +0.004)
+  HN1#2 → EXP_HN3  (self 0.831, top margin +0.004)
+  HN1#3 → EXP_HN3  (self 0.831, top margin +0.004)
+  A232#1 → EXP_A242  (self 0.648, top margin +0.036)
+  A232#2 → EXP_A242  (self 0.652, top margin +0.033)
+  A232#3 → EXP_A242  (self 0.655, top margin +0.035)
+  A234#1 → GF_cyclosarin_glob  (self 0.680, top margin +0.008)
+  A234#2 → GF_cyclosarin_glob  (self 0.717, top margin +0.024)
+  A234#3 → EXP_A232_Eglob  (self 0.737, top margin +0.000)
+  A234#4 → EXP_A232_Eglob  (self 0.741, top margin +0.000)
+  A234#5 → EXP_A232_Eglob  (self 0.737, top margin +0.000)
+
+A-series: separation margin from siblings (self − best sibling):
+  A230: measured best sibling 0.847   computed best sibling 0.928
+  A232: measured best sibling 0.881   computed best sibling 0.928
+  A234: measured best sibling 0.881   computed best sibling 0.925
+  A242: measured best sibling 0.710   computed best sibling 0.844
+
+Per-region domain gap (reproducibility ceiling − measured↔computed):
+   region  dft_cos  repro_cos  weight   gap
+  250–600    0.770      0.905   0.202 0.136
+  600–850    0.719      0.982   0.292 0.263
+ 850–1150    0.826      0.982   0.166 0.156
+1150–1400    0.796      0.982   0.124 0.186
+1400–1800    0.698      0.989   0.216 0.291
+
+P-containing vs P-free, per-region measured↔computed cosine difference (P-free − P-containing):
+  250–600      P-series 0.810  P-free 0.675  Δ -0.135  p=0.967
+  600–850      P-series 0.636  P-free 0.912  Δ +0.276  p=0.058
+  850–1150     P-series 0.840  P-free 0.793  Δ -0.047  p=0.808
+  1150–1400    P-series 0.814  P-free 0.755  Δ -0.058  p=0.867
+  1400–1800    P-series 0.758  P-free 0.557  Δ -0.201  p=1.000
+
+saved figures/v3_fig_headtohead.png + data/v3_headtohead.csv, v3_nested_calibration.csv, v3_aseries_margins.csv, v3_headtohead_meta.json
+[calibration] s=(1.016, 0.990)  Γ_base=22
+
+measured Γ per agent: A230 17.8, A232 24.7, A234 27.8, A242 33.7, GD 19.0, GF 17.5, HD 48.4, HN1 21.7, HN2 9.2, HN3 22.5, VX 38.9
+median 21.7
+
+queries 27 / 8 agents
+
+cosine, Γ=22                       molecule 13/27  (53 agents 13/27)  class 25/27  per agent 4/8  self 0.742  margin 0.052
+cosine, Γ=30                       molecule 16/27  (53 agents 16/27)  class 25/27  per agent 5/8  self 0.757  margin 0.042
+cosine, Γ=40                       molecule 16/27  (53 agents 16/27)  class 26/27  per agent 5/8  self 0.759  margin 0.030
+cosine, Γ=50                       molecule 16/27  (53 agents 16/27)  class 26/27  per agent 5/8  self 0.754  margin 0.020
+cosine, Γ=per-agent                molecule 12/27  (53 agents 12/27)  class 26/27  per agent 4/8  self 0.740  margin 0.048
+first-derivative cosine, Γ=22      molecule 10/27  (53 agents 10/27)  class 19/27  per agent 3/8  self 0.392  margin 0.124
+shift-tolerant cosine ±3px, Γ=22   molecule 16/27  (53 agents 16/27)  class 27/27  per agent 5/8  self 0.788  margin 0.040
+peak-list HQI, tol=10              molecule  8/27  (53 agents  4/27)  class 13/27  per agent 2/8  self 0.136  margin 0.054
+peak-list HQI, tol=20              molecule 11/27  (53 agents 11/27)  class 25/27  per agent 3/8  self 0.258  margin 0.057
+peak-list HQI, tol=35              molecule 11/27  (53 agents 11/27)  class 27/27  per agent 3/8  self 0.360  margin 0.077
+band-position Dice, tol=20         molecule  8/27  (53 agents  6/27)  class 22/27  per agent 2/8  self 0.510  margin 0.080
+band-position Dice, tol=35         molecule 10/27  (53 agents  9/27)  class 24/27  per agent 2/8  self 0.669  margin 0.043
+
+saved data/v3_t118_metrics.csv
+
+baseline (cosine Γ=22): molecule 13/27, per agent 4/8
+best     (cosine, Γ=30): molecule 16/27, per agent 5/8

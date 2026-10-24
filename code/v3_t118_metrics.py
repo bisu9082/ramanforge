@@ -17,7 +17,8 @@ from scipy.optimize import linear_sum_assignment
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT); sys.path.insert(0, os.path.join(ROOT, "scripts"))
 from v3_step3_headtohead import (load_measured, load_library, measured_peaks, fit_scale,
-                                 synth_native, cos, identify, AGENTS, CLASS, JOB, CUT, GAMMA)
+                                 synth_native, cos, identify, AGENTS, CLASS, JOB, CUT, GAMMA,
+                                 EXCL_QUERY)
 
 DATA = os.path.join(ROOT, "data")
 
@@ -86,7 +87,7 @@ def main():
         a = JOB2AG.get(job)
         return float(gper.get(a, gmed)) if a else gmed
 
-    # computed library: synthesised under each Gamma scenario
+    # computed library: synthesized under each Gamma scenario
     scen = {"G22": {k: synth_native(v, X, SL, SH, 22.0) for k, v in lib.items()},
             "G30": {k: synth_native(v, X, SL, SH, 30.0) for k, v in lib.items()},
             "G40": {k: synth_native(v, X, SL, SH, 40.0) for k, v in lib.items()},
@@ -94,12 +95,27 @@ def main():
             "Gper": {k: synth_native(v, X, SL, SH, gamma_for(k)) for k, v in lib.items()}}
 
     core = [JOB[a] for a in AGENTS if a in JOB]
-    queryable = [a for a in AGENTS if len(acq[a]) >= 2]
+    queryable = [a for a in AGENTS if len(acq[a]) >= 2 and a not in EXCL_QUERY]
     queries = [(a, r, s) for a in queryable for r, s in acq[a]]
     print(f"queries {len(queries)} / {len(queryable)} agents\n")
 
     # precomputed peak lists for the library
     PLK = {sk: {k: peaklist(v, X) for k, v in sp.items()} for sk, sp in scen.items()}
+
+    # The measured library, as a control, under the identical metric and the identical code.
+    # For each query the entry of its own agent is the mean of that agent's other acquisitions,
+    # so the query is never in the library it is matched against, exactly as in STEP 3. The
+    # four linewidth variants are a property of the computed synthesis only, so the measured
+    # arm is defined for the eight metrics that do not involve Gamma.
+    MLIB, MPLK = {}, {}
+    for q_ag, q_rep, _ in queries:
+        ml = {}
+        for a_ in AGENTS:
+            others = [s for r, s in acq[a_] if not (a_ == q_ag and r == q_rep)]
+            if others:
+                ml[a_] = np.mean(others, 0)
+        MLIB[(q_ag, q_rep)] = ml
+        MPLK[(q_ag, q_rep)] = {k: peaklist(v, X) for k, v in ml.items()}
 
     METRICS = []   # (label, kind, param)
     for sk in ["G22", "G30", "G40", "G50", "Gper"]:
@@ -146,15 +162,45 @@ def main():
                     per[q_ag][0] += ok; per[q_ag][1] += 1
                 else:
                     nmol53 += ok; ncls53 += clsok
+        # ---- the same metric against the measured library ----
+        m_defined = sk == "G22"
+        m_mol = m_cls = 0
+        m_selfs = []
+        if m_defined:
+            for q_ag, q_rep, q in queries:
+                ml = MLIB[(q_ag, q_rep)]; mpl = MPLK[(q_ag, q_rep)]
+                if kind == "cos":
+                    sc = {k: cos(q, v) for k, v in ml.items()}
+                elif kind == "dcos":
+                    sc = {k: dcos(q, v) for k, v in ml.items()}
+                elif kind == "shift":
+                    sc = {k: shiftcos(q, v) for k, v in ml.items()}
+                elif kind.startswith("hqi"):
+                    tol = float(kind[3:]); qp, qa = peaklist(q, X)
+                    sc = {k: hqi(qp, qa, mpl[k][0], mpl[k][1], tol) for k in ml}
+                else:
+                    tol = float(kind[4:]); qp, _ = peaklist(q, X)
+                    sc = {k: dice(qp, mpl[k][0], tol) for k in ml}
+                o = sorted(sc.items(), key=lambda t: -t[1])
+                top = o[0][0]
+                m_mol += (top == q_ag)
+                m_cls += (CLASS[top] == CLASS[q_ag])
+                m_selfs.append(sc.get(q_ag, np.nan))
+
         N = len(queries)
         agent_ok = sum(1 for a in per if per[a][0] * 2 > per[a][1])
         out.append(dict(metric=label, kind=kind, gamma=sk,
                         mol_closed=nmol, mol_open=nmol53, cls_closed=ncls, cls_open=ncls53,
                         n=N, agent_closed=agent_ok, n_agents=len(per),
-                        self_mean=float(np.nanmean(selfs)), margin_mean=float(np.nanmean(margs))))
-        print(f"{label:<34} molecule {nmol:2d}/{N}  (53 agents {nmol53:2d}/{N})  "
+                        self_mean=float(np.nanmean(selfs)), margin_mean=float(np.nanmean(margs)),
+                        meas_mol=(m_mol if m_defined else np.nan),
+                        meas_cls=(m_cls if m_defined else np.nan),
+                        meas_self=(float(np.nanmean(m_selfs)) if m_defined else np.nan)))
+        mtag = (f"  | measured {m_mol:2d}/{N} self {np.nanmean(m_selfs):.3f}"
+                if m_defined else "  | measured n/a")
+        print(f"{label:<34} molecule {nmol:2d}/{N}  (open set {nmol53:2d}/{N})  "
               f"class {ncls:2d}/{N}  per agent {agent_ok}/{len(per)}  "
-              f"self {np.nanmean(selfs):.3f}  margin {np.nanmean(margs):.3f}")
+              f"self {np.nanmean(selfs):.3f}  margin {np.nanmean(margs):.3f}{mtag}")
 
     D = pd.DataFrame(out)
     D.to_csv(f"{DATA}/v3_t118_metrics.csv", index=False)

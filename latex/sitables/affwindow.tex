@@ -1,0 +1,33 @@
+\begin{table}[htbp]
+\centering
+\caption{The window diagnosis under both calibrations. The adopted two-region map is
+discontinuous at 800\,\wn{}, where it sends 800$^-$ to 812.8 and 800$^+$ to 792.0; four
+library entries have a mode pair inside that overlap and have their order reversed by it.
+The affine map of Table~\ref{tab:si-affine} is monotone. Both columns are computed with
+the same spectra, the same window definitions and the same ten agents. Produced by
+\texttt{code/v3\_affine\_window.py}.}
+\label{tab:si-affwindow}
+\small
+\begin{tabular}{lrrrrrr}
+\toprule
+ & \multicolumn{3}{c}{Two-region (adopted)} & \multicolumn{3}{c}{Affine} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+Window (\wn) & P & no P & $\Delta$ & P & no P & $\Delta$ \\
+\midrule
+250--600 & 0.810 & 0.675 & $-0.135$ & 0.772 & 0.662 & $-0.109$ \\
+600--850 & 0.636 & 0.912 & $+0.276$ & 0.645 & 0.916 & $+0.271$ \\
+850--1150 & 0.840 & 0.793 & $-0.047$ & 0.837 & 0.808 & $-0.029$ \\
+1150--1400 & 0.814 & 0.755 & $-0.058$ & 0.806 & 0.752 & $-0.055$ \\
+1400--1800 & 0.758 & 0.557 & $-0.201$ & 0.777 & 0.583 & $-0.194$ \\
+\bottomrule
+\end{tabular}
+
+\begin{flushleft}\footnotesize The diagnosis does not depend on the map. Under the
+adopted calibration the 600--850\,\wn{} window gives $\Delta = +0.276$ against
+at most $0.201$ in absolute value elsewhere; under the affine map it gives
+$\Delta = +0.271$ against at most $0.194$. In both cases 600--850\,\wn{}
+is the only window in which the phosphorus-free agents score higher than the
+phosphorus-containing ones, and in both cases it is the largest contrast in the row. The
+discontinuity is therefore a defect of the adopted map that should be stated, but it does
+not generate the localisation it sits inside.\end{flushleft}
+\end{table}

@@ -11,14 +11,24 @@ P = dict(warm_red="#C94F4A", amber="#E8943A", teal="#4AACB0", dusty="#5B8DB8",
 plt.rcParams.update({"axes.labelsize": 14, "xtick.labelsize": 12, "ytick.labelsize": 12,
                      "legend.fontsize": 12, "font.size": 13, "font.family": "DejaVu Sans"})
 
-# measured-library control under the identical metric; final values
-MEAS = {"cosine": (30, 0.983), "derivative": (30, 0.981), "shift-tol": (30, 0.983),
-        "HQI 10": (28, 0.801), "HQI 20": (29, 0.835), "HQI 35": (29, 0.856),
-        "Dice 20": (28, 0.891), "Dice 35": (25, 0.898)}
-COMP = {"cosine": (17, 0.687), "derivative": (11, 0.356), "shift-tol": (19, 0.729),
-        "HQI 10": (5, 0.107), "HQI 20": (11, 0.216), "HQI 35": (11, 0.320),
-        "Dice 20": (7, 0.453), "Dice 35": (10, 0.613)}
-LBL = list(MEAS)
+# Both arms are read from the deposited output of v3_t118_metrics.py, which computes the
+# measured-library control under the identical code. Nothing on this figure is written in
+# by hand: the eight metrics below are those for which the measured arm is defined.
+SHORT = {"cosine, \u0393=22": "cosine",
+         "first-derivative cosine, \u0393=22": "derivative",
+         "shift-tolerant cosine \u00b13px, \u0393=22": "shift-tol",
+         "peak-list HQI, tol=10": "HQI 10", "peak-list HQI, tol=20": "HQI 20",
+         "peak-list HQI, tol=35": "HQI 35",
+         "band-position Dice, tol=20": "Dice 20", "band-position Dice, tol=35": "Dice 35"}
+_MT = pd.read_csv(f"{DATA}/v3_t118_metrics.csv")
+MEAS, COMP, LBL = {}, {}, []
+for _r in _MT.itertuples():
+    _k = SHORT.get(_r.metric)
+    if _k is None or pd.isna(_r.meas_mol):
+        continue
+    LBL.append(_k)
+    MEAS[_k] = (int(_r.meas_mol), float(_r.meas_self))
+    COMP[_k] = (int(_r.mol_closed), float(_r.self_mean))
 
 fig, ax = plt.subplots(2, 2, figsize=(15.5, 10.5))
 
@@ -62,7 +72,9 @@ for gi, (lab, sub, col) in enumerate(grp):
 c.axhline(0, color="0.3", lw=0.9)
 c.set_xticks(xx); c.set_xticklabels(names + ["all three"])
 c.set_ylabel("recovery in 600–850 cm$^{-1}$ cosine")
-c.set_ylim(-0.04, 0.23); c.legend(loc="upper left", frameon=False)
+_cmax = max(max([sub[k].mean() for k in comp] + [(sub.ALL - sub.BASE).mean()])
+            for _, sub, _ in grp)
+c.set_ylim(-0.04, _cmax * 1.22); c.legend(loc="upper left", frameon=False)
 c.set_title("(c) Linewidth contributes nothing; position dominates", loc="left", fontsize=14)
 
 # (d) unmatched intensity
