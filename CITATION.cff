@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+title: "ramanforge: measured versus computed Raman libraries for authentic chemical warfare agents"
+message: "If you use this software or data, please cite the accompanying article."
+type: dataset
+authors:
+  - family-names: Lee
+    given-names: Doo-Hee
+  - family-names: Lee
+    given-names: Seongchan
+  - family-names: Kim
+    given-names: Sungbong
+  - family-names: Jeong
+    given-names: Jinkwang
+  - family-names: Oh
+    given-names: Rosy
+  - family-names: Kim
+    given-names: Hyein
+  - family-names: Kang
+    given-names: Ku
+    email: bisu9082@gmail.com
+license: MIT

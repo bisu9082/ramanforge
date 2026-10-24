@@ -1,0 +1,9 @@
+{
+ "best_n": 16,
+ "best_s": 0.968,
+ "best_gamma": 46,
+ "n_cells": 3,
+ "n_total": 441,
+ "n_queries": 30,
+ "adopted_n": 13
+}

@@ -1,0 +1,21 @@
+parameter,value,cos_vs_default,within_class,between_class,separation
+AsLS lambda,1000.0,0.996,0.607,0.485,0.122
+AsLS lambda,3000.0,0.9987,0.614,0.489,0.125
+AsLS lambda,10000.0,1.0,0.619,0.496,0.123
+AsLS lambda,30000.0,0.9973,0.625,0.506,0.119
+AsLS lambda,100000.0,0.9863,0.636,0.522,0.113
+AsLS lambda,1000000.0,0.9666,0.642,0.539,0.104
+AsLS p,0.001,0.9821,0.659,0.559,0.1
+AsLS p,0.005,0.9984,0.631,0.516,0.115
+AsLS p,0.01,1.0,0.619,0.496,0.123
+AsLS p,0.02,0.9988,0.605,0.474,0.131
+AsLS p,0.05,0.9924,0.579,0.44,0.139
+fingerprint low,200.0,,0.616,0.496,0.12
+fingerprint low,250.0,,0.619,0.496,0.123
+fingerprint low,300.0,,0.625,0.497,0.128
+fingerprint low,400.0,,0.628,0.499,0.129
+fingerprint high,1600.0,,0.62,0.495,0.124
+fingerprint high,1700.0,,0.619,0.496,0.124
+fingerprint high,1800.0,,0.619,0.496,0.123
+normalisation,max,1.0,0.619,0.496,0.123
+normalisation,snv,0.8254,0.495,0.306,0.188
