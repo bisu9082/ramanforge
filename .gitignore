@@ -1,8 +1,10 @@
 __pycache__/
 *.pyc
-*.aux
-*.log
-*.out
-*.toc
-*.synctex.gz
 .DS_Store
+
+# LaTeX build artefacts (scoped to latex/ so that ORCA .out files are not caught)
+latex/**/*.aux
+latex/**/*.log
+latex/**/*.out
+latex/**/*.toc
+latex/**/*.synctex.gz

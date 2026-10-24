@@ -1,0 +1,54 @@
+nohup: ignoring input
+resume start Fri Jul 10 16:50:30 KST 2026  (총 39종)
+>>> OP_Et_iBu start Fri Jul 10 16:50:32 KST 2026
+>>> OP_Et_iBu done Fri Jul 10 18:58:46 KST 2026
+>>> OP_Et_sBu start Fri Jul 10 18:58:47 KST 2026
+>>> OP_Et_sBu done Fri Jul 10 21:07:43 KST 2026
+>>> OP_nPr_nPr start Fri Jul 10 21:07:44 KST 2026
+>>> OP_nPr_nPr done Fri Jul 10 23:28:11 KST 2026
+>>> OP_nPr_iPr start Fri Jul 10 23:28:12 KST 2026
+>>> OP_nPr_iPr done Sat Jul 11 01:59:09 KST 2026
+>>> OP_iPr_nPr start Sat Jul 11 01:59:10 KST 2026
+>>> OP_iPr_nPr done Sat Jul 11 04:01:07 KST 2026
+>>> OP_iPr_iPr start Sat Jul 11 04:01:08 KST 2026
+>>> OP_iPr_iPr done Sat Jul 11 06:07:25 KST 2026
+>>> OP_iBu_Et start Sat Jul 11 06:07:26 KST 2026
+>>> OP_iBu_Et done Sat Jul 11 08:16:12 KST 2026
+>>> OP_sBu_Et start Sat Jul 11 08:16:13 KST 2026
+>>> OP_sBu_Et done Sat Jul 11 10:21:14 KST 2026
+>>> OP_Me_cHx start Sat Jul 11 10:21:15 KST 2026
+>>> OP_Me_cHx done Sat Jul 11 13:12:56 KST 2026
+>>> OP_Et_cPn start Sat Jul 11 13:12:57 KST 2026
+>>> OP_Et_cPn done Sat Jul 11 15:55:37 KST 2026
+>>> OP_cPn_Et start Sat Jul 11 15:55:38 KST 2026
+>>> OP_cPn_Et done Sat Jul 11 18:41:13 KST 2026
+>>> OP_nPr_iBu start Sat Jul 11 18:41:14 KST 2026
+>>> OP_nPr_iBu done Sat Jul 11 22:21:26 KST 2026
+>>> OP_nPr_sBu start Sat Jul 11 22:21:27 KST 2026
+>>> OP_nPr_sBu done Sun Jul 12 03:52:21 KST 2026
+>>> OP_iPr_iBu start Sun Jul 12 03:52:22 KST 2026
+>>> OP_iPr_iBu done Sun Jul 12 10:31:07 KST 2026
+>>> OP_iPr_sBu start Sun Jul 12 10:31:08 KST 2026
+>>> OP_iPr_sBu done Sun Jul 12 18:30:42 KST 2026
+>>> OP_iBu_nPr start Sun Jul 12 18:30:43 KST 2026
+>>> OP_iBu_nPr done Mon Jul 13 00:54:19 KST 2026
+>>> OP_iBu_iPr start Mon Jul 13 00:54:20 KST 2026
+>>> OP_iBu_iPr done Mon Jul 13 07:16:45 KST 2026
+>>> OP_sBu_nPr start Mon Jul 13 07:16:46 KST 2026
+>>> OP_sBu_nPr done Mon Jul 13 13:41:24 KST 2026
+>>> OP_sBu_iPr start Mon Jul 13 13:41:28 KST 2026
+>>> OP_sBu_iPr done Mon Jul 13 19:10:36 KST 2026
+>>> OP_Et_cHx start Mon Jul 13 19:10:37 KST 2026
+>>> OP_Et_cHx done Tue Jul 14 02:36:50 KST 2026
+>>> OP_nPr_cPn start Tue Jul 14 02:36:51 KST 2026
+>>> OP_nPr_cPn done Tue Jul 14 06:54:40 KST 2026
+>>> OP_iPr_cPn start Tue Jul 14 06:54:41 KST 2026
+>>> OP_iPr_cPn done Tue Jul 14 12:05:39 KST 2026
+>>> OP_cPn_nPr start Tue Jul 14 12:05:40 KST 2026
+>>> OP_cPn_nPr done Tue Jul 14 17:12:57 KST 2026
+>>> OP_cPn_iPr start Tue Jul 14 17:12:58 KST 2026
+>>> OP_cPn_iPr done Tue Jul 14 23:51:09 KST 2026
+>>> OP_cHx_Et start Tue Jul 14 23:51:10 KST 2026
+>>> OP_cHx_Et done Wed Jul 15 06:36:50 KST 2026
+SUMMARY: 이미완료 14, 이번실행 25, 실패 0  Wed Jul 15 06:36:50 KST 2026
+ALL DONE Wed Jul 15 06:36:50 KST 2026

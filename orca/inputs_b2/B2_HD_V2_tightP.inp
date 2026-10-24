@@ -1,0 +1,29 @@
+# def2-TZVPP on P, F, S and Cl only: relieves the classic bottleneck for phosphorus frequencies (insufficient tight d functions).
+# Starting geometry: converged structure from EXP_HD.out
+! B3LYP 6-311++G(d,p) TightOpt NumFreq
+%pal nprocs 8 end
+%maxcore 1400
+%elprop Polar 1 end
+%basis
+  NewGTO P  "def2-TZVPP" end
+  NewGTO F  "def2-TZVPP" end
+  NewGTO S  "def2-TZVPP" end
+  NewGTO Cl "def2-TZVPP" end
+end
+* xyz 0 1
+  Cl     3.35371500     0.13931500    -1.44563900
+  C      2.24067600     0.20888000     0.00118800
+  C      1.15236700    -0.84524900    -0.10776600
+  S      0.00721600    -0.78694500     1.32857000
+  C     -1.14324600     0.54633700     0.80762500
+  C     -2.23974600     0.12920800    -0.16073800
+  Cl    -3.45832500    -0.97582100     0.60335600
+  H      1.83873500     1.22008400     0.02073700
+  H      2.86408100     0.05100200     0.87834600
+  H      0.58953700    -0.73884400    -1.03689900
+  H      1.58731400    -1.84578500    -0.10112400
+  H     -1.58144000     0.93485300     1.72852600
+  H     -0.56644100     1.35909100     0.35583900
+  H     -2.79735200     1.00348100    -0.49860200
+  H     -1.84709000    -0.39960700    -1.02810900
+*

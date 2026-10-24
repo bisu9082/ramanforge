@@ -44,7 +44,7 @@ submission to the OPCW Central Analytical Database, through which they are avail
 States Parties and designated laboratories. Everything needed to reproduce every number in
 the manuscript from the deposited preprocessed spectra is in this repository.
 
-ORCA output files (54 MB) are archived at the Zenodo DOI rather than here.
+ORCA inputs and outputs for all 57 computed structures are under `orca/` (62 MB).
 
 ## Reproducing the results
 
