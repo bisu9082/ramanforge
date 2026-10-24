@@ -7,6 +7,7 @@ from scipy.signal import find_peaks
 from scipy.optimize import least_squares
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+os.makedirs(os.path.join(ROOT, "figures"), exist_ok=True)
 sys.path.insert(0, ROOT)
 from src.rawio import load_all
 from src import preprocess_v3 as PP
@@ -341,9 +342,9 @@ def main():
     ax.legend(frameon=False, loc="upper left", fontsize=11)
     ax.text(-.11, 1.06, "f", transform=ax.transAxes, fontsize=26, fontweight="bold")
 
-    fig.savefig(os.path.join(ROOT, "figure", "v3_fig_preprocessing.png"),
+    fig.savefig(os.path.join(ROOT, "figures", "v3_fig_preprocessing.png"),
                 dpi=200, bbox_inches="tight")
-    print("\nsaved figure/v3_fig_preprocessing.png + data/v3_measured.npz, "
+    print("\nsaved figures/v3_fig_preprocessing.png + data/v3_measured.npz, "
           "v3_preproc_meta.json, v3_preproc_sensitivity.csv, v3_linewidths.csv")
 
 

@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+os.makedirs(os.path.join(ROOT, "figures"), exist_ok=True)
 sys.path.insert(0, ROOT)
 from src.calibrate import _cos
 from scripts.analysis_v2 import GRID, AGENTS, JOB, cls, label
@@ -139,7 +140,7 @@ def fig4():
     ax.legend(fontsize=LG - 1, loc="center right", frameon=True, framealpha=0.95, edgecolor="#CCC")
     clean(ax); panel(ax, "(f)", x=-0.16)
 
-    out = os.path.join(ROOT, "figure", "fig4_identification.png")
+    out = os.path.join(ROOT, "figures", "fig4_identification.png")
     fig.savefig(out, dpi=200, bbox_inches="tight", facecolor="white")
     plt.close(fig)
     print("fig4 ->", out)
@@ -215,7 +216,7 @@ def fig5():
     cb.set_label("cosine similarity", fontsize=AX - 4); cb.ax.tick_params(labelsize=TK - 2)
     ax.tick_params(labelsize=TK - 2); panel(ax, "(f)", x=-0.19, y=1.30)
 
-    out = os.path.join(ROOT, "figure", "fig5_failure_analysis.png")
+    out = os.path.join(ROOT, "figures", "fig5_failure_analysis.png")
     fig.savefig(out, dpi=200, bbox_inches="tight", facecolor="white")
     plt.close(fig)
     print("fig5 ->", out, "| failures:", {a: fails[a]["wrong"] for a in order})

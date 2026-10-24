@@ -80,7 +80,7 @@ def main(root: Path):
     status = "" if n_mol >= 40 else f"  (preliminary: {n_mol}/44 molecules)"
     fig.suptitle(f"Active-learning replay on OP-F Raman pool{status}",
                  fontsize=FS_LABEL, y=1.02)
-    out = root / "figure" / "al_learning_curve.png"
+    out = root / "figures" / "al_learning_curve.png"
     out.parent.mkdir(exist_ok=True)
     fig.savefig(out, dpi=200, bbox_inches="tight")
     print(f"[saved] {out}")

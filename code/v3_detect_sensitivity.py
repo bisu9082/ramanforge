@@ -16,17 +16,34 @@ sys.path.insert(0, ROOT); sys.path.insert(0, os.path.join(ROOT, "scripts"))
 from v3_step3_headtohead import load_measured, load_library, fit_scale, AGENTS, JOB, CUT
 
 PEN = 35.0
+def _noise_sd(X, spec):
+    """Noise estimate from the band-free window above 1600 cm-1."""
+    d = np.diff(spec[X > 1600.0])
+    return float(np.std(d)) / np.sqrt(2.0)
+
+
+def _noise_scaled(X, spec):
+    """Per-agent detection threshold: five times that spectrum's own noise, but never
+    looser than the adopted criterion. The measured spectra differ in noise by more than
+    an order of magnitude, so a single absolute prominence admits many more peaks from
+    the noisiest spectrum than from the quietest; this criterion removes that imbalance."""
+    return dict(prominence=max(0.05, 5.0 * _noise_sd(X, spec)), distance=2)
+
+
 MODES = [("prominence $>$ 0.05, separation 2 points", dict(prominence=0.05, distance=2)),
          ("height $>$ 0.10 and prominence $>$ 0.05, separation 4 points",
           dict(height=0.10, prominence=0.05, distance=4)),
-         ("height $>$ 0.12, separation 6 points", dict(height=0.12, distance=6))]
+         ("height $>$ 0.12, separation 6 points", dict(height=0.12, distance=6)),
+         ("prominence $>$ max(0.05, $5\\sigma$) per agent, separation 2 points", _noise_scaled)]
 
 X, acq = load_measured(); lib = load_library()
 mean = {a: np.mean([s for _, s in acq[a]], 0) for a in AGENTS}
 CAL = [a for a in AGENTS if a in JOB]
 rows = []
 for lab, kw in MODES:
-    mpk = {a: X[find_peaks(mean[a], **kw)[0]] for a in AGENTS}
+    mpk = {a: X[find_peaks(mean[a],
+                           **(kw(X, mean[a]) if callable(kw) else kw))[0]]
+           for a in AGENTS}
     _, SL, SH, _ = fit_scale(lib, mpk, CAL, min_pairs=20)
     for tol in (35.0, 20.0):
         d = []; nm = nc = npr = 0

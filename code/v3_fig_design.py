@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+os.makedirs(os.path.join(ROOT, "figures"), exist_ok=True)
 P = dict(warm_red="#C94F4A", amber="#E8943A", gold="#F0C040", teal="#4AACB0",
          dusty="#5B8DB8", brown="#8B6347", dark_teal="#2E7D7A", coral="#E8836A",
          sage="#7FAF6A", tan="#C9A882", rose="#B84040", pale_teal="#7DC4C4")
@@ -131,8 +132,8 @@ def main():
             color=P["dark_teal"], transform=ax.transAxes, linespacing=1.6)
 
     fig.suptitle("Two libraries, one comparison", fontsize=19, y=0.975)
-    fig.savefig(os.path.join(ROOT, "figure", "v3_fig_design.png"), dpi=200)
-    print("saved figure/v3_fig_design.png")
+    fig.savefig(os.path.join(ROOT, "figures", "v3_fig_design.png"), dpi=200)
+    print("saved figures/v3_fig_design.png")
 
 
 if __name__ == "__main__":

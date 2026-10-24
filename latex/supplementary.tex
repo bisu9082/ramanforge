@@ -723,7 +723,13 @@ tolerances.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{table}[htbp]
 \centering
-\caption{Sensitivity of the frequency calibration to the band-detection criterion and to the pairing tolerance. The criterion in the first row is the one used throughout this work.}
+\caption{Sensitivity of the frequency calibration to the band-detection criterion and
+to the pairing tolerance. The criterion in the first row is the one used throughout this
+work. The last criterion scales the threshold to each spectrum's own noise, because the
+measured spectra differ in noise by more than an order of magnitude and a single absolute
+prominence therefore admits many more peaks from the noisiest of them; it removes 57 of
+the 176 detected bands and gives the lowest penalized RMSE of the four, while leaving the
+scale factors where they are.}
 \label{tab:si-detect}
 \footnotesize
 \resizebox{\textwidth}{!}{%
@@ -737,11 +743,13 @@ height $>$ 0.10 and prominence $>$ 0.05, separation 4 points & 35 & 1.016 & 0.98
 height $>$ 0.10 and prominence $>$ 0.05, separation 4 points & 20 & 1.016 & 0.988 & 8.3 & 69 & 132 & 175 & 29.8 \\
 height $>$ 0.12, separation 6 points & 35 & 1.016 & 0.988 & 10.4 & 71 & 121 & 175 & 29.5 \\
 height $>$ 0.12, separation 6 points & 20 & 1.016 & 0.988 & 8.2 & 65 & 121 & 175 & 30.0 \\
+prominence $>$ max(0.05, $5\sigma$) per agent, separation 2 points & 35 & 1.016 & 0.990 & 9.9 & 72 & 119 & 175 & 29.3 \\
+prominence $>$ max(0.05, $5\sigma$) per agent, separation 2 points & 20 & 1.016 & 0.990 & 8.5 & 68 & 119 & 175 & 29.6 \\
 \bottomrule
 \end{tabular}
 }
 
-\begin{flushleft}\footnotesize The scale factors move by at most 0.2\% and the paired RMSE stays between 8.2 and 10.6\,\wn{} across all six combinations, so neither the detection threshold nor the tolerance drives the calibration. The penalized RMSE charges every unpaired band a fixed 35\,\wn{} so that the six cells remain comparable; it is stable near 30\,\wn{} and is the honest upper bound on the positional disagreement, the paired RMSE being the value over bands that found a partner.\end{flushleft}
+\begin{flushleft}\footnotesize The scale factors move by at most 0.2\% and the paired RMSE stays between 8.2 and 10.6\,\wn{} across all six combinations, so neither the detection threshold nor the tolerance drives the calibration. The penalised RMSE charges every unpaired band a fixed 35\,\wn{} so that the six cells remain comparable; it is stable near 30\,\wn{} and is the honest upper bound on the positional disagreement, the paired RMSE being the value over bands that found a partner.\end{flushleft}
 \end{table}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage
@@ -1841,13 +1849,14 @@ library.}
 \toprule
  & Scale held at (1.018, 0.988) & Scale refitted to (1.016, 0.990) \\
 \midrule
-Molecular top-1, closed set & 13/30 & 13/30 \\
+Molecular top-1, closed set & 16/30 & 13/30 \\
 Agents correct (majority) & 5/9 & 4/9 \\
 HN1 assignment & EXP\_HN1 (\checkmark) & EXP\_HN3 ($\times$) \\
 \bottomrule
 \end{tabular}
 
-\begin{flushleft}\footnotesize A 0.2\,\% change in the scale factors flips HN1, whose
+\begin{flushleft}\footnotesize A 0.2\,\% change in the scale factors moves the molecular
+total by three of thirty, flipping all three HN1 acquisitions, whose
 pre-correction margin was 0.022. The refitted values are the ones reported throughout,
 because the calibration procedure is defined before the identification is computed and is
 not permitted to depend on it.\end{flushleft}

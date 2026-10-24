@@ -27,6 +27,7 @@ from scipy.signal import find_peaks
 from scipy.optimize import nnls
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+os.makedirs(os.path.join(ROOT, "figures"), exist_ok=True)
 sys.path.insert(0, ROOT); sys.path.insert(0, os.path.join(ROOT, "scripts"))
 from v3_step3_headtohead import (load_measured, load_library, synth_native, fit_scale,
                                  measured_peaks, cos, cls_of, JOB, CLASS, AGENTS, GAMMA)
@@ -323,8 +324,8 @@ def main():
                         color=P["brown"])
     fig.suptitle("Abstention fails for the same reason identification fails",
                  fontsize=19, y=0.965)
-    fig.savefig(os.path.join(ROOT, "figure", "v3_fig_abstention.png"), dpi=200)
-    print("\nsaved figure/v3_fig_abstention.png + data/v3_abstention_*.csv")
+    fig.savefig(os.path.join(ROOT, "figures", "v3_fig_abstention.png"), dpi=200)
+    print("\nsaved figures/v3_fig_abstention.png + data/v3_abstention_*.csv")
 
 
 if __name__ == "__main__":

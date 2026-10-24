@@ -15,6 +15,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+os.makedirs(os.path.join(ROOT, "figures"), exist_ok=True)
 sys.path.insert(0, ROOT); sys.path.insert(0, os.path.join(ROOT, "scripts"))
 from v3_step3_headtohead import (load_measured, load_library, synth_native, cos,
                                  measured_peaks, position_rmse, scattering_factor,
@@ -218,9 +219,9 @@ def main():
 
     fig.suptitle("A calibration with no parameter fitted to identification",
                  fontsize=19, y=0.955)
-    out = os.path.join(ROOT, "figure", "v3_fig_calibration.png")
+    out = os.path.join(ROOT, "figures", "v3_fig_calibration.png")
     fig.savefig(out, dpi=200)
-    print("saved figure/v3_fig_calibration.png")
+    print("saved figures/v3_fig_calibration.png")
     print("  per-region optimum:", dict(zip(lab, [round(o, 3) for o in opt])))
 
 

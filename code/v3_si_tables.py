@@ -1,5 +1,5 @@
 """
-v3 SI table generator: replaces the v2 tables in latex/si/sitables/ entirely with v3 data.
+v3 SI table generator: replaces the v2 tables in latex/sitables/ entirely with v3 data.
 
 The v2 SI is based on the agent-average over 9 species (molecular 5/9, class 9/9), whereas the
 v3 main text is based on the 30 genuine acquisitions (measured 30/30, computed 14/30). Having
@@ -13,7 +13,7 @@ import numpy as np, pandas as pd
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(ROOT, "data")
-OUT = os.path.join(ROOT, "latex", "si", "sitables")
+OUT = os.path.join(ROOT, "latex", "sitables")
 os.makedirs(OUT, exist_ok=True)
 
 NICE = {"GD": "GD", "GF": "GF", "VX": "VX", "HD": "HD", "HN1": "HN1", "HN2": "HN2",

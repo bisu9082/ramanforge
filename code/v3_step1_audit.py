@@ -136,5 +136,5 @@ ax.set_xlabel("SNR"); ax.set_ylabel("bands $\\geq$10% of strongest band")
 ax.set_title("HN2 fails on spectral content, not on SNR", fontsize=16)
 ax.text(-.15,1.04,"f",transform=ax.transAxes,fontsize=26,fontweight="bold")
 
-fig.savefig(os.path.join(ROOT,"figure","v3_fig_raw_audit.png"), dpi=200, bbox_inches="tight")
-print("\nsaved figure/v3_fig_raw_audit.png")
+fig.savefig(os.path.join(ROOT,"figures","v3_fig_raw_audit.png"), dpi=200, bbox_inches="tight")
+print("\nsaved figures/v3_fig_raw_audit.png")

@@ -18,6 +18,7 @@ import matplotlib.pyplot as plt
 from scipy.signal import find_peaks
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+os.makedirs(os.path.join(ROOT, "figures"), exist_ok=True)
 sys.path.insert(0, ROOT)
 from src.spectra import parse_raman
 from src.preprocess_v3 import LASER_NM, TEMP_K
@@ -445,8 +446,8 @@ def main():
     ax.set_title("The deficit is specific to phosphorus", fontsize=15)
     ax.text(-0.26, 1.05, "f", transform=ax.transAxes, fontsize=26, fontweight="bold")
 
-    fig.savefig(os.path.join(ROOT, "figure", "v3_fig_headtohead.png"), dpi=200)
-    print("\nsaved figure/v3_fig_headtohead.png + data/v3_headtohead.csv, "
+    fig.savefig(os.path.join(ROOT, "figures", "v3_fig_headtohead.png"), dpi=200)
+    print("\nsaved figures/v3_fig_headtohead.png + data/v3_headtohead.csv, "
           "v3_nested_calibration.csv, v3_aseries_margins.csv, v3_headtohead_meta.json")
 
 

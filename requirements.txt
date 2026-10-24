@@ -1,0 +1,12 @@
+# Versions this analysis was last run and verified with (Python 3.13.16).
+# The identification outcome is sensitive to a 0.2 per cent change in the frequency
+# scale factors (Table S-calibsens), so the numerical environment is pinned rather
+# than left open.
+numpy==2.5.3
+scipy==1.18.1
+pandas==3.0.5
+matplotlib==3.11.2
+
+# Only v3_export_library.py needs this, to perceive the computed structures and write
+# computed_library/MANIFEST.csv. Every other script runs without it.
+rdkit==2026.9.1

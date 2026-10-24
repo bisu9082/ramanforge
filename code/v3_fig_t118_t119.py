@@ -4,6 +4,7 @@ import numpy as np, pandas as pd
 import matplotlib; matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+os.makedirs(os.path.join(ROOT, "figures"), exist_ok=True)
 DATA = os.path.join(ROOT, "data")
 P = dict(warm_red="#C94F4A", amber="#E8943A", teal="#4AACB0", dusty="#5B8DB8",
          brown="#8B6347", dark_teal="#2E7D7A", sage="#7FAF6A", rose="#B84040")
@@ -77,6 +78,6 @@ d.set_title("(d) The calculation adds bands the measurement does not show", loc=
 for A in ax.ravel():
     A.spines[["top", "right"]].set_visible(False)
 plt.tight_layout()
-out = os.path.join(ROOT, "figure", "v3_fig_metrics_decomp.png")
+out = os.path.join(ROOT, "figures", "v3_fig_metrics_decomp.png")
 plt.savefig(out, dpi=200, bbox_inches="tight")
 print("saved", out)

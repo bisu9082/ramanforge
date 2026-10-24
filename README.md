@@ -44,6 +44,14 @@ submission to the OPCW Central Analytical Database, through which they are avail
 States Parties and designated laboratories. Everything needed to reproduce every number in
 the manuscript from the deposited preprocessed spectra is in this repository.
 
+`computed_library/MANIFEST.csv` maps every entry to its ORCA input and output, its line
+list, an **isomeric** SMILES and an InChIKey perceived from the optimised geometry, and
+whether it is one of the 54 library members or a superseded structure. The isomeric SMILES
+is the authoritative structural record: the plain SMILES in Table S-library carries no
+E/Z descriptor, and Section S9 shows that the amidine configuration of A-232 is worth
+0.300 in the 600--850 cm-1 window, so a structure rebuilt from the plain SMILES will not
+reproduce this work.
+
 ORCA inputs and outputs for all 57 computed structures are under `orca/` (62 MB); see
 `orca/README.md` for what is there and why some of the working comments in the inputs are
 in Korean.

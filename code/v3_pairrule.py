@@ -9,7 +9,7 @@ agent-correction trials of Section S8 under both rules.
 Both columns are computed on the pre-correction library, so that the two rules are
 compared on identical inputs; run with RF_PRECORR=1, which this script sets for itself.
 
-Writes data/v3_pairrule.csv and latex/si/sitables/pairrule.tex.
+Writes data/v3_pairrule.csv and latex/sitables/pairrule.tex.
 """
 import os
 os.environ["RF_PRECORR"] = "1"          # must precede the import below
@@ -173,9 +173,9 @@ Section~\\ref{{si:ident}}. {diff}\\end{{flushleft}}
     import json
     LIBN = len(load_library())
     tex = tex.replace("pre-correction {}-member", f"pre-correction {LIBN}-member")
-    out = os.path.join(ROOT, "latex", "si", "sitables", "pairrule.tex")
+    out = os.path.join(ROOT, "latex", "sitables", "pairrule.tex")
     open(out, "w").write(tex)
-    print("saved latex/si/sitables/pairrule.tex")
+    print("saved latex/sitables/pairrule.tex")
 
 
 if __name__ == "__main__":

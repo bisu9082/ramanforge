@@ -1,0 +1,25 @@
+\begin{table}[htbp]
+\centering
+\caption{Sensitivity of the corrected library to the calibration. The two columns differ
+only in the frequency scale: the left holds it at the pre-correction values, the right
+refits it to the corrected library, a change of 0.2 per cent.}
+\label{tab:si-calibsens}
+\small
+\begin{tabular}{lcc}
+\toprule
+ & Scale held at (1.018, 0.988) & Scale refitted to (1.016, 0.990) \\
+\midrule
+Molecular top-1, closed set & 16/30 & 13/30 \\
+Agents correct (majority) & 5/9 & 4/9 \\
+HN1 assignment & EXP\_HN1 (\checkmark) & EXP\_HN3 ($\times$) \\
+\bottomrule
+\end{tabular}
+
+\begin{flushleft}\footnotesize A 0.2\,\% change in the scale factors moves the
+molecular total by 3 of 30 and flips all three HN1
+acquisitions, whose pre-correction margin was 0.022. The refitted values are the ones
+reported throughout, because the calibration procedure is defined before the
+identification is computed and is not permitted to depend on it. That the outcome of the
+computed library is not determined to the precision at which its calibration is
+determined is itself a result about the library.\end{flushleft}
+\end{table}

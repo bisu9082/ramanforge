@@ -8,3 +8,4 @@ latex/**/*.log
 latex/**/*.out
 latex/**/*.toc
 latex/**/*.synctex.gz
+figures/v3_fig_*.png

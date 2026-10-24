@@ -5,3 +5,5 @@ criterion,tol,s_low,s_high,rmse,n_pair,n_meas,n_calc,rmse_pen
 "height $>$ 0.10 and prominence $>$ 0.05, separation 4 points",20.0,1.016,0.988,8.305395902658447,69,132,175,29.8303742666817
 "height $>$ 0.12, separation 6 points",35.0,1.016,0.988,10.422987992161174,71,121,175,29.541936007168317
 "height $>$ 0.12, separation 6 points",20.0,1.016,0.988,8.227197830130292,65,121,175,29.9891496228758
+"prominence $>$ max(0.05, $5\sigma$) per agent, separation 2 points",35.0,1.016,0.99,9.94817963198847,72,119,175,29.322344277748385
+"prominence $>$ max(0.05, $5\sigma$) per agent, separation 2 points",20.0,1.016,0.99,8.488287332721065,68,119,175,29.632667745625305

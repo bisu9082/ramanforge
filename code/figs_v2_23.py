@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 from scipy.signal import find_peaks
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+os.makedirs(os.path.join(ROOT, "figures"), exist_ok=True)
 sys.path.insert(0, ROOT)
 from src.spectra import parse_raman
 from src.calibrate import _cos
@@ -129,7 +130,7 @@ def fig2():
     ax.set_ylim(0.956, 1.032)
     clean(ax); panel(ax, "(d)")
 
-    out = os.path.join(ROOT, "figure", "fig2_calibration.png")
+    out = os.path.join(ROOT, "figures", "fig2_calibration.png")
     fig.savefig(out, dpi=200, bbox_inches="tight", facecolor="white")
     plt.close(fig)
     print("fig2 ->", out, "| region optima:", [(o[0], o[1]) for o in opt])
@@ -212,7 +213,7 @@ def fig3():
               columnspacing=0.8, handlelength=1.1, bbox_to_anchor=(0.5, 1.02))
     clean(ax); panel(ax, "(l)", x=-0.16, y=1.14)
 
-    out = os.path.join(ROOT, "figure", "fig3_measured_vs_computed.png")
+    out = os.path.join(ROOT, "figures", "fig3_measured_vs_computed.png")
     fig.savefig(out, dpi=200, bbox_inches="tight", facecolor="white")
     plt.close(fig)
     print("fig3 ->", out)

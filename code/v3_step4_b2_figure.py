@@ -15,6 +15,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+os.makedirs(os.path.join(ROOT, "figures"), exist_ok=True)
 sys.path.insert(0, ROOT); sys.path.insert(0, os.path.join(ROOT, "scripts"))
 from src.spectra import parse_raman
 from v3_step3_headtohead import (load_measured, load_library, synth_native, fit_scale,
@@ -218,9 +219,9 @@ def main():
 
     fig.suptitle("No generalisable fix: the one apparent success does not transfer to its "
                  "nearest neighbour", fontsize=19, y=0.955)
-    out = os.path.join(ROOT, "figure", "v3_fig_b2.png")
+    out = os.path.join(ROOT, "figures", "v3_fig_b2.png")
     fig.savefig(out, dpi=200)
-    print("saved figure/v3_fig_b2.png")
+    print("saved figures/v3_fig_b2.png")
 
 
 if __name__ == "__main__":
