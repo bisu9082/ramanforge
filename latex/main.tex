@@ -141,7 +141,7 @@ Here we measure both sides of that question. We measured Raman spectra of eleven
 
 The calibration that bridges the two contains \textbf{no parameter fitted to identification}. Frequency scale factors are obtained by minimizing the difference between measured and computed band positions, an observable independent of the performance we report, and the condensed-phase linewidth is taken from the measured band widths. The activity-to-intensity conversion introduces no freedom at all. Every accuracy below is therefore an outcome of the calibration rather than a target of it.
 
-Under that calibration, computed and measured band positions agree to 10.4 \wn{} over 81 matched band pairs, approximately 1.8 pixels on the native measurement grid. Querying with thirty genuine acquisitions of nine agents, under an identical pipeline, grid and metric, the measured library assigns all thirty correctly at the molecular level and the computed library assigns thirteen. The similarity to the correct entry falls from 0.983 to 0.674 and the decision margin from 0.219 to 0.056, while mutual similarities among congeners are comparable in the two libraries: what the computed library lacks is accuracy on the correct molecule, not separation between candidates.
+Under that calibration, computed and measured band positions agree to 10.4 \wn{} over 81 matched band pairs, approximately 1.8 pixels on the native measurement grid. That residual is not an artifact of this instrument: of the thirty-one bands Kondo et al.\ report for authentic agents measured at the same excitation, twenty-two of the seven agents in common are reproduced here with a residual RMS of 5.5 \wn{}, below the 5.73 \wn{} sampling of the measurement (Section~S\ref{si:kondo}).\cite{kondo2018analysis} Querying with thirty genuine acquisitions of nine agents, under an identical pipeline, grid and metric, the measured library assigns all thirty correctly at the molecular level and the computed library assigns thirteen. The similarity to the correct entry falls from 0.983 to 0.674 and the decision margin from 0.219 to 0.056, while mutual similarities among congeners are comparable in the two libraries: what the computed library lacks is accuracy on the correct molecule, not separation between candidates.
 
 Three findings extend beyond the specific system. (i) The loss is localized instead of stochastic, and it is localized to phosphorus: it concentrates in the 600--850 \wn{} window, which carries 29\% of the measured intensity, and within that window the seven phosphorus-containing agents average 0.636 against 0.912 for the three that contain none, with the ordering reversed in every other window. Conformational sampling does not order it, since the most flexible agent is the best in that window and the most rigid the worst. (ii) The same deficit governs what the method can say about its own reliability. When the query's entire toxicological class is deleted from the library the workflow does not decline but assigns confidently, and no score we tested separates that condition from the one in which the answer is present; the identical procedure on a measured library succeeds with a single ordinary cosine threshold. Abstention therefore shares its cause with identification instead of forming a separate problem with a separate solution. (iii) Raising the level of theory does not repair it generally. Across ten agent--correction pairs spanning implicit solvation, a polarized triple-zeta basis on phosphorus and a range-separated functional, the assignment changes for one agent only: cyclosarin becomes correct under two independent corrections, while the same correction degrades the affected window for soman, its nearest structural neighbor, and for A-234. Both misassigned Novichok agents remain misassigned.
 
@@ -203,7 +203,7 @@ campaign, so $\Gamma$ should not be read as a condensed-phase linewidth.
 
 \subsection{Data quality criterion}
 
-A quality criterion was defined before the identification analysis: a measured spectrum was retained only if at least four bands reached 10\% of its strongest band in the 250--1800 \wn{} region. This is the criterion applied in the Supplementary Material, and it is the only criterion used. Ten of the eleven agents satisfied it, exhibiting 7 to 20 bands above that threshold. The HN2 measurement yielded a single band at that threshold and was excluded. Its spectrum also lacks the low-frequency structure present in every other nitrogen mustard. We do not claim to have established the cause: HN2 was acquired between successful HN3 and HN1 acquisitions three and two minutes away, which does not favor an instrumental explanation, and no assay of the material is available. (Its mean normalized intensity, 0.062 against 0.125--0.220, is not independent evidence: after min--max scaling that statistic is largely a restatement of the band count.) HN2 is nevertheless retained among the queries, so that both libraries face an identical query set; because its contents are not established, every headline figure in this work is reported both with and without it. The comparison that motivates the concern is given in the Results.
+A quality criterion was defined before the identification analysis: a measured spectrum was retained only if at least four bands reached 10\% of its strongest band in the 250--1800 \wn{} region. This is the criterion applied in the Supplementary Material, and it is the only criterion used. Ten of the eleven agents satisfied it, exhibiting 7 to 20 bands above that threshold. The HN2 measurement yielded a single band at that threshold and was excluded. Its spectrum also lacks the low-frequency structure present in every other nitrogen mustard. An instrumental explanation is not supported: HN2 was acquired between successful HN3 and HN1 acquisitions three and two minutes away. The comparison with published authentic-agent spectra settles the point. The vial reproduces none of the four bands Kondo et al.\ report for HN2, while the six other agents in common reproduce twenty-two of twenty-seven; its spectrum is dominated instead by a band at 994\,\wn{} with a weak partner at 1585\,\wn{}, the signature of a monosubstituted aromatic ring, which no nitrogen mustard carries as either the free base or the hydrochloride (Section~S\ref{si:kondo}).\cite{kondo2018analysis} The vial does not contain HN2; we have not established what it does contain. (Its mean normalized intensity, 0.062 against 0.125--0.220, is not independent evidence: after min--max scaling that statistic is largely a restatement of the band count.) HN2 is nevertheless retained among the queries, so that both libraries face an identical query set; because its contents are not established, every headline figure in this work is reported both with and without it. The comparison that motivates the concern is given in the Results.
 
 \subsection{Quantum-chemical calculations}
 
@@ -283,6 +283,21 @@ on that native axis: the computed spectra are brought down onto the measured gri
 the measurement is never interpolated onto a finer one. A band-position residual of
 10.4\,\wn{} is therefore approximately 1.8 pixels, and we read it as such.
 
+\textbf{The wavenumber axis agrees with an independent measurement of the same
+compounds.} No external wavenumber standard was run on this instrument. In its place we
+compare against the only published Raman measurements of authentic agents at this
+excitation: Kondo et al.\ report assigned band positions for twenty-two agents at
+785\,nm and 1064\,nm, from material synthesised in house and confirmed by nuclear
+magnetic resonance and gas chromatography--mass spectrometry above 98\%
+purity.\cite{kondo2018analysis} Seven of their agents are in this set. Of the thirty-one
+bands they report for those seven, twenty-two are reproduced here with a residual mean of
+$-0.9$\,\wn{} and an RMS of 5.5\,\wn{}, below the 5.73\,\wn{} sampling of this
+measurement and well inside the 15--18\,\wn{} resolution they quote at 1064\,nm
+(Section~S\ref{si:kondo}). The 10.4\,\wn{} measured-to-computed residual is therefore
+not an artifact of this instrument's calibration. One agent is the exception: HN2
+reproduces none of the four bands reported for it, which bears on the identity of that
+sample rather than on the axis, and is taken up in Section~S\ref{si:hn2}.
+
 \textbf{Exposure differs by more than two orders of magnitude between agents.} The
 per-file integration time, recorded by the instrument, ranges from 119 to 30\,000\,ms.
 It is a confounder between agents and we report it with every per-agent quantity rather
@@ -305,7 +320,7 @@ independently and meet only at the query: both are brought onto the same native
 parameter is fitted to identification. (b) The eleven authentic agents, colored by
 toxicological class, with the number of genuine acquisitions each provides. HD and VX
 yield one acquisition each and are retained in the libraries without being queried;
-the HN2 material is not what its label says. (c) Composition of
+the HN2 material is not what its label says, as the external comparison of Section~S\ref{si:kondo} establishes. (c) Composition of
 the two libraries.}
 \label{fig:design}
 \end{figure}
@@ -833,9 +848,10 @@ not been shown a negative is not yet an identification method.
 ranges are reported.\cite{witkiewicz2018analysis} All measurements are of neat material.
 
 \textbf{One sample is not what its label says.} The HN2 material gives a computed
-self-similarity of 0.057, and we report the identification results with and without it.
-No assay of the material is available and we do not claim to have established what the
-vial contains.
+self-similarity of 0.057, it reproduces none of the bands published for HN2 at this
+excitation, and its spectrum carries an aromatic signature that no nitrogen mustard has.
+We report the identification results with and without it. We have not established what
+the vial contains.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%  end results

@@ -1064,9 +1064,21 @@ Computed margin & 0.056 & 0.052 \\
 The three HN2 acquisitions are assigned to a Novichok agent at a similarity to their own
 computed entry of 0.057. A measured library identifies the HN2 vial correctly, because a
 replicate of that vial is in it; only the computed library can state that the material is
-not HN2. Those two results are simultaneously true only if the vial does not contain
-HN2. No assay of the material is available and we do not claim to have established what
-it contains; we report it as evidence about the sample rather than about the method.
+not the free base. Those two results are simultaneously true only if the vial does not
+contain the compound its label names.
+
+The external comparison of Section~\ref{si:kondo} settles the point without an assay.
+Kondo et al.\ report four assigned bands for HN2 at 1064\,\wn{} excitation: 729\,\wn{}
+(C--Cl), 664\,\wn{} (tertiary amine), 1448\,\wn{} (N--C) and 388\,\wn{}. The vial
+measured here reproduces none of them, while the six other agents in common reproduce
+twenty-two of twenty-seven (Table~\ref{tab:si-kondo}). Its spectrum is instead dominated
+by a single band at 994\,\wn{} carrying 80\% of the normalized intensity, with weak
+partners at 1176 and 1585\,\wn{}. A strong band near 1000\,\wn{} accompanied by one near
+1590\,\wn{} is the ring-breathing and ring-stretching signature of a monosubstituted
+aromatic ring, which no nitrogen mustard carries in either the free base or the
+hydrochloride, and which protonation of a tertiary amine does not create. The vial does
+not contain HN2. We have not established what it does contain, and we report this as
+evidence about the sample rather than about the method.
 
 \subsection{Where the computed library loses}
 
@@ -1887,6 +1899,114 @@ Different class & 332 & 0.469 \\
 
 \begin{flushleft}\footnotesize Computed on the 32 genuine acquisitions only; the derived copies present in the delivered files were excluded, which the previous version of this analysis did not do. Mann--Whitney: same agent against same class $p = 4.0e-18$, same class against different class $p = 3.8e-24$. The spectra are determined by the material rather than by the session. All acquisitions were taken within a single hour on one instrument, so day-to-day reproducibility remains untested.\end{flushleft}
 \end{table}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{External comparison with published authentic-agent spectra}
+\label{si:kondo}
+
+The measurements reported here were made in one laboratory on one instrument, and the
+frequency calibration of the computed library is fitted to them. An external reference is
+therefore worth more than any internal consistency check. Kondo et al.\ published Raman
+spectra of twenty-two authentic chemical warfare agents measured on a portable instrument
+at 785\,nm and at 1064\,nm, with material synthesised in house and confirmed by nuclear
+magnetic resonance and gas chromatography--mass spectrometry at a purity above
+98\% (Kondo et al., \textit{Forensic Sci. Int.} \textbf{291}, 23--38, 2018;
+\url{https://doi.org/10.1016/j.forsciint.2018.07.032}). Seven of their agents are in this set, and their 1064\,nm
+excitation is the one used here. To our knowledge this is the only independent measured
+reference for authentic agents at this excitation.
+
+Table~\ref{tab:si-kondo} and Figure~\ref{fig:si-kondo} give the comparison. Twenty-two of
+the thirty-one bands Kondo et al.\ report for the seven agents in common are reproduced
+here, with a residual mean of $-0.9$\,\wn{} and an RMS of 5.5\,\wn{}, which is below the
+5.73\,\wn{} sampling of this measurement and well inside the 15--18\,\wn{} resolution they
+quote at 1064\,nm.
+
+Two consequences follow. First, the wavenumber axis of this work agrees with an
+independent measurement of the same compounds to within one pixel, so the 10.4\,\wn{}
+residual between measurement and calculation reported in Section~\ref{si:calib} is not an
+artifact of this instrument's calibration. The attribution of that residual to the
+calculation does not rest on internal evidence alone. Second, HN2 is the only agent that
+reproduces none of the bands reported for it, while the six others reproduce twenty-two
+of twenty-seven. This is discussed in Section~\ref{si:hn2}.
+
+\begin{table}[htbp]
+\centering
+\caption{Measured band positions against those published by Kondo et al.\ for authentic
+agents at the same excitation (Kondo et al., Forensic Sci.\ Int.\ 291, 23--38, 2018).
+Their Table~1 reports assigned
+bands only, so the comparison is one-way: for each band they report we ask whether this
+work has a measured band at the same position, within the 18\,\wn{} resolution they quote
+for 1064\,nm. The absence of a partner is therefore not evidence of disagreement. Bands
+are those detected by the criterion of Section~\ref{si:preproc}.}
+\label{tab:si-kondo}
+\small
+\begin{tabular}{llrrrc}
+\toprule
+Agent & Kondo (\wn) & Assignment & This work (\wn) & Residual (\wn) & Reproduced \\
+\midrule
+GD & 727 & P & 727 & $-0.2$ & \checkmark \\
+ & 751 & P & 752 & $+0.8$ & \checkmark \\
+ & 513 & P-O & --- & --- & $\times$ \\
+ & 802 & alkyl & 801 & $-0.6$ & \checkmark \\
+\addlinespace
+GF & 753 & P & 752 & $-1.2$ & \checkmark \\
+ & 502 & P-O & 501 & $-1.4$ & \checkmark \\
+ & 792 & alkyl & 789 & $-2.9$ & \checkmark \\
+ & 1447 & alkyl & 1444 & $-2.8$ & \checkmark \\
+\addlinespace
+VX & 695 & P & 695 & $+0.2$ & \checkmark \\
+ & 742 & P & 739 & $-2.7$ & \checkmark \\
+ & 768 & P & --- & --- & $\times$ \\
+ & 500 & P-O & 501 & $+0.6$ & \checkmark \\
+ & 837 & alkyl & 838 & $+1.2$ & \checkmark \\
+ & 1455 & N-C & 1460 & $+4.6$ & \checkmark \\
+ & 667 & C-S & --- & --- & $\times$ \\
+\addlinespace
+HD & 698 & C-Cl & 702 & $+3.6$ & \checkmark \\
+ & 746 & C-Cl & 733 & $-13.0$ & \checkmark \\
+ & 648 & C-S & 644 & $-3.7$ & \checkmark \\
+ & 855 & alkyl & --- & --- & $\times$ \\
+ & 1428 & alkyl & 1439 & $+11.0$ & \checkmark \\
+\addlinespace
+HN1 & 721 & C-Cl & 720 & $-0.5$ & \checkmark \\
+ & 787 & C-N-C & 770 & $-16.5$ & \checkmark \\
+ & 1448 & N-C & 1449 & $+1.3$ & \checkmark \\
+ & 664 & tert-amine & 663 & $-0.5$ & \checkmark \\
+\addlinespace
+HN2 & 729 & C-Cl & --- & --- & $\times$ \\
+ & 1448 & N-C & --- & --- & $\times$ \\
+ & 388 & skeletal & --- & --- & $\times$ \\
+ & 664 & tert-amine & --- & --- & $\times$ \\
+\addlinespace
+HN3 & 722 & C-Cl & 720 & $-1.5$ & \checkmark \\
+ & 1440 & N-C & 1444 & $+4.2$ & \checkmark \\
+ & 805 & alkyl & --- & --- & $\times$ \\
+\bottomrule
+\end{tabular}
+
+\begin{flushleft}\footnotesize 22 of 31 reported bands are reproduced,
+with a residual mean of -0.9\,\wn{} and an RMS of 5.5\,\wn{},
+below the 5.73\,\wn{} sampling of this measurement; excluding the two residuals
+larger than 10\,\wn{} the RMS is 2.3\,\wn{}.
+Both large residuals have a stated cause. For HD, Kondo give the C--Cl band as 734\,\wn{}
+at 785\,nm and 746\,\wn{} at 1064\,nm and note in their text that the 734 and
+756\,\wn{} bands merge at 1064\,nm; the 733\,\wn{} band measured here resolves the
+lower of the pair. For HN1 their two excitations differ by 19\,\wn{} for the same band
+(768 and 787\,\wn{}), and the 770\,\wn{} measured here matches the former. HN2 is the
+only agent that reproduces none of the bands reported for it.\end{flushleft}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{kondo_comparison.png}
+\caption{Measured mean spectra with the band positions of Kondo et al.\ marked beneath
+each trace: blue where this work reproduces the band within 18\,\wn{}, orange where it
+does not. HN2, in orange, is the only agent that reproduces none
+of them.}
+\label{fig:si-kondo}
+\end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage
 

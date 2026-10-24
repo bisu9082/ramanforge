@@ -22,6 +22,7 @@ steps=(
   v3_geomwindow           # window-resolved effect of the geometry correction
   v3_calibsens            # sensitivity of the corrected library to the calibration
   v3_export_library       # computed_library/ line lists and MANIFEST.csv
+  v3_kondo_compare        # external comparison with Kondo et al. 2018
   v3_si_tables            # every SI table, into latex/sitables/
 )
 
