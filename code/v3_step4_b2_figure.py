@@ -1,12 +1,12 @@
 """
-v3 B2 — 최종 판정 figure (2026-09-24 전면 개정).
+v3 B2: final verdict figure (fully revised 2026-09-24).
 
-이전 버전은 GF 단독 결과("계산 라이브러리는 고칠 수 있다")를 그렸다.
-GD·A-230·A-234 결과가 그 결론을 반증했으므로 figure도 전면 교체한다.
+The previous version plotted the GF-only result ("the computed library can be fixed").
+The GD, A-230 and A-234 results refuted that conclusion, so the figure is replaced entirely as well.
 
-새 논지: 표준 보정 사다리를 5분자 × 3종 = 10건 시험했으나 일반화되는 수정은 없다.
-         유일한 성공(GF)은 메커니즘이 아니라, 한 방향 이동이 한 분자의 오차와
-         우연히 맞아떨어진 결과다.
+New claim: the standard calibration ladder was tested on 5 molecules × 3 variants = 10 cases,
+         but no correction generalizes. The single success (GF) is not a mechanism; it is a
+         shift in one direction that happened to coincide with the error of one molecule.
 """
 import os, sys
 import numpy as np, pandas as pd
@@ -48,7 +48,7 @@ def main():
     R = pd.read_csv(os.path.join(ROOT, "data", "v3_b2_evaluation.csv"))
     B = pd.read_csv(os.path.join(ROOT, "data", "v3_b2_bandshift.csv"))
 
-    # tight-P 스펙트럼 캐시
+    # cache of the tight-P spectra
     spec = {}
     for ag in TIGHTP:
         e = JOB[ag]
@@ -61,7 +61,7 @@ def main():
     gs = fig.add_gridspec(2, 3, hspace=0.46, wspace=0.46,
                           left=0.105, right=0.930, top=0.875, bottom=0.085)
 
-    # ---------- a : 10건 전체 판정 ----------
+    # ---------- a : verdict on all ten pairs ----------
     ax = fig.add_subplot(gs[0, 0])
     T = R.assign(delta=R["new_600–850"] - R["base_600–850"]).sort_values("delta")
     lbl = [f"{NICE[r.agent]}  {VNICE[r.variant]}" for r in T.itertuples()]
@@ -106,7 +106,7 @@ def main():
     spectra_panel(fig.add_subplot(gs[0, 1]), "GF", "b")
     spectra_panel(fig.add_subplot(gs[1, 1]), "GD", "e")
 
-    # ---------- c : 구간별 델타 히트맵 (tight-P 6종) ----------
+    # ---------- c : heat map of the per-region delta (the six tight-P cases) ----------
     ax = fig.add_subplot(gs[0, 2])
     M = np.zeros((len(TIGHTP), len(REG)))
     for i, ag in enumerate(TIGHTP):
@@ -132,7 +132,7 @@ def main():
     cb.ax.tick_params(labelsize=10.5)
     letter(ax, "c", -0.22)
 
-    # ---------- d : ★ 메커니즘 — 흩어진 오차 vs 한 방향 이동 ----------
+    # ---------- d : the mechanism, scattered error vs a one-directional shift ----------
     ax = fig.add_subplot(gs[1, 0])
     Bs = B.sort_values("err_base")
     y = np.arange(len(Bs))
@@ -170,7 +170,7 @@ def main():
               loc="lower right", handletextpad=0.4, borderaxespad=0.8)
     letter(ax, "d", -0.22)
 
-    # ---------- f : top-1 결과 ----------
+    # ---------- f : top-1 outcome ----------
     ax = fig.add_subplot(gs[1, 2]); ax.axis("off")
     ax.text(0.5, 1.06, "Open-set top-1 (53-member library)", ha="center",
             fontsize=15.5, transform=ax.transAxes)

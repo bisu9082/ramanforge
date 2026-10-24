@@ -1,0 +1,25 @@
+\begin{table}[htbp]
+\centering
+\caption{Data-quality criterion, applied before any identification was attempted. A measured spectrum is retained if at least four bands reach 10\% of its strongest band within 250--1800\,\wn{}.}
+\label{tab:si-quality}
+\small
+\begin{tabular}{lrrrrrl}
+\toprule
+Agent & Bands & $\geq$10\% & $\geq$20\% & SNR & Top-band share & Decision \\
+\midrule
+GD & 20 & 15 & 7 & 420 & 0.190 & retained \\
+GF & 22 & 15 & 9 & 491 & 0.210 & retained \\
+VX & 21 & 20 & 17 & 317 & 0.100 & retained \\
+HD & 7 & 7 & 7 & 36 & 0.280 & retained \\
+HN1 & 17 & 8 & 4 & 454 & 0.260 & retained \\
+HN2 & 8 & 1 & 1 & 643 & 0.810 & \textbf{excluded} \\
+HN3 & 7 & 7 & 6 & 88 & 0.260 & retained \\
+A-230 & 10 & 10 & 10 & 28 & 0.180 & retained \\
+A-232 & 18 & 16 & 8 & 302 & 0.170 & retained \\
+A-234 & 19 & 13 & 10 & 345 & 0.170 & retained \\
+A-242 & 15 & 13 & 11 & 153 & 0.180 & retained \\
+\bottomrule
+\end{tabular}
+
+\begin{flushleft}\footnotesize HN2 fails the criterion, and the reason is spectral content rather than acquisition quality: its signal-to-noise ratio is the highest of the eleven agents and its count rate the second highest. The previous version of this work attributed the exclusion to a poor measurement, which these figures do not support. Section~S6 gives the independent evidence from the computed library.\end{flushleft}
+\end{table}

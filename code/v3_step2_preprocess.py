@@ -1,4 +1,4 @@
-"""v3 STEP 2 — 전처리 사양 확정 + 민감도 + 실측 선폭(Γ) 측정."""
+"""v3 STEP 2: fix the preprocessing spec + sensitivity + measured linewidth (Γ)."""
 import os, sys, itertools, json, collections
 import numpy as np, pandas as pd
 import matplotlib; matplotlib.use("Agg")
@@ -24,7 +24,7 @@ CLASS = {"GD": "Nerve", "GF": "Nerve", "VX": "Nerve",
 
 
 def load_genuine():
-    R = load_all(os.path.join(ROOT, "data", "raw_files"))
+    R = load_all(os.path.join(ROOT, "data", "raw"))
     acq = []
     for r in R:
         m, d = r["meta"], r["df"]
@@ -38,7 +38,7 @@ def load_genuine():
 
 
 def cosmic_sets(acq, w=1, k=6.0):
-    """작용제별 복제본 합의로 우주선 픽셀 집합을 만든다. 부산물로 재현율도 반환."""
+    """Build the cosmic ray pixel set by per-agent replicate consensus; recall is returned as a by-product."""
     by = collections.defaultdict(list)
     for i, a in enumerate(acq):
         by[a["agent"]].append(i)
@@ -65,7 +65,7 @@ def multi_lorentz(x, centers, amps, gamma, offset):
 
 
 def fit_shared_gamma(x, y, sigma_rel, max_peaks=24):
-    """한 획득의 모든 검출 밴드에 공통 Γ 하나를 적합한다."""
+    """Fit one common Γ to all detected bands of a single acquisition."""
     pk, props = find_peaks(y, prominence=5 * sigma_rel, distance=2)
     if len(pk) < 3:
         return None
@@ -78,7 +78,7 @@ def fit_shared_gamma(x, y, sigma_rel, max_peaks=24):
 
     def resid(th):
         n = len(pk)
-        c = c0 + th[:n] * dx            # 중심은 +-1 픽셀만 허용
+        c = c0 + th[:n] * dx            # allow the centre to move by at most +-1 pixel
         a = th[n:2 * n]
         return multi_lorentz(x, c, a, abs(th[-2]), th[-1]) - y
 
@@ -99,50 +99,50 @@ def main():
     flags = cosmic_sets(acq)
     X0 = acq[0]["shift"]
     DEAD = PP.detect_dead_pixels(X0, [a["sub"] for a in acq])
-    print(f"진짜 획득 {len(acq)}건 / 11종\n")
-    print("S2b 불량 픽셀 (사전 규칙: 편차가 90% 이상 획득에서 음 & 50% 이상에서 |z|>6)")
+    print(f"true acquisitions {len(acq)} / 11 agents\n")
+    print("S2b bad pixels (prespecified rule: deviation negative in >=90% of acquisitions & |z|>6 in >=50%)")
     Z = np.stack([PP.pixel_z(X0, a["sub"]) for a in acq])
     for i in DEAD:
-        print(f"    픽셀 {i:>3}  {X0[i]:7.1f} cm-1   z 중앙값 {np.median(Z[:, i]):+6.1f}  "
-              f"|z|>6 인 획득 {int((np.abs(Z[:, i])>6).sum())}/{len(acq)}")
-    print("    → 813.7은 P–F 진단창(600–850) 상단, 1220.6은 1150–1400 창 내부에 있다.\n")
+        print(f"    pixel {i:>3}  {X0[i]:7.1f} cm-1   z median {np.median(Z[:, i]):+6.1f}  "
+              f"acquisitions with |z|>6 {int((np.abs(Z[:, i])>6).sum())}/{len(acq)}")
+    print("    → 813.7 is at the top of the P–F diagnostic window (600–850); 1220.6 lies inside the 1150–1400 window.\n")
 
-    # --- 우주선 진단 -------------------------------------------------
+    # --- cosmic-ray diagnosis ----------------------------------------
     nraw = sum(len(f["raw_flag"]) for f in flags)
     ncos = sum(len(f["cosmic"]) for f in flags)
     rep = []
     for f in flags:
         if f["n_rep"] > 1 and f["raw_flag"]:
             rep.append(1 - len(f["cosmic"]) / len(f["raw_flag"]))
-    print("S2 우주선 제거 — 복제본 합의")
-    print(f"  단일 스펙트럼 flag {nraw}건 중 독립 획득에서 재현되는 비율 "
-          f"{np.mean(rep)*100:.1f}%  → 실제 신호")
-    print(f"  비재현 = 우주선으로 판정 {ncos}건 "
-          f"(획득당 {ncos/len(acq):.1f}px, {ncos/(len(acq)*512)*100:.2f}%)")
+    print("S2 cosmic ray removal: replicate consensus")
+    print(f"  of {nraw} single-spectrum flags, fraction reproduced in independent acquisitions "
+          f"{np.mean(rep)*100:.1f}%  → real signal")
+    print(f"  not reproduced = judged cosmic ray, {ncos} cases "
+          f"({ncos/len(acq):.1f}px per acquisition, {ncos/(len(acq)*512)*100:.2f}%)")
     solo = [a["agent"] for a, f in zip(acq, flags) if f["n_rep"] == 1]
-    print(f"  ⚠️ 획득 1건이라 이 단계를 적용할 수 없는 작용제: {sorted(set(solo))}\n")
+    print(f"  ⚠️ agents with only 1 acquisition, this step cannot be applied: {sorted(set(solo))}\n")
 
-    # 여러 작용제에서 반복되는 픽셀 = 검출기 고정패턴 후보
+    # a pixel that recurs across several agents is a candidate detector fixed-pattern defect
     ap = collections.defaultdict(set)
     for a, f in zip(acq, flags):
         for px in f["raw_flag"]:
             ap[px].add(a["agent"])
     fixed = sorted([(px, len(v)) for px, v in ap.items() if len(v) >= 3], key=lambda t: -t[1])
     if fixed:
-        print("  3종 이상에서 같은 픽셀이 flag됨 (검출기 고정패턴 후보):")
+        print("  same pixel flagged in 3 or more agents (detector fixed-pattern candidates):")
         for px, n in fixed:
-            print(f"    픽셀 {px:>3}  {X0[px]:7.1f} cm-1  {n}종")
+            print(f"    pixel {px:>3}  {X0[px]:7.1f} cm-1  {n} agents")
     print()
 
-    # --- 전처리 ------------------------------------------------------
+    # --- preprocessing -----------------------------------------------
     proc = []
     for a, f in zip(acq, flags):
         r = PP.preprocess(a["shift"], a["sub"], a["int_time"], cosmic_px=f["cosmic"],
                           dead_px=DEAD)
         proc.append({**a, **r})
     X = proc[0]["shift"]
-    print(f"분석 격자: {len(X)} 픽셀, {X[0]:.1f}–{X[-1]:.1f} cm-1, "
-          f"간격 {np.diff(X).min():.2f}–{np.diff(X).max():.2f} (평균 {np.diff(X).mean():.2f})\n")
+    print(f"analysis grid: {len(X)} pixels, {X[0]:.1f}–{X[-1]:.1f} cm-1, "
+          f"spacing {np.diff(X).min():.2f}–{np.diff(X).max():.2f} (mean {np.diff(X).mean():.2f})\n")
 
     # --- Γ -----------------------------------------------------------
     grows = []
@@ -154,16 +154,16 @@ def main():
     W = pd.DataFrame(grows)
     W.to_csv(os.path.join(ROOT, "data", "v3_linewidths.csv"), index=False)
     GAMMA = float(np.round(W.gamma.median(), 0))
-    print(f"Γ — 획득별 공통 선폭 적합 ({len(W)}/{len(proc)}건, R2>0.8)")
+    print(f"Γ — common linewidth fit per acquisition ({len(W)}/{len(proc)} cases, R2>0.8)")
     print(f"  median {W.gamma.median():.1f}  IQR {W.gamma.quantile(.25):.1f}–"
           f"{W.gamma.quantile(.75):.1f}  range {W.gamma.min():.1f}–{W.gamma.max():.1f} cm-1")
-    print("  작용제별:")
+    print("  per agent:")
     print("   " + W.groupby("agent").agg(n=("rep", "size"), gamma=("gamma", "median"),
                                           bands=("n_bands", "median"), r2=("r2", "median")
                                           ).round(2).to_string().replace("\n", "\n   "))
-    print(f"  => Γ = {GAMMA:.0f} cm-1 로 고정 (실측 스펙트럼에서만 적합, 식별 성능 미사용)\n")
+    print(f"  => Γ = {GAMMA:.0f} cm-1 fixed (fitted on measured spectra only, identification performance not used)\n")
 
-    # --- 민감도 ------------------------------------------------------
+    # --- sensitivity -------------------------------------------------
     def spec_for(**kw):
         norm = kw.pop("norm", "max")
         out = {}
@@ -189,7 +189,7 @@ def main():
             [("AsLS p", "p", v) for v in [0.001, 0.005, 0.01, 0.02, 0.05]] +
             [("fingerprint low", "lo", v) for v in [200.0, 250.0, 300.0, 400.0]] +
             [("fingerprint high", "hi", v) for v in [1600.0, 1700.0, 1800.0]] +
-            [("normalisation", "norm", v) for v in ["max", "snv"]])
+            [("normalization", "norm", v) for v in ["max", "snv"]])
     for label, key, val in grid:
         kw = {}
         if key == "lam": kw["lam"] = val
@@ -207,15 +207,15 @@ def main():
                          separation=round(wi - bw, 3)))
     S = pd.DataFrame(sens)
     S.to_csv(os.path.join(ROOT, "data", "v3_preproc_sensitivity.csv"), index=False)
-    print("전처리 민감도 (작용제-평균 스펙트럼):")
+    print("Preprocessing sensitivity (agent-mean spectra):")
     print(S.to_string(index=False))
 
     wi0, bw0 = sep(base)
-    print(f"\n기본 사양 클래스 분리 (11종 평균): within {wi0:.3f}  between {bw0:.3f}  Δ {wi0-bw0:.3f}")
-    comp = {"11종 전부": AGENTS,
-            "HN2 제외 (10종)": [a for a in AGENTS if a != "HN2"],
-            "HN2·VX 제외 (9종 = v2 구성)": [a for a in AGENTS if a not in ("HN2", "VX")],
-            "HN2·HD·VX 제외 (8종, n>=3)": [a for a in AGENTS if a not in ("HN2", "HD", "VX")]}
+    print(f"\nclass separation, default settings (mean over 11 agents): within {wi0:.3f}  between {bw0:.3f}  Δ {wi0-bw0:.3f}")
+    comp = {"all 11 agents": AGENTS,
+            "HN2 excluded (10 agents)": [a for a in AGENTS if a != "HN2"],
+            "HN2, VX excluded (9 agents = v2 configuration)": [a for a in AGENTS if a not in ("HN2", "VX")],
+            "HN2, HD, VX excluded (8 agents, n>=3)": [a for a in AGENTS if a not in ("HN2", "HD", "VX")]}
     for name, ks in comp.items():
         w_, b_ = sep({k: base[k] for k in ks})
         print(f"   {name:<30} within {w_:.3f}  between {b_:.3f}  Δ {w_-b_:.3f}")
@@ -227,10 +227,10 @@ def main():
            if a1 != a2 and CLASS[a1] == CLASS[a2]]
     bcl = [cos(u, v) for (a1, u), (a2, v) in itertools.combinations(pairs, 2)
            if CLASS[a1] != CLASS[a2]]
-    print(f"\n획득 단위(32건, 증강본 0):")
-    print(f"   같은 작용제 다른 획득 {np.mean(same):.3f} (n={len(same)})")
-    print(f"   같은 클래스 다른 작용제 {np.mean(wcl):.3f} (n={len(wcl)})")
-    print(f"   다른 클래스           {np.mean(bcl):.3f} (n={len(bcl)})")
+    print(f"\nper acquisition (32 cases, 0 augmented):")
+    print(f"   same agent, different acquisition {np.mean(same):.3f} (n={len(same)})")
+    print(f"   same class, different agent       {np.mean(wcl):.3f} (n={len(wcl)})")
+    print(f"   different class                   {np.mean(bcl):.3f} (n={len(bcl)})")
     print(f"   MWU same-agent vs same-class p={mannwhitneyu(same, wcl).pvalue:.1e}; "
           f"same-class vs diff-class p={mannwhitneyu(wcl, bcl).pvalue:.1e}")
     acqsep = dict(same_agent=float(np.mean(same)), same_class=float(np.mean(wcl)),
@@ -238,7 +238,7 @@ def main():
                   p_same_vs_class=float(mannwhitneyu(same, wcl).pvalue),
                   p_class_vs_diff=float(mannwhitneyu(wcl, bcl).pvalue))
 
-    # --- 저장 --------------------------------------------------------
+    # --- save ----------------------------------------------------------
     np.savez(os.path.join(ROOT, "data", "v3_measured.npz"),
              shift=X, agents=np.array(AGENTS),
              **{f"mean_{k}": v for k, v in base.items()},
@@ -273,7 +273,7 @@ def main():
             ls="--", label="S4 AsLS background")
     ax.plot(q["shift"], q["corrected"] / q["corrected"].max() * .55 - .70,
             color=P["dark_teal"], lw=1.6, label="S4 output (offset)")
-    ax.set_xlabel("Raman shift (cm$^{-1}$)"); ax.set_ylabel("normalised counts")
+    ax.set_xlabel("Raman shift (cm$^{-1}$)"); ax.set_ylabel("normalized counts")
     for i in DEAD:
         ax.axvline(X0[i], color=P["gold"], lw=1.2, alpha=.9)
     ax.set_title("GF: pipeline stages\n(gold = masked dead pixels)", fontsize=15, pad=8)
@@ -318,7 +318,7 @@ def main():
 
     ax = fig.add_subplot(gs[1, 1])
     D = S.dropna(subset=["cos_vs_default"])
-    cmap = {"AsLS lambda": P["dark_teal"], "AsLS p": P["amber"], "normalisation": P["sage"]}
+    cmap = {"AsLS lambda": P["dark_teal"], "AsLS p": P["amber"], "normalization": P["sage"]}
     labs = [f"{r.parameter.split()[-1]}={r.value}" for _, r in D.iterrows()]
     ax.barh(range(len(D)), D.cos_vs_default, color=[cmap.get(p, P["tan"]) for p in D.parameter])
     ax.set_yticks(range(len(D))); ax.set_yticklabels(labs, fontsize=10)

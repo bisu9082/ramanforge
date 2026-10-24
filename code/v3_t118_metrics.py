@@ -1,12 +1,13 @@
 """
-T1-18 — 지표 비교. 동일 쿼리·동일 라이브러리·동일 전처리에서 '지표'만 바꾼다.
+T1-18: metric comparison. Only the 'metric' is changed, with the same query, the same library and the same preprocessing.
 
-심사 지적(R2-M11, R3-M10): full-profile 코사인은 Γ=22 격자에서 위치 잔차 0.6Γ
-구간에 있어 위치 오차에 최대로 민감하다. 따라서 보고된 결손이 '계산의 부정확'인지
-'지표의 부적합'인지 구별되지 않는다. band-match fraction이 in-library 조건에서
-0.833이라는 저자 자신의 수치가 후자를 시사한다.
+Reviewer comment (R2-M11, R3-M10): on the Γ=22 grid the full-profile cosine lies in the
+regime of position residuals around 0.6Γ, where it is maximally sensitive to position error.
+The reported deficit therefore cannot be separated into 'inaccuracy of the computation'
+versus 'unsuitability of the metric'. The authors' own value of 0.833 for the band-match
+fraction under the in-library condition suggests the latter.
 
-공정성: 측정·계산 양쪽 모두 **동일한 피크 검출기**를 동일 native 격자에서 통과시킨다.
+Fairness: both the measured and the computed side are passed through the **same peak detector** on the same native grid.
 """
 import os, sys, json, collections
 import numpy as np, pandas as pd
@@ -20,15 +21,15 @@ from v3_step3_headtohead import (load_measured, load_library, measured_peaks, fi
 
 DATA = os.path.join(ROOT, "data")
 
-# ─────────────────────────────── 지표 정의
+# ------------------------------- definitions of the metrics
 def peaklist(spec, X, prom=0.05):
     pk, _ = find_peaks(spec, prominence=prom, distance=2)
     return X[pk], spec[pk]
 
 def hqi(qp, qa, lp, la, tol):
-    """대칭 피크리스트 hit-quality. 1대1 할당 + 위치 벌점 + 강도 가중.
+    """Symmetric peak list hit quality. One-to-one assignment + position penalty + intensity weighting.
        S = Σ min(a,b)·(1−|Δ|/tol) / max(Σa, Σb)   ∈ [0,1]
-       짝 없는 쿼리 피크와 여분의 라이브러리 피크를 모두 벌점한다."""
+       Both unmatched query peaks and surplus library peaks are penalized."""
     if not len(qp) or not len(lp): return 0.0
     C = np.abs(qp[:, None] - lp[None, :])
     C = np.where(C > tol, 1e6, C)
@@ -40,7 +41,7 @@ def hqi(qp, qa, lp, la, tol):
     return float(num / max(qa.sum(), la.sum()))
 
 def dice(qp, lp, tol):
-    """강도를 배제한 순수 밴드 위치 일치 (Dice). 위치만의 기여를 본다."""
+    """Pure band position agreement with intensity excluded (Dice). Shows the position-only contribution."""
     if not len(qp) or not len(lp): return 0.0
     C = np.abs(qp[:, None] - lp[None, :])
     C = np.where(C > tol, 1e6, C)
@@ -49,12 +50,12 @@ def dice(qp, lp, tol):
     return float(2 * m / (len(qp) + len(lp)))
 
 def dcos(u, v, w=7):
-    """1차 미분 코사인. 완만한 배경·포락선 차이를 제거하고 밴드 구조만 비교."""
+    """First-derivative cosine: removes gentle differences in background and envelope and compares band structure alone."""
     du = savgol_filter(u, w, 2, deriv=1); dv = savgol_filter(v, w, 2, deriv=1)
     return cos(du, dv)
 
 def shiftcos(u, v, maxpx=3):
-    """±maxpx 픽셀 정렬 허용 코사인 (≈±17 cm-1). 계통적 위치 오차를 흡수시킨다."""
+    """Cosine allowing ±maxpx pixel alignment (≈±17 cm-1). Absorbs systematic position error."""
     best = -1.0
     for k in range(-maxpx, maxpx + 1):
         vv = np.roll(v, k)
@@ -70,22 +71,22 @@ def main():
     mpk = {a: measured_peaks(X, mean[a]) for a in AGENTS}
     calib = [a for a in AGENTS if a in JOB]
     _, SL, SH, _ = fit_scale(lib, mpk, calib)
-    print(f"[보정] s=({SL:.3f}, {SH:.3f})  Γ_base={GAMMA:.0f}\n")
+    print(f"[calibration] s=({SL:.3f}, {SH:.3f})  Γ_base={GAMMA:.0f}\n")
 
-    # 작용제별 실측 선폭 (Table S7) — 없으면 중앙값
+    # measured linewidth per agent (Table S7); the median where none is available
     LW = pd.read_csv(f"{DATA}/v3_linewidths.csv")
     gcol = [c for c in LW.columns if "gamma" in c.lower() or c.lower() in ("g", "width", "fwhm")][0]
     gmed = float(LW[gcol].median())
     gper = LW.groupby("agent")[gcol].mean().to_dict()
-    print(f"작용제별 실측 Γ: " + ", ".join(f"{k} {v:.1f}" for k, v in sorted(gper.items())))
-    print(f"중앙값 {gmed:.1f}\n")
+    print(f"measured Γ per agent: " + ", ".join(f"{k} {v:.1f}" for k, v in sorted(gper.items())))
+    print(f"median {gmed:.1f}\n")
 
     JOB2AG = {j: a for a, j in JOB.items()}
     def gamma_for(job):
         a = JOB2AG.get(job)
         return float(gper.get(a, gmed)) if a else gmed
 
-    # 계산 라이브러리: Γ 시나리오별 합성
+    # computed library: synthesised under each Gamma scenario
     scen = {"G22": {k: synth_native(v, X, SL, SH, 22.0) for k, v in lib.items()},
             "G30": {k: synth_native(v, X, SL, SH, 30.0) for k, v in lib.items()},
             "G40": {k: synth_native(v, X, SL, SH, 40.0) for k, v in lib.items()},
@@ -95,21 +96,21 @@ def main():
     core = [JOB[a] for a in AGENTS if a in JOB]
     queryable = [a for a in AGENTS if len(acq[a]) >= 2]
     queries = [(a, r, s) for a in queryable for r, s in acq[a]]
-    print(f"쿼리 {len(queries)}건 / {len(queryable)}종\n")
+    print(f"queries {len(queries)} / {len(queryable)} agents\n")
 
-    # 피크리스트 사전계산 (라이브러리)
+    # precomputed peak lists for the library
     PLK = {sk: {k: peaklist(v, X) for k, v in sp.items()} for sk, sp in scen.items()}
 
     METRICS = []   # (label, kind, param)
     for sk in ["G22", "G30", "G40", "G50", "Gper"]:
         METRICS.append((f"cosine, Γ={sk[1:] if sk!='Gper' else 'per-agent'}", "cos", sk))
-    METRICS += [("1차 미분 코사인, Γ=22", "dcos", "G22"),
-                ("±3px 이동허용 코사인, Γ=22", "shift", "G22"),
-                ("피크리스트 HQI, tol=10", "hqi10", "G22"),
-                ("피크리스트 HQI, tol=20", "hqi20", "G22"),
-                ("피크리스트 HQI, tol=35", "hqi35", "G22"),
-                ("밴드위치 Dice, tol=20", "dice20", "G22"),
-                ("밴드위치 Dice, tol=35", "dice35", "G22")]
+    METRICS += [("first-derivative cosine, Γ=22", "dcos", "G22"),
+                ("shift-tolerant cosine ±3px, Γ=22", "shift", "G22"),
+                ("peak-list HQI, tol=10", "hqi10", "G22"),
+                ("peak-list HQI, tol=20", "hqi20", "G22"),
+                ("peak-list HQI, tol=35", "hqi35", "G22"),
+                ("band-position Dice, tol=20", "dice20", "G22"),
+                ("band-position Dice, tol=35", "dice35", "G22")]
 
     out = []
     for label, kind, sk in METRICS:
@@ -151,17 +152,17 @@ def main():
                         mol_closed=nmol, mol_open=nmol53, cls_closed=ncls, cls_open=ncls53,
                         n=N, agent_closed=agent_ok, n_agents=len(per),
                         self_mean=float(np.nanmean(selfs)), margin_mean=float(np.nanmean(margs))))
-        print(f"{label:<34} 분자 {nmol:2d}/{N}  (53종 {nmol53:2d}/{N})  "
-              f"클래스 {ncls:2d}/{N}  작용제단위 {agent_ok}/{len(per)}  "
-              f"자기 {np.nanmean(selfs):.3f}  마진 {np.nanmean(margs):.3f}")
+        print(f"{label:<34} molecule {nmol:2d}/{N}  (53 agents {nmol53:2d}/{N})  "
+              f"class {ncls:2d}/{N}  per agent {agent_ok}/{len(per)}  "
+              f"self {np.nanmean(selfs):.3f}  margin {np.nanmean(margs):.3f}")
 
     D = pd.DataFrame(out)
     D.to_csv(f"{DATA}/v3_t118_metrics.csv", index=False)
     print(f"\nsaved data/v3_t118_metrics.csv")
     base = D[D.metric.str.startswith("cosine, Γ=22")].iloc[0]
     best = D.loc[D.mol_closed.idxmax()]
-    print(f"\n기준선 (cosine Γ=22): 분자 {base.mol_closed}/{base.n}, 작용제단위 {base.agent_closed}/{base.n_agents}")
-    print(f"최고    ({best.metric}): 분자 {best.mol_closed}/{best.n}, 작용제단위 {best.agent_closed}/{best.n_agents}")
+    print(f"\nbaseline (cosine Γ=22): molecule {base.mol_closed}/{base.n}, per agent {base.agent_closed}/{base.n_agents}")
+    print(f"best     ({best.metric}): molecule {best.mol_closed}/{best.n}, per agent {best.agent_closed}/{best.n_agents}")
 
 if __name__ == "__main__":
     main()

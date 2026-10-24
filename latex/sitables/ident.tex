@@ -1,0 +1,26 @@
+\begin{table}[htbp]
+\centering
+\caption{Identification of the same thirty genuine acquisitions against a measured and against a computed library, under identical preprocessing, an identical native grid and an identical cosine metric. The query acquisition is never present in the library it is matched against.}
+\label{tab:si-ident}
+\footnotesize
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrrrrr}
+\toprule
+Agent & $n$ & Measured mol. & Self cos. & Computed mol. & Self cos. & Computed class & 54-member mol. \\
+\midrule
+GD & 4 & 4/4 & 0.999 & 4/4 & 0.853 & 4/4 & 4/4 \\
+GF & 3 & 3/3 & 1.000 & 0/3 & 0.517 & 3/3 & 0/3 \\
+HN1 & 3 & 3/3 & 1.000 & 0/3 & 0.831 & 3/3 & 0/3 \\
+HN2 & 3 & 3/3 & 1.000 & 0/3 & 0.057 & 0/3 & 0/3 \\
+HN3 & 3 & 3/3 & 0.999 & 3/3 & 0.830 & 3/3 & 3/3 \\
+A-230 & 3 & 3/3 & 0.970 & 3/3 & 0.801 & 3/3 & 3/3 \\
+A-232 & 3 & 3/3 & 1.000 & 0/3 & 0.652 & 3/3 & 0/3 \\
+A-234 & 5 & 5/5 & 0.941 & 0/5 & 0.722 & 3/5 & 0/5 \\
+A-242 & 3 & 3/3 & 0.958 & 3/3 & 0.706 & 3/3 & 3/3 \\
+\textbf{All} & \textbf{30} & \textbf{30/30} & \textbf{0.983} & \textbf{13/30} & \textbf{0.674} & \textbf{25/30} & \textbf{13/30} \\
+\bottomrule
+\end{tabular}
+}
+
+\begin{flushleft}\footnotesize HD and VX have a single genuine acquisition each and are retained in both libraries but not queried. The three HN2 queries fail against the computed library at a self-similarity of 0.057; Section~S6 treats that as evidence about the sample.\end{flushleft}
+\end{table}

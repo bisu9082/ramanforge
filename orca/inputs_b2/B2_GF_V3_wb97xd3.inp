@@ -1,5 +1,5 @@
-# Dispersion-corrected, range-separated functional, the escalation flagged as future work by Kim 2026.
-# Starting geometry: converged structure from GF_cyclosarin.out
+# Kim 2026이 future work로 예고한 분산·장거리 보정 범함수.
+# 출발 기하: GF_cyclosarin.out 수렴 구조
 ! wB97X-D3 6-311++G(d,p) TightOpt NumFreq
 %pal nprocs 8 end
 %maxcore 1400

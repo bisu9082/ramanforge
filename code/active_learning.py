@@ -1,20 +1,20 @@
 """
-active_learning.py — pool-based Active Learning으로 ORCA(oracle)를 구동하는 메인 루프.
+active_learning.py: the main loop driving ORCA (the oracle) by pool-based Active Learning.
 
-흐름 (라운드 반복):
-  1) pool 구조를 값싼 피처로 표현 (featurize)
-  2) 이미 계산된 labeled 집합으로 GPR surrogate 학습
-       입력=피처, 출력=진단 밴드 위치(P=O/P-F/C=N/...)  [config.target_mode]
-  3) acquisition: GPR 예측분산(uncertainty) + 배치 다양성(diversity)로
-     다음에 ORCA로 계산할 batch_size개 구조 선택
-  4) oracle: 선택 구조를 ORCA opt+freq+Raman 계산 → 스펙트럼 파싱 → labeled에 추가
-  5) 학습곡선(누적 DFT 호출수 vs surrogate RMSE) 기록 → al_state 저장
+Flow (repeated every round):
+  1) represent the pool structures with cheap features (featurize)
+  2) train the GPR surrogate on the already computed labeled set
+       input=features, output=diagnostic band positions (P=O/P-F/C=N/...)  [config.target_mode]
+  3) acquisition: from the GPR predictive variance (uncertainty) plus batch diversity,
+     select batch_size structures to be computed next with ORCA
+  4) oracle: run ORCA opt+freq+Raman on the selected structures → parse the spectra → add to labeled
+  5) record the learning curve (cumulative number of DFT calls vs surrogate RMSE) → save al_state
 
-핵심 측정: "전수계산 대비 몇 번의 DFT 호출로 목표 정확도 도달하는가" (노블티 정량화).
+Key measurement: "how many DFT calls are needed to reach the target accuracy, relative to exhaustive computation" (quantification of the novelty).
 
-oracle 모드:
-  --oracle orca : 실제 ORCA 실행 (Ku 로컬)
-  --oracle mock : 샌드박스 로직 검증용 (합성 함수, ORCA 불필요)
+oracle modes:
+  --oracle orca : run the real ORCA (local to Ku)
+  --oracle mock : for sandbox logic checks (synthetic function, no ORCA required)
 """
 from __future__ import annotations
 import argparse, os, json, csv, sys
@@ -29,7 +29,7 @@ import featurize as F
 import spectrum as S
 
 
-# ---------------------------- 데이터 로드 ----------------------------
+# ------------------------------ load data ------------------------------
 def load_cfg(path: str) -> dict:
     with open(path) as f:
         return yaml.safe_load(f)
@@ -59,7 +59,7 @@ def build_gpr():
 
 
 class Surrogate:
-    """타깃별 GPR (uncertainty 제공). 피처는 PCA로 축소."""
+    """Per-target GPR (provides uncertainty). Features reduced by PCA."""
     def __init__(self, targets, n_pca=25, seed=42):
         self.targets = targets
         self.scaler = StandardScaler()
@@ -85,22 +85,22 @@ class Surrogate:
                 mu, sd = self.models[t].predict(Xr, return_std=True)
                 mean[:, j], std[:, j] = mu, sd
             except Exception:
-                std[:, j] = 1e3   # 미학습 타깃 → 높은 불확실성
+                std[:, j] = 1e3   # target never trained on -> high uncertainty
         return mean, std
 
 
 # ---------------------------- acquisition ----------------------------
 def select_batch(std, Xr, k, kappa, div_lambda, mode):
-    """불확실성(평균 std) + 다양성(선택배치 내 유사도 페널티) 그리디 선택."""
+    """Greedy selection by uncertainty (mean std) + diversity (similarity penalty within the selected batch)."""
     n = std.shape[0]
-    unc = std.mean(axis=1)                      # 후보별 평균 불확실성
+    unc = std.mean(axis=1)                      # mean uncertainty per candidate
     if mode == "random":
         rng = np.random.default_rng(0)
         return list(rng.choice(n, size=min(k, n), replace=False))
     if mode == "uncertainty":
         return list(np.argsort(-unc)[:k])
 
-    # ucb_diversity / diversity: 그리디
+    # ucb_diversity / diversity: greedy
     Xn = Xr / (np.linalg.norm(Xr, axis=1, keepdims=True) + 1e-9)
     chosen, avail = [], list(range(n))
     score = kappa * unc if mode != "diversity" else np.zeros(n)
@@ -111,14 +111,14 @@ def select_batch(std, Xr, k, kappa, div_lambda, mode):
         avail.remove(i)
         if not avail:
             break
-        sim = Xn[avail] @ Xn[i]                  # cosine 유사도
+        sim = Xn[avail] @ Xn[i]                  # cosine similarity
         cur[avail] = cur[avail] - div_lambda * np.maximum(sim, 0)
     return chosen
 
 
 # ---------------------------- oracle ----------------------------
 def oracle_orca(rows, cfg):
-    """선택 구조를 ORCA로 계산 → {name: peaks}. 실패는 제외."""
+    """Compute the selected structures with ORCA → {name: peaks}. Failures are excluded."""
     import structures as ST
     import orca_io as IO
     import run_orca as R
@@ -126,7 +126,7 @@ def oracle_orca(rows, cfg):
     for r in rows:
         xyz = ST.gen_xyz(r["smiles"], seed=cfg["active_learning"]["seed"])
         if xyz is None:
-            print(f"  [skip] 지오메트리 실패: {r['name']}")
+            print(f"  [skip] geometry failed: {r['name']}")
             continue
         inp = IO.save_input(r["name"], xyz, cfg, cfg["paths"]["orca_inputs"])
         out = os.path.join(cfg["paths"]["orca_outputs"], f"{r['name']}.out")
@@ -139,13 +139,13 @@ def oracle_orca(rows, cfg):
 
 
 def oracle_mock(rows, cfg):
-    """샌드박스 검증용 합성 oracle: SMILES 피처로 밴드 위치를 결정적으로 생성."""
+    """Synthetic oracle for sandbox validation: band positions generated deterministically from SMILES features."""
     res = {}
     for r in rows:
         v = F.featurize_smiles(r["smiles"])
         if v is None:
             continue
-        h = float(np.tanh(v[:9].sum() % 7))     # 구조 의존 유사난수
+        h = float(np.tanh(v[:9].sum() % 7))     # structure-dependent pseudo-random value
         peaks = [
             {"freq": 1245 + 15 * h, "activity": 30 + 10 * abs(h), "depol": 0.3},   # P=O
             {"freq": 725 + 20 * h,  "activity": 12, "depol": 0.4},                  # P-F
@@ -156,7 +156,7 @@ def oracle_mock(rows, cfg):
     return res
 
 
-# ---------------------------- 타깃 추출/저장 ----------------------------
+# -------------------- extract and store targets --------------------
 def peaks_to_targets(peaks, cfg):
     d = S.diagnostic_bands(peaks, cfg["active_learning"]["targets"], cfg)
     return d
@@ -174,7 +174,7 @@ def append_labeled(path, name, smiles, targets):
         w.writerow(row)
 
 
-# ---------------------------- 메인 루프 ----------------------------
+# ------------------------------ main loop ------------------------------
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--config", default="config.yaml")
@@ -195,16 +195,16 @@ def main():
     keep, X = F.featurize_frame(names, smiles)
     idx = {nm: i for i, nm in enumerate(keep)}
     pool = [r for r in pool if r["name"] in idx]
-    Xr_full = X  # 원피처 (surrogate 내부에서 스케일/PCA)
+    Xr_full = X  # raw features (scaling/PCA happen inside the surrogate)
     print(f"[init] pool={len(pool)} featurized, targets={targets}, oracle={args.oracle}")
 
     labeled = read_labeled(cfg["paths"]["labeled_csv"])
     oracle = oracle_orca if args.oracle == "orca" else oracle_mock
 
-    # 초기 seed: labeled 없으면 다양성으로 선택
+    # initial seed: if nothing is labeled, select by diversity
     if len(labeled) < 3:
         seed_k = al["init_labeled"]
-        # k-means 대신 무작위+거리 최대화 근사 (그리디 farthest-point)
+        # random + distance-maximising approximation instead of k-means (greedy farthest-point)
         sel = [int(rng.integers(len(pool)))]
         Xn = X / (np.linalg.norm(X, axis=1, keepdims=True) + 1e-9)
         while len(sel) < min(seed_k, len(pool)):
@@ -212,7 +212,7 @@ def main():
             d[sel] = -1
             sel.append(int(np.argmax(d)))
         seed_rows = [pool[i] for i in sel]
-        print(f"[seed] 초기 {len(seed_rows)}개 계산 (diversity)")
+        print(f"[seed] initial {len(seed_rows)} computations (diversity)")
         got = oracle(seed_rows, cfg)
         for nm, pk in got.items():
             r = next(p for p in pool if p["name"] == nm)
@@ -221,24 +221,24 @@ def main():
 
     history = []
     for rnd in range(1, n_rounds + 1):
-        # 학습 데이터 구성
+        # assemble the training data
         lab_names = [nm for nm in labeled if nm in idx]
         if len(lab_names) < 3:
-            print("[stop] labeled<3, 중단"); break
+            print("[stop] labeled<3, halting"); break
         Xtr = X[[idx[nm] for nm in lab_names]]
         Ytr = np.array([[float(labeled[nm].get(t, "nan")) for t in targets] for nm in lab_names])
 
         sur = Surrogate(targets, n_pca=min(25, Xtr.shape[0] - 1, Xtr.shape[1]))
         sur.fit(Xtr, Ytr)
 
-        # 후보 = 아직 labeled 아닌 pool
+        # candidates = the pool entries not yet labeled
         cand = [p for p in pool if p["name"] not in labeled]
         if not cand:
-            print("[done] 풀 소진"); break
+            print("[done] pool exhausted"); break
         Xc = X[[idx[p["name"]] for p in cand]]
         _, std = sur.predict(Xc)
 
-        # 학습곡선용: 현재 surrogate를 labeled에 대해 LOO 근사(train RMSE)
+        # for the learning curve: LOO approximation of the current surrogate on the labeled set (train RMSE)
         mu_tr, _ = sur.predict(Xtr)
         rmse = float(np.sqrt(np.nanmean((mu_tr - Ytr) ** 2)))
 
@@ -247,7 +247,7 @@ def main():
                             al["diversity_lambda"], al["acquisition"])
         batch = [cand[i] for i in pick]
         print(f"[round {rnd}] labeled={len(lab_names)} | train_RMSE={rmse:.1f}cm-1 | "
-              f"mean_unc={std.mean():.1f} | 선택 {len(batch)}: {[b['name'] for b in batch]}")
+              f"mean_unc={std.mean():.1f} | selected {len(batch)}: {[b['name'] for b in batch]}")
 
         got = oracle(batch, cfg)
         for nm, pk in got.items():
@@ -260,7 +260,7 @@ def main():
                         "dft_calls_total": len(labeled)})
         _save_state(cfg, history)
 
-    print(f"[end] labeled 총 {len(labeled)} | history → {cfg['paths']['al_state']}/history.json")
+    print(f"[end] labeled total {len(labeled)} | history → {cfg['paths']['al_state']}/history.json")
 
 
 def _save_state(cfg, history):

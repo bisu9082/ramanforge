@@ -1,10 +1,10 @@
 """
-ramanforge v3 — 원시 스펙트럼 입출력.
+ramanforge v3: raw spectrum input and output.
 
-TacticID-1064 ST 원시 CSV 구조
+Structure of the TacticID-1064 ST raw CSV
   line1 : SN,<serial>,PixelNum,512,IntTime,<ms>,CCDTemperature,<C>,
           Gain,<g>,Offset,<o>,LEW,<laser excitation wavelength nm>
-  line2-5 : Coef_0..Coef_3  (pixel -> wavelength 다항식)
+  line2-5 : Coef_0..Coef_3  (pixel -> wavelength polynomial)
   line6 : header  PixelNum,WaveLength,RamanShift,RawData,Dark,DarkSubed,Ratio3
   line7+: 512 pixel rows
 """

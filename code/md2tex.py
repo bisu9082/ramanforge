@@ -1,11 +1,11 @@
-"""markdown 초고 -> achemso LaTeX 섹션 변환.
+"""markdown draft -> achemso LaTeX section conversion.
 
 - [@a; @b]         -> \cite{a,b}
 - **x** / *x*      -> \textbf / \textit
 - ## / ###         -> \subsection / \subsubsection
 - "Figure 4c"      -> Figure~\ref{fig:identification}c
-- 유니코드(cm-1, 그리스문자, 대시 등) -> LaTeX
-- 한글 메모, `---` 구분선, 최상위 제목은 제거
+- Unicode (cm-1, Greek letters, dashes and so on) -> LaTeX
+- Korean-language notes, `---` separators and the top-level title are removed
 """
 from __future__ import annotations
 import os, re, sys
@@ -30,15 +30,15 @@ def convert(md: str) -> str:
     out, in_math = [], False
     for ln in lines:
         s = ln.rstrip()
-        if s.startswith("# "):                       # 최상위 제목 제거
+        if s.startswith("# "):                       # drop the top-level heading
             continue
-        if re.match(r"^\*\(.*\)\*$", s.strip()):     # 드래프트 메모
+        if re.match(r"^\*\(.*\)\*$", s.strip()):     # drafting notes
             continue
         if s.strip() == "---":
             continue
-        if s.strip().startswith(">"):                # 인용 블록(한글 메모)
+        if s.strip().startswith(">"):                # block quotes (drafting notes)
             continue
-        if re.search(r"[\uac00-\ud7a3]", s):         # 한글이 있으면 통째로 제거
+        if re.search(r"[\uac00-\ud7a3]", s):         # drop the whole line if it contains Korean text
             continue
         if s.startswith("### "):
             out.append(r"\subsubsection{%s}" % s[4:].strip()); continue
@@ -47,37 +47,37 @@ def convert(md: str) -> str:
         out.append(s)
     t = "\n".join(out)
 
-    # 수식 블록 보호
+    # protect math blocks
     blocks = []
     def stash(m):
         blocks.append(m.group(0)); return f"@@MATH{len(blocks)-1}@@"
     t = re.sub(r"\$\$.*?\$\$", stash, t, flags=re.S)
 
-    # 인용
+    # quotation
     def cite(m):
         keys = [k.strip().lstrip("@") for k in m.group(1).split(";")]
         return r"\cite{%s}" % ",".join(keys)
     t = re.sub(r"\[((?:@[A-Za-z0-9_\-\.]+\s*;?\s*)+)\]", cite, t)
 
-    # 아래첨자 표기
+    # subscript notation
     t = re.sub(r"\*([A-Za-z])\*<sub>([A-Za-z]+)</sub>", r"$\1_{\\mathrm{\2}}$", t)
     t = re.sub(r"<sub>([^<]+)</sub>", r"$_{\1}$", t)
     t = re.sub(r"<sup>([^<]+)</sup>", r"$^{\1}$", t)
 
-    # 인라인 코드
+    # inline code
     t = re.sub(r"`([^`\n]+)`", r"\\texttt{\1}", t)
 
-    # 강조
+    # emphasis
     t = re.sub(r"\*\*(.+?)\*\*", r"\\textbf{\1}", t, flags=re.S)
     t = re.sub(r"(?<![\*\w])\*([^\*\n]+?)\*(?!\*)", r"\\textit{\1}", t)
 
-    # 그림 참조
+    # figure reference
     def figref(m):
         n, suf = m.group(1), m.group(2) or ""
         return "Figure~\\ref{fig:%s}%s" % (FIGREF.get(n, "overview"), suf)
     t = re.sub(r"Figure\s+(\d)([a-z](?:\u2013[a-z])?(?:,[a-z])?)?", figref, t)
 
-    # 단위 / 유니코드
+    # units / unicode
     t = t.replace("cm\u207b\u00b9", r"\wn{}").replace("cm^-1", r"\wn{}")
     for a, b in UNI:
         t = t.replace(a, b)

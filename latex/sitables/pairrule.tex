@@ -1,0 +1,38 @@
+\begin{table}[htbp]
+\centering
+\caption{The ten trials under both band-pairing rules. $\Delta$ is the change in the
+600--850\,\wn{} cosine; the assignment columns give the open-set top-1 result against the
+pre-correction 54-member library before and after the correction, with \checkmark{} for a
+correct assignment and $\times$ for an incorrect one.}
+\label{tab:si-pairrule}
+\footnotesize
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llrrcc}
+\toprule
+& & \multicolumn{2}{c}{$\Delta$ cosine, 600--850 \wn} & \multicolumn{2}{c}{Assignment} \\
+\cmidrule(lr){3-4}\cmidrule(lr){5-6}
+Agent & Correction & One-to-one & Nearest & One-to-one & Nearest \\
+\midrule
+GF & $\omega$B97X-D3 & \textbf{+0.369} & \textbf{+0.306} & $\times$ $\rightarrow$ \checkmark & $\times$ $\rightarrow$ \checkmark \\
+GF & tight P/F/S/Cl & \textbf{+0.286} & \textbf{+0.294} & $\times$ $\rightarrow$ \checkmark & $\times$ $\rightarrow$ \checkmark \\
+A-232 & $\omega$B97X-D3 & \textbf{+0.116} & +0.097 & $\times$ $\rightarrow$ $\times$ & $\times$ $\rightarrow$ $\times$ \\
+A-230 & tight P/F/S/Cl & +0.068 & +0.023 & \checkmark $\rightarrow$ \checkmark & \checkmark $\rightarrow$ \checkmark \\
+A-232 & CPCM & +0.043 & +0.038 & $\times$ $\rightarrow$ $\times$ & $\times$ $\rightarrow$ $\times$ \\
+A-232 & tight P/F/S/Cl & +0.026 & +0.029 & $\times$ $\rightarrow$ $\times$ & $\times$ $\rightarrow$ $\times$ \\
+GF & CPCM & +0.004 & -0.013 & $\times$ $\rightarrow$ $\times$ & $\times$ $\rightarrow$ $\times$ \\
+HD & tight P/F/S/Cl & -0.010 & -0.016 & \checkmark $\rightarrow$ \checkmark & \checkmark $\rightarrow$ \checkmark \\
+GD & tight P/F/S/Cl & \textbf{-0.162} & \textbf{-0.247} & \checkmark $\rightarrow$ \checkmark & \checkmark $\rightarrow$ $\times$ \\
+A-234 & tight P/F/S/Cl & \textbf{-0.189} & \textbf{-0.150} & $\times$ $\rightarrow$ $\times$ & $\times$ $\rightarrow$ $\times$ \\
+\bottomrule
+\end{tabular}
+}
+
+\begin{flushleft}\footnotesize The baseline calibration itself differs between the rules,
+shown here on the pre-correction library so that the two rules are compared on identical
+inputs: one-to-one assignment gives $s_{\mathrm{low}}$ = 1.018,
+$s_{\mathrm{high}}$ = 0.990 with a position RMSE of 10.4\,\wn{}
+over 80 pairs, nearest-neighbor matching gives 1.020 and
+0.988 with 12.4\,\wn{} over 89 pairs. The one-to-one
+values are the ones used throughout this work, including in the identification results of
+Section~\ref{si:ident}. The only assignment the two rules disagree on is GD under tight P/F/S/Cl.\end{flushleft}
+\end{table}

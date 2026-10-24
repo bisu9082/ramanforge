@@ -1,0 +1,22 @@
+\begin{table}[htbp]
+\centering
+\caption{Separation between the class-present and the class-absent condition, with the agent as the resampling unit. Intervals are 5000 bootstrap replicates over agents.}
+\label{tab:si-aucci}
+\footnotesize
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccc}
+\toprule
+Score & Measured AUC & 95\% CI & Computed AUC & 95\% CI \\
+\midrule
+top-1 cosine & 1.000 & [1.000, 1.000] & 0.766 & [0.639, 0.927] \\
+margin & 0.923 & [0.829, 1.000] & 0.763 & [0.547, 0.976] \\
+peak-to-sidelobe & 0.900 & [0.782, 1.000] & 0.790 & [0.596, 1.000] \\
+library-normalized $z$ & 1.000 & [1.000, 1.000] & 0.723 & [0.618, 0.886] \\
+unmixing residual & 1.000 & [1.000, 1.000] & 0.741 & [0.619, 0.904] \\
+band-match fraction & 0.848 & [0.741, 0.957] & 0.729 & [0.542, 0.895] \\
+\bottomrule
+\end{tabular}
+}
+
+\begin{flushleft}\footnotesize Resampling agents rather than acquisitions removes the threefold inflation that treating the thirty acquisitions as independent would introduce. On the measured library three scores separate the two conditions completely and the bootstrap never breaks that separation. On the computed library the best score reaches 0.790 and no score separates the two conditions on the observed data; the intervals are wide, so this is a statement about what nine agents can establish and not a proof that no score could separate them.\end{flushleft}
+\end{table}

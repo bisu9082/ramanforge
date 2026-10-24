@@ -1,0 +1,28 @@
+\begin{table}[htbp]
+\centering
+\caption{The same thirty queries scored with twelve different similarity metrics. The measured library is carried through the identical code as a control, so that a metric that performs poorly on the computed library can be distinguished from a metric that is simply badly implemented.}
+\label{tab:si-metrics}
+\footnotesize
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccccc}
+\toprule
+Metric & Meas.\ top-1 & Meas.\ self & Comp.\ top-1 (11) & Comp.\ top-1 (54) & Comp.\ by agent & Comp.\ self \\
+\midrule
+Full-profile cosine, $\Gamma$ = 22\,\wn{} (adopted) & 30/30 & 0.983 & 13/30 & 13/30 & 4/9 & 0.674 \\
+Full-profile cosine, $\Gamma$ = 30\,\wn{} & n/a & n/a & 16/30 & 16/30 & 5/9 & 0.688 \\
+Full-profile cosine, $\Gamma$ = 40\,\wn{} & n/a & n/a & 16/30 & 16/30 & 5/9 & 0.692 \\
+Full-profile cosine, $\Gamma$ = 50\,\wn{} & n/a & n/a & 16/30 & 16/30 & 5/9 & 0.688 \\
+Full-profile cosine, per-agent measured $\Gamma$ & n/a & n/a & 12/30 & 12/30 & 4/9 & 0.670 \\
+First-derivative cosine & 30/30 & 0.981 & 10/30 & 10/30 & 3/9 & 0.350 \\
+Shift-tolerant cosine, $\pm$3 pixels ($\pm$17\,\wn{}) & 30/30 & 0.983 & 16/30 & 16/30 & 5/9 & 0.720 \\
+Peak-list hit quality, 10\,\wn{} tolerance & 28/30 & 0.801 & 8/30 & 4/30 & 2/9 & 0.122 \\
+Peak-list hit quality, 20\,\wn{} tolerance & 29/30 & 0.835 & 11/30 & 11/30 & 3/9 & 0.232 \\
+Peak-list hit quality, 35\,\wn{} tolerance & 29/30 & 0.856 & 11/30 & 11/30 & 3/9 & 0.326 \\
+Band-position Dice, 20\,\wn{} tolerance & 28/30 & 0.891 & 8/30 & 6/30 & 2/9 & 0.459 \\
+Band-position Dice, 35\,\wn{} tolerance & 25/30 & 0.898 & 10/30 & 9/30 & 2/9 & 0.622 \\
+\bottomrule
+\end{tabular}
+}
+
+\begin{flushleft}\footnotesize No metric rescues the computed library. The adopted metric gives 13 of 30, the best of the twelve is 16 of 30 (Full-profile cosine), and every peak-list metric, which is what commercial library search actually uses, lies between 8 and 11 of 30. The measured library reaches 25 to 30 of 30 under all twelve, so the peak-list implementations are sound and the collapse is a property of the computed library and not of the comparison. The similarity metric is therefore excluded as an explanation of the result.\end{flushleft}
+\end{table}

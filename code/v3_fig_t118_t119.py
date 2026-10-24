@@ -1,4 +1,4 @@
-"""T1-18/T1-19 결과 figure — 지표 비교와 결손 성분 분해."""
+"""T1-18/T1-19 result figure: metric comparison and deficit component decomposition."""
 import os, sys
 import numpy as np, pandas as pd
 import matplotlib; matplotlib.use("Agg")
@@ -10,7 +10,7 @@ P = dict(warm_red="#C94F4A", amber="#E8943A", teal="#4AACB0", dusty="#5B8DB8",
 plt.rcParams.update({"axes.labelsize": 14, "xtick.labelsize": 12, "ytick.labelsize": 12,
                      "legend.fontsize": 12, "font.size": 13, "font.family": "DejaVu Sans"})
 
-# 측정 라이브러리 대조군 (동일 지표) — 확정 수치
+# measured-library control under the identical metric; final values
 MEAS = {"cosine": (30, 0.983), "derivative": (30, 0.981), "shift-tol": (30, 0.983),
         "HQI 10": (28, 0.801), "HQI 20": (29, 0.835), "HQI 35": (29, 0.856),
         "Dice 20": (28, 0.891), "Dice 35": (25, 0.898)}
@@ -21,7 +21,7 @@ LBL = list(MEAS)
 
 fig, ax = plt.subplots(2, 2, figsize=(15.5, 10.5))
 
-# (a) 지표별 분자 top-1
+# (a) molecule-level top-1 by metric
 a = ax[0, 0]; x = np.arange(len(LBL)); w = 0.38
 a.bar(x - w/2, [MEAS[k][0] for k in LBL], w, color=P["dark_teal"], label="measured library")
 a.bar(x + w/2, [COMP[k][0] for k in LBL], w, color=P["warm_red"], label="computed library")
@@ -34,7 +34,7 @@ a.axhline(30, ls=":", lw=1, color="0.5")
 a.legend(loc="lower right", frameon=False)
 a.set_title("(a) No metric rescues the computed library", loc="left", fontsize=14)
 
-# (b) 자기유사도
+# (b) self-similarity
 b = ax[0, 1]
 b.bar(x - w/2, [MEAS[k][1] for k in LBL], w, color=P["dark_teal"])
 b.bar(x + w/2, [COMP[k][1] for k in LBL], w, color=P["warm_red"])
@@ -45,7 +45,7 @@ for i, k in enumerate(LBL):
            ha="center", fontsize=9, color="0.35")
 b.set_title("(b) The deficit persists under every metric", loc="left", fontsize=14)
 
-# (c) 성분 분해 회복량
+# (c) recovery under component decomposition
 D = pd.read_csv(f"{DATA}/v3_t119_decompose.csv")
 c = ax[1, 0]
 comp = ["d_POS", "d_INT", "d_WID"]
@@ -64,7 +64,7 @@ c.set_ylabel("recovery in 600–850 cm$^{-1}$ cosine")
 c.set_ylim(-0.04, 0.23); c.legend(loc="upper left", frameon=False)
 c.set_title("(c) Linewidth contributes nothing; position dominates", loc="left", fontsize=14)
 
-# (d) 미짝 강도
+# (d) unmatched intensity
 U = pd.read_csv(f"{DATA}/v3_t119_unmatched.csv")
 d = ax[1, 1]; xu = np.arange(len(U))
 d.bar(xu - w/2, U.unm_calc * 100, w, color=P["warm_red"], label="computed intensity with\nno measured partner")

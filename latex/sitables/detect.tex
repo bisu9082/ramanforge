@@ -1,0 +1,22 @@
+\begin{table}[htbp]
+\centering
+\caption{Sensitivity of the frequency calibration to the band-detection criterion and to the pairing tolerance. The criterion in the first row is the one used throughout this work.}
+\label{tab:si-detect}
+\footnotesize
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrrrrrr}
+\toprule
+Detection criterion & Tol.\ (\wn) & $s_\mathrm{low}$ & $s_\mathrm{high}$ & RMSE (\wn) & Paired & Meas.\ bands & Comp.\ bands & Penalized RMSE \\
+\midrule
+prominence $>$ 0.05, separation 2 points & 35 & 1.016 & 0.990 & 10.4 & 81 & 176 & 175 & 29.8 \\
+prominence $>$ 0.05, separation 2 points & 20 & 1.016 & 0.990 & 8.6 & 76 & 176 & 175 & 30.1 \\
+height $>$ 0.10 and prominence $>$ 0.05, separation 4 points & 35 & 1.016 & 0.988 & 10.6 & 75 & 132 & 175 & 29.4 \\
+height $>$ 0.10 and prominence $>$ 0.05, separation 4 points & 20 & 1.016 & 0.988 & 8.3 & 69 & 132 & 175 & 29.8 \\
+height $>$ 0.12, separation 6 points & 35 & 1.016 & 0.988 & 10.4 & 71 & 121 & 175 & 29.5 \\
+height $>$ 0.12, separation 6 points & 20 & 1.016 & 0.988 & 8.2 & 65 & 121 & 175 & 30.0 \\
+\bottomrule
+\end{tabular}
+}
+
+\begin{flushleft}\footnotesize The scale factors move by at most 0.2\% and the paired RMSE stays between 8.2 and 10.6\,\wn{} across all six combinations, so neither the detection threshold nor the tolerance drives the calibration. The penalised RMSE charges every unpaired band a fixed 35\,\wn{} so that the six cells remain comparable; it is stable near 30\,\wn{} and is the honest upper bound on the positional disagreement, the paired RMSE being the value over bands that found a partner.\end{flushleft}
+\end{table}

@@ -1,4 +1,4 @@
-"""v3 Fig 1 — 연구 설계. 두 경로가 독립적으로 진행해 같은 질의에서 만난다."""
+"""v3 Fig 1: study design. The two paths proceed independently and meet at the same query."""
 import os, sys, json
 import numpy as np, pandas as pd
 import matplotlib; matplotlib.use("Agg")
@@ -43,7 +43,7 @@ def main():
     gs = fig.add_gridspec(2, 3, height_ratios=[1.12, 1], hspace=0.46, wspace=0.30,
                           left=0.045, right=0.975, top=0.91, bottom=0.075)
 
-    # ══════════ a : 워크플로 ══════════
+    # ========== a : workflow ==========
     ax = fig.add_subplot(gs[0, :]); ax.axis("off")
     ax.text(-0.012, 1.02, "a", transform=ax.transAxes, fontsize=25, fontweight="bold")
 
@@ -85,7 +85,7 @@ def main():
             ha="center", va="top", fontsize=12, style="italic", color=P["brown"],
             transform=ax.transAxes, linespacing=1.5)
 
-    # ══════════ b : 작용제 집합 ══════════
+    # ========== b : the agent set ==========
     ax = fig.add_subplot(gs[1, :2])
     ax.text(-0.055, 1.05, "b", transform=ax.transAxes, fontsize=25, fontweight="bold")
     n = [int(S.loc[a, "n_genuine"]) for a in ORDER]
@@ -110,7 +110,7 @@ def main():
     ax.legend(hs, ["nerve", "vesicant", "Novichok"], frameon=False, fontsize=11.5,
               ncol=3, loc="upper left", bbox_to_anchor=(0.0, 1.0))
 
-    # ══════════ c : 두 라이브러리 ══════════
+    # ========== c : the two libraries ==========
     ax = fig.add_subplot(gs[1, 2]); ax.axis("off")
     ax.text(-0.09, 1.05, "c", transform=ax.transAxes, fontsize=25, fontweight="bold")
     ax.text(0.5, 1.02, "The two libraries", ha="center", fontsize=15,

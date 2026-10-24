@@ -1,12 +1,12 @@
 """
-v3 Fig 2 — 보정. 식별에 조정된 파라미터가 없다는 것을 그림으로 보인다.
+v3 Fig 2: calibration. Shows graphically that no parameter was tuned on identification.
 
-a  세 보정이 계산 스펙트럼을 측정 가능한 형태로 옮기는 과정 (GF)
-b  각 보정 단계의 누적 코사인 기여
-c  밴드 위치 RMSE 곡면 — 실제로 최소화한 목적함수
-d  구간별 최적 스케일 인자 (두 인자를 쓰는 이유)
-e  nested leave-one-agent-out 안정성 (비순환의 증거)
-f  실측 선폭 분포와 채택한 Gamma
+a  how the three calibrations move the computed spectrum into a measurable form (GF)
+b  cumulative cosine contribution of each calibration step
+c  band position RMSE surface, the objective function that was actually minimized
+d  optimal scale factor per region (why two factors are used)
+e  nested leave-one-agent-out stability (the evidence of non-circularity)
+f  the measured linewidth distribution and the adopted Gamma
 """
 import os, sys, json
 import numpy as np, pandas as pd
@@ -54,7 +54,7 @@ def main():
     gs = fig.add_gridspec(2, 3, hspace=0.50, wspace=0.40,
                           left=0.075, right=0.945, top=0.885, bottom=0.095)
 
-    # ---------- a : 세 보정의 효과 (GF) ----------
+    # ---------- a : effect of the three corrections (GF) ----------
     ax = fig.add_subplot(gs[0, 0])
     AG = "GF"; pk = lib[JOB[AG]]
     m = (X >= 250) & (X <= 1800)
@@ -71,7 +71,7 @@ def main():
     ax.set_xlim(250, 1800)
     letter(ax, "a", -0.24)
 
-    # ---------- b : 보정 단계별 누적 코사인 ----------
+    # ---------- b : cumulative cosine by correction stage ----------
     ax = fig.add_subplot(gs[0, 1])
     stages = ["harmonic\nlines", "+ linewidth", "+ scattering\nfactor", "+ frequency\nscale"]
     vals = []
@@ -102,7 +102,7 @@ def main():
     ax.legend(frameon=False, loc="upper left", fontsize=11.5)
     letter(ax, "b")
 
-    # ---------- c : 위치 RMSE 곡면 (실제 목적함수) ----------
+    # ---------- c : band-position RMSE surface (the actual objective) ----------
     ax = fig.add_subplot(gs[0, 2])
     sl = np.arange(0.995, 1.0451, 0.0025)
     sh = np.arange(0.960, 1.0101, 0.0025)
@@ -128,7 +128,7 @@ def main():
     cb.ax.tick_params(labelsize=10.5)
     letter(ax, "c", -0.22)
 
-    # ---------- d : 구간별 최적 스케일 ----------
+    # ---------- d : optimal scale factor per region ----------
     ax = fig.add_subplot(gs[1, 0])
     REG = [(250, 500), (500, 800), (800, 1100), (1100, 1400), (1400, 1800)]
     grid = np.arange(0.955, 1.0501, 0.001)
@@ -149,7 +149,7 @@ def main():
                 r = float(np.sqrt(np.mean(np.array(d) ** 2)))
                 if r < best[1]: best = (float(s), r)
         if best[0] is None:
-            print(f"  ! {lo}-{hi}: 대응밴드 부족, 제외")
+            print(f"  ! {lo}-{hi}: too few paired bands, excluded")
             continue
         opt.append(best[0]); lab.append(f"{lo}--{hi}")
     xx = np.arange(len(opt))
@@ -195,7 +195,7 @@ def main():
               bbox_to_anchor=(0.5, 1.0))
     letter(ax, "e")
 
-    # ---------- f : 실측 선폭 ----------
+    # ---------- f : measured linewidths ----------
     ax = fig.add_subplot(gs[1, 2])
     G = pd.read_csv(os.path.join(ROOT, "data", "v3_linewidths.csv"))
     ags = [a for a in ORDER if a in set(G.agent)]
@@ -221,7 +221,7 @@ def main():
     out = os.path.join(ROOT, "figure", "v3_fig_calibration.png")
     fig.savefig(out, dpi=200)
     print("saved figure/v3_fig_calibration.png")
-    print("  구간별 최적:", dict(zip(lab, [round(o, 3) for o in opt])))
+    print("  per-region optimum:", dict(zip(lab, [round(o, 3) for o in opt])))
 
 
 if __name__ == "__main__":

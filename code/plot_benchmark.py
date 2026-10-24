@@ -1,13 +1,13 @@
 """
 ramanforge Step 4-c
-AL 벤치마크 학습곡선 플롯 (data/al_benchmark.csv -> figure/al_learning_curve.png).
+AL benchmark learning curve plot (data/al_benchmark.csv -> figure/al_learning_curve.png).
 
-좌: # DFT-labeled molecules vs held-out spectral RMSE
-우: # DFT-labeled molecules vs identification accuracy
-전략별 seed 평균 + 표준편차 밴드, full=수평 천장(dashed).
+Left: # DFT-labeled molecules vs held-out spectral RMSE
+Right: # DFT-labeled molecules vs identification accuracy
+Seed mean per strategy + standard deviation band, full = horizontal ceiling (dashed).
 
-Ku 피규어 규칙 적용: 어스톤 팔레트, 겹침 금지, 패널라벨 동일선상.
-실행:  python scripts/plot_benchmark.py
+Ku figure rules applied: earth-tone palette, no overlap, panel labels on the same line.
+Run:  python scripts/plot_benchmark.py
 """
 from __future__ import annotations
 from pathlib import Path
@@ -17,9 +17,9 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-# ---- Ku 승인 어스톤 팔레트 ----
+# ---- approved earth-tone palette ----
 COL = {
-    "ucb_diversity": "#C94F4A",   # AL (제안)
+    "ucb_diversity": "#C94F4A",   # AL (proposed)
     "ucb_only":      "#E8943A",
     "diversity_only":"#4AACB0",
     "random":        "#5B8DB8",
@@ -34,7 +34,7 @@ LAB = {
 }
 ORDER = ["ucb_diversity", "ucb_only", "diversity_only", "random"]
 
-# 폰트 스케일 (Ku 승인값 계열; 2패널이라 소폭 축소)
+# font scale (approved family; reduced slightly for a two-panel layout)
 FS_LABEL, FS_TICK, FS_LEG, FS_PANEL = 20, 14, 13, 24
 
 
@@ -64,7 +64,7 @@ def main(root: Path):
                     ms=6, label=LAB[s], zorder=3)
             ax.fill_between(g.n_labeled, g["mean"] - g["std"], g["mean"] + g["std"],
                             color=COL[s], alpha=0.15, zorder=1)
-        # full = 수평 천장
+        # full = the horizontal ceiling
         fu = df[df.strategy == "full"][metric]
         if len(fu):
             ax.axhline(fu.mean(), color=COL["full"], ls="--", lw=1.8,
@@ -85,14 +85,14 @@ def main(root: Path):
     fig.savefig(out, dpi=200, bbox_inches="tight")
     print(f"[saved] {out}")
 
-    # 콘솔 요약
-    print(f"\n분자 {n_mol}종 기준 요약:")
+    # console summary
+    print(f"\nSummary over {n_mol} molecules:")
     for s in ORDER + ["full"]:
         sub = df[df.strategy == s]
         if len(sub) == 0:
             continue
         last = sub[sub.n_labeled == sub.n_labeled.max()]
-        print(f"  {LAB[s]:22s} 최종 RMSE {last.rmse.mean():.4f}  acc {last.acc.mean():.3f}")
+        print(f"  {LAB[s]:22s} final RMSE {last.rmse.mean():.4f}  acc {last.acc.mean():.3f}")
 
 
 if __name__ == "__main__":

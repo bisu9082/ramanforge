@@ -1,0 +1,25 @@
+\begin{table}[htbp]
+\centering
+\caption{Agreement between calibrated computed and measured band positions, the quantity the frequency scale was fitted to. Measured and computed maxima are paired by one-to-one assignment, solved as a linear assignment problem on the matrix of absolute wavenumber differences with pairings beyond 35\,\wn{} forbidden; computed bands below 2\% of the molecule's strongest activity are not considered. Nearest-neighbour matching is not used, because it allows one computed band to be claimed by several measured bands with residuals of opposite sign that cancel.}
+\label{tab:si-bands}
+\small
+\begin{tabular}{lrrrrr}
+\toprule
+Agent & Pairs & RMSE (\wn) & Mean residual & Min & Max \\
+\midrule
+GD & 8 & 7.5 & -0.2 & -8 & +16 \\
+GF & 4 & 11.4 & -8.6 & -21 & -1 \\
+VX & 8 & 9.1 & -2.8 & -15 & +11 \\
+HD & 11 & 8.0 & -2.7 & -15 & +10 \\
+HN1 & 6 & 9.5 & +4.3 & -9 & +14 \\
+HN3 & 7 & 11.8 & -2.5 & -23 & +9 \\
+A-230 & 13 & 10.8 & +2.5 & -11 & +29 \\
+A-232 & 8 & 11.4 & +0.7 & -19 & +19 \\
+A-234 & 7 & 15.6 & +7.3 & -22 & +28 \\
+A-242 & 9 & 8.5 & -3.8 & -12 & +16 \\
+\textbf{All} & \textbf{81} & \textbf{10.4} & \textbf{-0.3} & \textbf{-23} & \textbf{+29} \\
+\bottomrule
+\end{tabular}
+
+\begin{flushleft}\footnotesize The global RMSE of 10.4\,\wn{} is approximately 1.8 pixels on the native measurement grid, whose mean spacing in this region is 5.73\,\wn{}. The full list of pairs is given in Table~\ref{tab:si-bandlist}.\end{flushleft}
+\end{table}

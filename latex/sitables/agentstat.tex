@@ -1,0 +1,26 @@
+\begin{table}[htbp]
+\centering
+\caption{Accuracy with the agent, not the acquisition, as the unit of analysis. Each agent is scored by the majority of its acquisitions; intervals are Clopper--Pearson.}
+\label{tab:si-agentstat}
+\footnotesize
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lllc}
+\toprule
+Subset & Quantity & Agents correct & 95\% CI \\
+\midrule
+All nine agents & Measured library, molecular & 9/9 & [0.66, 1.00] \\
+All nine agents & Computed library, molecular (11-member) & 4/9 & [0.14, 0.79] \\
+All nine agents & Computed library, molecular (54-member) & 4/9 & [0.14, 0.79] \\
+All nine agents & Measured library, class & 9/9 & [0.66, 1.00] \\
+All nine agents & Computed library, class & 8/9 & [0.52, 1.00] \\
+HN2 excluded (eight agents) & Measured library, molecular & 8/8 & [0.63, 1.00] \\
+HN2 excluded (eight agents) & Computed library, molecular (11-member) & 4/8 & [0.16, 0.84] \\
+HN2 excluded (eight agents) & Computed library, molecular (54-member) & 4/8 & [0.16, 0.84] \\
+HN2 excluded (eight agents) & Measured library, class & 8/8 & [0.63, 1.00] \\
+HN2 excluded (eight agents) & Computed library, class & 8/8 & [0.63, 1.00] \\
+\bottomrule
+\end{tabular}
+}
+
+\begin{flushleft}\footnotesize The thirty acquisitions are repeated interrogations of nine sealed vials recorded within a single hour, so the effective sample size is the number of agents. On that unit the paired comparison between the two libraries gives, excluding HN2, $b = 4$ discordant pairs in favour of the measured library and $c = 0$ against, an exact two-sided $p = 0.12$ at the molecular level; including HN2, $b = 5$, $c = 0$, $p = 0.062$. At the class level, excluding HN2, the two libraries do not disagree on any agent. The molecular contrast is therefore a consistent direction on a sample too small to reach conventional significance, and we report it as such.\end{flushleft}
+\end{table}

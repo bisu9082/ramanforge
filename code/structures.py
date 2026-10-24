@@ -1,21 +1,22 @@
 """
-structures.py — 후보 구조 풀 생성 + 3D 지오메트리.
+structures.py: candidate structure pool generation plus 3D geometries.
 
-두 가지를 만든다:
-  1) 검증 세트(validation): Kim 2026이 실험 대조한 신경작용제 (공개 구조). 프로토콜 재현용.
-  2) 유도체 풀(pool): 백본 SMILES 템플릿의 치환 위치([*:1] 등)에 R-그룹 조합을 대입해
-     조합 공간을 열거. Kim 2026의 4위치×{Me,Et,Pr}=3^4=81 을 일반화 (>1000 확장 가능).
+Two things are built:
+  1) validation set: the nerve agents that Kim 2026 compared against experiment (public structures). For reproducing the protocol.
+  2) derivative pool: the combinatorial space is enumerated by substituting R-group combinations
+     into the substitution positions ([*:1] and the like) of the backbone SMILES templates. This
+     generalizes the 4 positions×{Me,Et,Pr}=3^4=81 of Kim 2026 (extensible to >1000).
 
-※ 백본 SMILES는 config가 아니라 여기 TEMPLATES에 둔다. 민감 구조는 Ku가 직접 채운다
-   (플레이스홀더 제공). 실제 계산은 로컬에서만 수행.
+Note: the backbone SMILES are kept here in TEMPLATES rather than in config. Sensitive structures
+   are filled in by Ku directly (placeholders are provided). The actual calculations are run locally only.
 """
 from __future__ import annotations
 import argparse, itertools, os, csv
 from rdkit import Chem
 from rdkit.Chem import AllChem
 
-# ---- 검증 세트: 공개된 신경작용제 SMILES (스펙트럼 예측 대상; 합성정보 아님) ----
-# 프로토콜 재현(1-A)용. 필요한 것만 사용.
+# ---- validation set: published nerve-agent SMILES (targets for spectrum prediction; no synthesis information) ----
+# for protocol reproduction (1-A); use only what is needed
 VALIDATION = {
     "GB_sarin":   "CC(C)OP(C)(=O)F",
     "GD_soman":   "CC(C)(C)C(C)OP(C)(=O)F",
@@ -23,18 +24,18 @@ VALIDATION = {
     "VX":         "CCOP(=O)(C)SCCN(C(C)C)C(C)C",
 }
 
-# ---- 유도체 풀 템플릿 ----
-# 백본에 치환점을 [*:n] 으로 표기. R_GROUPS에서 조합 대입.
-# 아래는 '구조식 골격'만 담은 플레이스홀더 — Ku가 A-series 백본으로 교체.
+# ---- derivative pool templates ----
+# substitution points on the backbone are marked [*:n]; combinations are substituted from R_GROUPS
+# placeholder holding the skeleton only; replaced with the A-series backbone
 TEMPLATES = {
-    # OP 신경작용제-계열 2D 그리드: R1-O-P(R2)(=O)F ([*:1]=O치환, [*:2]=P치환).
-    # R2=Me 행이 Kim 2026 실험검증 5종(GB/EtGB/nPrGB/iBuGB/GF)을 포함 → 검증 앵커.
-    # AL replay 벤치마크용 화학공간 (스펙트럼 DB·탐지 연구, 계산 전용).
+    # two-dimensional grid of organophosphorus nerve-agent analogs: R1-O-P(R2)(=O)F ([*:1] on O, [*:2] on P)
+    # the R2=Me row contains the five experimentally validated species of Kim 2026 (GB/EtGB/nPrGB/iBuGB/GF) -> validation anchor
+    # chemical space for the AL replay benchmark (spectral database and detection research; computational only)
     "OP_grid": "[*:1]OP([*:2])(=O)F",
-    # A-series 백본은 Ku가 여기에 추가 (플레이스홀더):
-    # "A_series": "<Ku 입력>",
+    # the A-series backbone is added here (placeholder):
+    # "A_series": "<to be supplied>",
 }
-R_GROUPS = {              # 라벨: 치환 알킬 조각 (O·P 두 위치 공통)
+R_GROUPS = {              # labels: substituent alkyl fragments (shared by the O and P positions)
     "Me":  "C",           # methyl
     "Et":  "CC",          # ethyl
     "nPr": "CCC",         # n-propyl
@@ -43,16 +44,16 @@ R_GROUPS = {              # 라벨: 치환 알킬 조각 (O·P 두 위치 공통
     "sBu": "C(C)CC",      # sec-butyl
     "cPn": "C1CCCC1",     # cyclopentyl
     "cHx": "C1CCCCC1",    # cyclohexyl
-}                          # 8 × 8 = 64종 (R2=Me 행에 GB/EtGB/nPrGB/iBuGB/GF)
+}                          # 8 x 8 = 64 species (the R2=Me row holds GB/EtGB/nPrGB/iBuGB/GF)
 
 
 def _attach(backbone_smiles: str, subs: dict[int, str]) -> str | None:
-    """[*:n] 위치에 subs[n] R-그룹을 부착한 SMILES 반환."""
+    """Return SMILES with the subs[n] R-group attached at each [*:n] site."""
     mol = Chem.MolFromSmiles(backbone_smiles)
     if mol is None:
         return None
     rw = Chem.RWMol(mol)
-    # 각 더미원자([*:n])를 R그룹 첫 원자로 연결
+    # bond each dummy atom ([*:n]) to the first atom of its R group
     dummies = [(a.GetIdx(), a.GetAtomMapNum()) for a in rw.GetAtoms() if a.GetSymbol() == "*"]
     for idx, mapnum in sorted(dummies, key=lambda t: -t[0]):
         frag = Chem.MolFromSmiles(subs[mapnum])
@@ -60,13 +61,13 @@ def _attach(backbone_smiles: str, subs: dict[int, str]) -> str | None:
             return None
         combo = Chem.CombineMols(rw.GetMol(), frag)
         rw = Chem.RWMol(combo)
-        # 더미와 이웃 찾기
+        # locate the dummy atom and its neighbour
         d_idx = [a.GetIdx() for a in rw.GetAtoms() if a.GetSymbol() == "*" and a.GetAtomMapNum() == mapnum]
         if not d_idx:
             return None
         d = d_idx[0]
         nbr = [n.GetIdx() for n in rw.GetAtomWithIdx(d).GetNeighbors()][0]
-        # frag 첫 원자 = combine 후 원래 원자수 offset
+        # the first atom of the fragment sits at the original atom count as offset after combining
         frag_start = rw.GetNumAtoms() - frag.GetNumAtoms()
         rw.AddBond(nbr, frag_start, Chem.BondType.SINGLE)
         rw.RemoveAtom(d)
@@ -79,13 +80,13 @@ def _attach(backbone_smiles: str, subs: dict[int, str]) -> str | None:
 
 
 def enumerate_pool(templates=TEMPLATES, rgroups=R_GROUPS) -> list[dict]:
-    """모든 백본×치환조합 열거 → [{name, smiles}]."""
+    """Enumerate all backbone × substituent combinations → [{name, smiles}]."""
     out, seen = [], set()
     labels = list(rgroups.keys())
     for bb_name, bb in templates.items():
         mol = Chem.MolFromSmiles(bb)
         if mol is None:
-            print(f"[warn] backbone 파싱 실패: {bb_name}")
+            print(f"[warn] backbone parsing failed: {bb_name}")
             continue
         n_sites = sum(1 for a in mol.GetAtoms() if a.GetSymbol() == "*")
         if n_sites == 0:
@@ -102,7 +103,7 @@ def enumerate_pool(templates=TEMPLATES, rgroups=R_GROUPS) -> list[dict]:
 
 
 def gen_xyz(smiles: str, seed: int = 42) -> str | None:
-    """ETKDG 3D 임베딩 + MMFF 사전최적화 → xyz 블록(원소 x y z)."""
+    """ETKDG 3D embedding + MMFF pre-optimization → xyz block (element x y z)."""
     mol = Chem.MolFromSmiles(smiles)
     if mol is None:
         return None
@@ -140,7 +141,7 @@ def main():
         w = csv.DictWriter(f, fieldnames=["name", "smiles", "set"])
         w.writeheader()
         w.writerows(rows)
-    print(f"[ok] {len(rows)} 구조 → {args.out}  (validation={sum(r['set']=='validation' for r in rows)}, pool={sum(r['set']=='pool' for r in rows)})")
+    print(f"[ok] {len(rows)} structures → {args.out}  (validation={sum(r['set']=='validation' for r in rows)}, pool={sum(r['set']=='pool' for r in rows)})")
 
 
 if __name__ == "__main__":

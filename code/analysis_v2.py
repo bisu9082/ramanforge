@@ -1,14 +1,14 @@
 """
-ramanforge — v2 마스터 분석 (순환 없는 보정).
+ramanforge: v2 master analysis (non-circular calibration).
 
-v1 대비 변경점
-  1) s를 '밴드 위치'로만 적합 (식별 정확도 미사용)  -> 순환 제거
-  2) 저/고주파 두 구간 스케일 (mode-dependent, 문헌 권고)
-  3) Γ는 실측 밴드 겉보기 폭에서 고정 -> 자유 파라미터 0개
-  4) 밴드 매칭을 one-to-one (Hungarian) 으로 변경 -> 중복 배정 제거
-  5) leave-one-molecule-out-of-library 추가 (논문의 전제 시나리오)
+Changes relative to v1
+  1) s is fitted on 'band positions' only (identification accuracy not used)  -> circularity removed
+  2) two-region scaling for low and high wavenumbers (mode-dependent, recommended in the literature)
+  3) Γ is fixed from the apparent width of the measured bands -> 0 free parameters
+  4) band matching changed to one-to-one (Hungarian) -> duplicate assignments removed
+  5) leave-one-molecule-out-of-library added (the scenario assumed in the paper)
 
-출력: data/_v2.pkl  (모든 figure/표/본문 수치의 단일 원천)
+Output: data/_v2.pkl  (the single source for every figure, table and in-text number)
 """
 from __future__ import annotations
 import glob, os, sys, pickle, itertools, random
@@ -46,7 +46,7 @@ def cls(job): return CLASS.get(job, "Nerve")
 def label(job): return PRETTY.get(job, job.replace("_", " "))
 
 
-# ---------------------------------------------------------------- 로드
+# ---------------------------------------------------------------- load
 def load_library():
     out = {}
     for f in sorted(glob.glob(os.path.join(ROOT, "orca", "outputs", "*.out"))):
@@ -66,7 +66,7 @@ def load_measured():
     return {k: (lambda m: m / m.max())(np.mean(v, 0)) for k, v in acc.items()}
 
 
-# ---------------------------------------------------------------- 보정
+# ----------------------------------------------------------- calibration
 def scale_freqs(f, sl, sh): return np.where(f < CUT, f * sl, f * sh)
 
 
@@ -85,7 +85,7 @@ def synth(pk, sl, sh, fwhm=FWHM, scattering=True):
 
 
 def band_rmse(lib, mpk, sl, sh, tol=MATCH_TOL):
-    """식별을 쓰지 않는 목적함수: 실측 밴드 위치 vs 스케일된 조화 진동수."""
+    """Objective function that does not use identification: measured band positions vs scaled harmonic frequencies."""
     d = []
     for ag in AGENTS:
         pk = lib[JOB[ag]]
@@ -112,9 +112,9 @@ def fit_scale(lib, mpk, min_pairs=85):
     return best
 
 
-# ---------------------------------------------------------------- 밴드 매칭 (one-to-one)
+# -------------------------------------------- band matching (one-to-one)
 def match_bands(exp_spec, dft_spec, tol=MATCH_TOL):
-    """Hungarian 배정: 계산 밴드 하나가 실측 밴드 하나에만 대응."""
+    """Hungarian assignment: each computed band pairs with exactly one measured band."""
     pe, _ = find_peaks(exp_spec / exp_spec.max(), height=PEAK_H, distance=PEAK_D)
     pc, _ = find_peaks(dft_spec / dft_spec.max(), height=PEAK_H, distance=PEAK_D)
     we, wc = GRID[pe], GRID[pc]
@@ -128,7 +128,7 @@ def match_bands(exp_spec, dft_spec, tol=MATCH_TOL):
     return np.array(pairs).reshape(-1, 2), len(we), len(wc)
 
 
-# ---------------------------------------------------------------- 식별
+# -------------------------------------------------------- identification
 def identify(spec, meas, drop_self=False, pool=None):
     rows = []
     for ag in AGENTS:
@@ -151,7 +151,7 @@ def identify(spec, meas, drop_self=False, pool=None):
     return pd.DataFrame(rows)
 
 
-# ---------------------------------------------------------------- 실패 분석 구간
+# ------------------------------------------------ failure analysis block
 REGIONS = [("skeletal\n250-600", 250, 600), ("P-F / P-N\n600-850", 600, 850),
            ("P-O-C / C-N\n850-1150", 850, 1150), ("C=N / P=O\n1150-1400", 1150, 1400),
            ("CH deform\n1400-1800", 1400, 1800)]
@@ -176,7 +176,7 @@ def main():
 
     spec = {n: synth(v, SL, SH) for n, v in lib.items()}
 
-    # --- 밴드 매칭 (one-to-one) ---
+    # --- band matching (one-to-one) ---
     bands, prow = [], []
     for ag in AGENTS:
         P, ne, nc = match_bands(meas[KEY[ag]], spec[JOB[ag]])
@@ -195,7 +195,7 @@ def main():
           f"MAE={np.abs(dd).mean():.1f}  bias={dd.mean():+.1f}")
     print(B.to_string(index=False))
 
-    # --- 식별 ---
+    # --- identification ---
     R53 = identify(spec, meas)
     R9 = identify(spec, meas, pool=[JOB[a] for a in AGENTS])
     RLOO = identify(spec, meas, drop_self=True)
@@ -203,7 +203,7 @@ def main():
     print(f"[ident]  9-lib molecular {R9.mol_ok.sum()}/9  class {R9.cls_ok.sum()}/9")
     print(f"[LOO ]  true molecule removed -> class {RLOO.cls_ok.sum()}/9")
 
-    # --- 라이브러리 성장 ---
+    # --- library growth ---
     core = [JOB[a] for a in AGENTS]
     extra = [n for n in spec if n not in core]
     rng = random.Random(0)
@@ -225,17 +225,17 @@ def main():
         if len(k):
             absten.append((th, len(k), k.mol_ok.mean() * 100, k.cls_ok.mean() * 100))
 
-    # --- Novichok 계산-계산 유사도 ---
+    # --- Novichok computed-to-computed similarity ---
     NOV = ["A-230", "A-232", "A-234", "A-242"]
     DD = np.array([[_cos(spec[JOB[a]], spec[JOB[b]]) for b in NOV] for a in NOV])
 
-    # --- 실패 사례 구간 분해 ---
+    # --- region decomposition of the failure cases ---
     fails = {}
     for r in R53[~R53.mol_ok].itertuples():
         fails[r.agent] = dict(wrong=label(r.top1), wrong_job=r.top1,
                               rows=region_breakdown(meas[KEY[r.agent]], spec[r.gold], spec[r.top1]))
 
-    # --- Γ 민감도 (pitfall 재검증) ---
+    # --- sensitivity to Gamma (pitfall re-check) ---
     pit = []
     for w in [8, 12, 16, 20, 25, 30, 35, 40, 50, 60]:
         sp = {n: synth(v, SL, SH, fwhm=w) for n, v in lib.items()}
@@ -243,14 +243,14 @@ def main():
         mc = float(np.mean([_cos(meas[KEY[a]], sp[JOB[a]]) for a in AGENTS]))
         pit.append((w, mc, r.mol_ok.sum() / 9, r.cls_ok.sum() / 9, float(r.gold_margin.mean())))
 
-    # --- 3항 보정 기여도 (anchor GF) ---
+    # --- contribution of the three correction terms (anchor GF) ---
     gpk = lib[JOB["GF"]]; gexp = meas[KEY["GF"]]
     stages = [("scaling only", _cos(gexp, synth(gpk, SL, SH, fwhm=2.0, scattering=False))),
               ("+ linewidth", _cos(gexp, synth(gpk, SL, SH, fwhm=FWHM, scattering=False))),
               ("+ scattering factor", _cos(gexp, synth(gpk, SL, SH, fwhm=FWHM, scattering=True)))]
     print("[stages]", [(a, round(b, 3)) for a, b in stages])
 
-    # --- 저주파 밴드 수 (Novichok) ---
+    # --- number of low-frequency bands (Novichok) ---
     nlow = {}
     for ag in NOV:
         p = mpk[ag]

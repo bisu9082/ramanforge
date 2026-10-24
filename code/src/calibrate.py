@@ -1,20 +1,21 @@
 """
-ramanforge — DFT→실측 스펙트럼 보정(calibration).
+ramanforge: DFT→measured spectrum calibration.
 
-DFT 조화·기체상·단일 conformer 계산과 상온 응축상 실측 사이의
-도메인 갭을 물리 기반으로 보정한다. 앵커(GF)에서 실측으로 검증된
-기여도: 코사인 0.587 → 0.707(FWHM) → 0.723(산란인자).
+The domain gap between harmonic, gas phase, single conformer DFT calculations and
+room temperature condensed phase measurements is calibrated on physical grounds. The
+contributions verified against the measurement at the anchor (GF):
+cosine 0.587 → 0.707 (FWHM) → 0.723 (scattering factor).
 
-보정 요소
-  1) 주파수 스케일링 s : B3LYP 조화 진동수의 계통 과대추정 보정
-  2) Lorentzian FWHM   : 응축상 선폭(기체상 계산엔 없음)
-  3) Raman 산란인자    : ORCA 'activity'(∂α/∂Q)² → 실측 강도로 변환
+Calibration terms
+  1) frequency scaling s : corrects the systematic overestimation of the B3LYP harmonic wavenumbers
+  2) Lorentzian FWHM     : condensed phase linewidth (absent from a gas phase calculation)
+  3) Raman scattering factor : converts the ORCA 'activity' (∂α/∂Q)² into measured intensity
         I ∝ (ν0-ν)^4 / ν · 1/(1-exp(-hcν/kT))   (Bose-Einstein)
-  4) (옵션) 선형 baseline : 실측 형광 배경 근사
+  4) (optional) linear baseline : approximates the measured fluorescence background
 
-파라미터는 실측 앵커에 대해 코사인 최대화로 적합(fit_calibration)하고,
-그 값을 라이브러리 전체에 적용(apply)한다. — 즉 분자마다 따로 맞추지
-않으므로 과적합/순환 위험이 없다.
+The parameters are fitted by maximizing the cosine against the measured anchor
+(fit_calibration) and those values are applied to the whole library (apply); that is, they
+are not fitted molecule by molecule, so there is no risk of overfitting or circularity.
 """
 from __future__ import annotations
 from dataclasses import dataclass, asdict
@@ -23,17 +24,17 @@ from pathlib import Path
 import numpy as np
 
 HCK = 1.4388      # hc/k  [cm·K]
-# 실측 장비: Metrohm TacticID-1064 ST (1064 nm ± 0.2 nm, Class IIIB, max 495 mW)
+# instrument: Metrohm TacticID-1064 ST (1064 nm +- 0.2 nm, Class IIIB, max 495 mW)
 DEFAULT_LASER = 1064.0  # nm
 
 
 @dataclass
 class CalibParams:
-    scale: float = 0.992      # 주파수 스케일
+    scale: float = 0.992      # frequency scale factor
     fwhm: float = 30.0        # cm-1
     laser_nm: float = DEFAULT_LASER
     temp_K: float = 298.0
-    scattering: bool = True   # 산란인자 적용 여부
+    scattering: bool = True   # whether the scattering factor is applied
 
     def save(self, path):
         Path(path).write_text(json.dumps(asdict(self), indent=2))
@@ -44,8 +45,8 @@ class CalibParams:
 
 
 def scattering_factor(freqs: np.ndarray, laser_nm: float, T: float) -> np.ndarray:
-    """ORCA activity → 실측 Raman 강도 변환 인자."""
-    nu0 = 1e7 / laser_nm                       # 여기광 [cm-1]
+    """ORCA activity → measured Raman intensity conversion factor."""
+    nu0 = 1e7 / laser_nm                       # excitation [cm-1]
     with np.errstate(divide="ignore", invalid="ignore"):
         bose = 1.0 / (1.0 - np.exp(-HCK * freqs / T))
         fac = ((nu0 - freqs) ** 4) / freqs * bose
@@ -55,8 +56,8 @@ def scattering_factor(freqs: np.ndarray, laser_nm: float, T: float) -> np.ndarra
 def synth_spectrum(peaks: np.ndarray, grid: np.ndarray,
                    p: CalibParams) -> np.ndarray:
     """
-    DFT 라인 스펙트럼(peaks[:,0]=freq, [:,1]=activity) → 보정된 연속 스펙트럼.
-    반환: grid 위 정규화(max=1) 강도.
+    DFT line spectrum (peaks[:,0]=freq, [:,1]=activity) → calibrated continuous spectrum.
+    Returns: intensity normalized (max=1) on the grid.
     """
     f = peaks[:, 0] * p.scale
     a = peaks[:, 1].astype(float).copy()
@@ -81,11 +82,12 @@ def fit_calibration(peaks: np.ndarray, exp_spec: np.ndarray, grid: np.ndarray,
                     fwhms=(8, 12, 16, 20, 25, 30, 35, 40),
                     scattering: bool = True) -> tuple[CalibParams, float]:
     """
-    [주의] 유사도(코사인) 최대화 기준 적합.
-    FWHM은 넓힐수록 스펙트럼이 뭉개져 '아무 쌍이나' 코사인이 올라가므로,
-    이 기준으로 FWHM을 고르면 식별 변별력이 오히려 나빠진다(실측 확인:
-    fwhm40에서 황겨자가 신경작용제 DFT를 1위로 오답). 주파수 스케일 적합에만
-    쓰고, FWHM/식별용 보정은 fit_calibration_discriminative()를 사용할 것.
+    [Caution] Fit based on maximizing the similarity (cosine).
+    The broader the FWHM, the more the spectrum is smeared, so the cosine rises for
+    'any pair'; choosing the FWHM by this criterion therefore degrades identification
+    discrimination (confirmed on measured data: at fwhm40, sulfur mustard ranks a nerve
+    agent DFT spectrum first, an incorrect call). Use it for the frequency scale fit only;
+    for the FWHM and for identification calibration use fit_calibration_discriminative().
     """
     best, best_cs = None, -1.0
     for s in scales:
@@ -105,15 +107,16 @@ def fit_calibration_discriminative(
         fwhms=(8, 10, 12, 15, 20, 25, 30),
         scattering: bool = True):
     """
-    **식별 성능** 기준 보정 적합(권장).
+    Calibration fit based on **identification performance** (recommended).
 
-    lib_peaks : {라이브러리명: DFT peaks 배열}
-    exp_specs : {실측명: grid 위 스펙트럼}
-    truth     : {실측명: 정답 라이브러리명}
-    목적함수  : 정답이 1위인 비율(top-1) 우선, 동률이면 정답과 최고오답의
-                코사인 마진 평균이 큰 쪽.
+    lib_peaks : {library name: DFT peaks array}
+    exp_specs : {measured name: spectrum on the grid}
+    truth     : {measured name: correct library name}
+    Objective : the fraction for which the correct entry ranks first (top-1) takes
+                precedence; on a tie, the larger mean cosine margin between the
+                correct entry and the best incorrect one.
 
-    반환: (최적 CalibParams, top1, 평균마진)
+    Returns: (best CalibParams, top1, mean margin)
     """
     best = None
     for s in scales:
@@ -142,13 +145,13 @@ def fit_calibration_discriminative(
 
 
 def snv(x: np.ndarray) -> np.ndarray:
-    """Standard Normal Variate — 실측 강도 스케일/오프셋 정규화."""
+    """Standard Normal Variate; normalizes measured intensity scale/offset."""
     return (x - x.mean()) / (x.std() + 1e-12)
 
 
 def baseline_correct(y: np.ndarray, order: int = 3, n_iter: int = 30) -> np.ndarray:
     """
-    형광 배경 제거(반복 다항 피팅). 실측 스펙트럼 전처리용.
+    Fluorescence background removal (iterative polynomial fitting). For preprocessing of measured spectra.
     """
     x = np.linspace(-1, 1, len(y))
     z = y.copy()

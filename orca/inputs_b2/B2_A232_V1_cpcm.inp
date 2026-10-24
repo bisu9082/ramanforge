@@ -1,5 +1,5 @@
-# Condensed-phase dielectric effect, approximated with acetone, whose permittivity (~20) is close to that of the neat liquid agents.
-# Starting geometry: converged structure from EXP_A232.out
+# 응축상 유전 효과. 순수액상 작용제의 유전율(~20)에 가까운 아세톤으로 근사.
+# 출발 기하: EXP_A232.out 수렴 구조
 ! B3LYP 6-311++G(d,p) TightOpt NumFreq CPCM(Acetone)
 %pal nprocs 8 end
 %maxcore 1400

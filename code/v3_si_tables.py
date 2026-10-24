@@ -1,11 +1,12 @@
 """
-v3 SI 표 생성기 — latex/si/sitables/ 의 v2 표를 v3 데이터로 전면 교체한다.
+v3 SI table generator: replaces the v2 tables in latex/si/sitables/ entirely with v3 data.
 
-v2 SI는 작용제-평균 9종 기준(분자 5/9, 클래스 9/9)이고, v3 본문은 진짜 획득 30건
-기준(실측 30/30, 계산 14/30)이다. 둘이 같은 문서에 있으면 정면 모순이므로
-본문이 인용하는 모든 표를 여기서 한 번에 다시 만든다.
+The v2 SI is based on the agent-average over 9 species (molecular 5/9, class 9/9), whereas the
+v3 main text is based on the 30 genuine acquisitions (measured 30/30, computed 14/30). Having
+both in the same document is a direct contradiction, so every table cited by the main text is
+rebuilt here in one pass.
 
-출력 파일은 기존 파일명을 그대로 쓴다(si.tex의 \input 경로 유지).
+The output files keep the existing file names (the \input paths in si.tex are preserved).
 """
 import os, sys, json, math
 import numpy as np, pandas as pd
@@ -47,11 +48,13 @@ def table(fn, caption, label, colspec, header, rows, note=None, small=True):
 
 made = []
 H = pd.read_csv(f"{DATA}/v3_headtohead.csv")
-_LIBN = int(json.load(open(f"{DATA}/v3_headtohead_meta.json"))["n_library"])
+_H2HM = json.load(open(f"{DATA}/v3_headtohead_meta.json"))
+_LIBN = int(_H2HM["n_library"])        # full computed library (open set)
+_CLOSN = int(_H2HM["n_agents_lib"])    # closed set: one computed entry per measured agent
 META = json.load(open(f"{DATA}/v3_headtohead_meta.json"))
 PRE = json.load(open(f"{DATA}/v3_preproc_meta.json"))
 
-# ───────────────────────── sessions : 원시 획득 대장
+# ------------------------- sessions : register of raw acquisitions
 A = pd.read_csv(f"{DATA}/v3_acquisition_audit.csv")
 S = pd.read_csv(f"{DATA}/v3_agent_summary.csv").set_index("agent")
 rows = []
@@ -78,7 +81,7 @@ made.append(table(
          f"{len(S)} agents from {int(S.n_files.sum())} files. HD and VX have a single "
          "genuine acquisition each and are never used as queries."))
 
-# ───────────────────────── quality : 데이터 품질과 HN2
+# ------------------------- quality : data quality and HN2
 rows = []
 for a in ORDER:
     if a not in S.index: continue
@@ -100,7 +103,7 @@ made.append(table(
          "attributed the exclusion to a poor measurement, which these figures do not "
          "support. Section~S6 gives the independent evidence from the computed library."))
 
-# ───────────────────────── gamma : 선폭은 측정값
+# ------------------------- gamma : the linewidth is measured, not fitted
 G = pd.read_csv(f"{DATA}/v3_linewidths.csv")
 gg = G.groupby("agent")
 rows = []
@@ -128,13 +131,13 @@ made.append(table(
          "apparent width that includes the instrument response function. No "
          "identification result was consulted in obtaining it."))
 
-# ───────────────────────── preproc : 민감도 격자
+# ------------------------- preproc : sensitivity grid
 P = pd.read_csv(f"{DATA}/v3_preproc_sensitivity.csv")
 rows = []
 for _, r in P.iterrows():
     v = r["value"]
     vs = v if isinstance(v, str) else (f"{v:g}")
-    cos = "---" if pd.isna(r.cos_vs_default) else f"{r.cos_vs_default:.4f}"
+    cos = "n/a" if pd.isna(r.cos_vs_default) else f"{r.cos_vs_default:.4f}"
     star = "\\textbf{" if abs(r.separation - 0.123) < 1e-9 and cos in ("1.0000",) else ""
     end = "}" if star else ""
     rows.append([esc(r.parameter), f"{star}{vs}{end}", cos,
@@ -157,7 +160,7 @@ made.append(table(
          "changing the spectra substantially, and both are reported rather than the "
          "better-scoring one being adopted."))
 
-# ───────────────────────── ident : 작용제별 식별 요약
+# ------------------------- ident : identification summary by agent
 rows = []
 for a in ORDER:
     s = H[H.agent == a]
@@ -186,13 +189,13 @@ made.append(table(
          f"{H[H.agent=='HN2'].dft_self.mean():.3f}; Section~S6 treats "
          f"that as evidence about the sample."))
 
-# ───────────────────────── peracq : 획득별 전건
+# ------------------------- peracq : every acquisition, one row each
 rows = []
 for _, r in H.sort_values(["agent", "rep"]).iterrows():
     rows.append([nm(r.agent), str(int(r.rep)),
-                 esc(r.meas_top1), "\\checkmark" if r.meas_mol else "---",
+                 esc(r.meas_top1), "\\checkmark" if r.meas_mol else "$\\times$",
                  f"{r.meas_self:.3f}", f"{r.meas_margin:.3f}",
-                 esc(r.dft_top1), "\\checkmark" if r.dft_mol else "---",
+                 esc(r.dft_top1), "\\checkmark" if r.dft_mol else "$\\times$",
                  f"{r.dft_self:.3f}", f"{r.dft_margin:.3f}"])
 made.append(table(
     "peracq.tex",
@@ -205,7 +208,7 @@ made.append(table(
          "rows. We report the per-acquisition result because it is what a single "
          "interrogation delivers."))
 
-# ───────────────────────── loao : nested 보정
+# ------------------------- loao : nested calibration
 N = pd.read_csv(f"{DATA}/v3_nested_calibration.csv")
 rows = [[nm(r.held_out), f"{r.s_low:.4f}", f"{r.s_high:.4f}",
          f"{r.rmse:.2f}", str(int(r.n_pairs))] for _, r in N.iterrows()]
@@ -227,11 +230,11 @@ made.append(table(
          "the calibration, and the identification results are obtained under factors "
          "effectively independent of the agent being identified."))
 
-print("생성:", len(made), "개")
+print("generated:", len(made), "tables")
 for f in made: print("  ", f)
 
 
-# ───────────────────────── regions : 구간 분해 + 인 함유 분할
+# ------------------------- regions : region decomposition and the phosphorus split
 RB = pd.read_csv(f"{DATA}/v3_region_breakdown.csv")
 PF = pd.read_csv(f"{DATA}/v3_pf_region_split.csv")
 RA = pd.read_csv(f"{DATA}/v3_region_by_agent.csv").rename(columns={"Unnamed: 0": "agent"})
@@ -274,7 +277,7 @@ made.append(table(
          f"of the effect and on its confinement to one window rather than on that $p$ value. "
          f"$p$ is one-sided Mann--Whitney."))
 
-# ───────────────────────── regbyagent : 작용제별 구간
+# ------------------------- regbyagent : regions by agent
 cols = [c for c in RA.columns if c != "agent"]
 rows = []
 for a in ORDER:
@@ -286,7 +289,7 @@ for a in ORDER:
     for c in cols:
         v = f"{r[c]:.3f}"
         vals.append(f"\\textbf{{{v}}}" if ("600-850" in c and P_) else v)
-    rows.append([nm(a), "P" if P_ else "---"] + vals)
+    rows.append([nm(a), "yes" if P_ else "no"] + vals)
 _PSET = ("GD", "GF", "VX", "A230", "A232", "A234", "A242")
 _c68 = [c for c in cols if "600-850" in c][0]
 _pv = [RA[RA.agent == a].iloc[0][_c68] for a in ORDER if a in _PSET and len(RA[RA.agent == a])]
@@ -302,7 +305,7 @@ made.append(table(
     "Measured-to-computed cosine by region for every queried agent. Bold entries are the "
     "600--850\\,\\wn{} window of the phosphorus-containing agents.",
     "tab:si-regbyagent", "ll" + "r" * len(cols),
-    ["Agent", "P"] + [c.replace("–", "--").replace("-", "--") for c in cols], rows,
+    ["Agent", "Contains P"] + [c.replace("–", "--").replace("-", "--") for c in cols], rows,
     note=f"The phosphorus-containing agents span {_RBmin:.3f} to {_RBmax:.3f} in the 600--850\\,\\wn{{}} "
          f"window against {_RNmin:.3f}--{_RNmax:.3f} for the {_nNP} that contain no phosphorus. "
          f"Conformational flexibility does not order this: {_RBbest} is the best of the "
@@ -310,7 +313,7 @@ made.append(table(
          f"census over all eleven agents gives no association between conformational entropy "
          f"and this cosine (Pearson $r$ = +0.23, $n$ = 10)."))
 
-# ───────────────────────── absten : 기권 점수 AUC + 운용점
+# ------------------------- absten : abstention score AUC and operating point
 AU = pd.read_csv(f"{DATA}/v3_abstention_auc.csv")
 OP = pd.read_csv(f"{DATA}/v3_abstention_operating.csv").set_index("score")
 CM = pd.read_csv(f"{DATA}/v3_abstention_compare.csv").set_index("score")
@@ -341,7 +344,7 @@ made.append(table(
          "obtained on one instrument, one session and one vial per agent, and is not a "
          "transferable operating value; the contrast between the libraries is the result."))
 
-# ───────────────────────── loco : 클래스 부재 시 무엇으로 가는가
+# ------------------------- loco : where the answer goes when the class is absent
 SCr = pd.read_csv(f"{DATA}/v3_abstention_scores.csv")
 LO = SCr[SCr.cond == "LOCO"]
 rows = []
@@ -365,10 +368,10 @@ made.append(table(
          "the ranges it returns when the answer is present, which is why no threshold on "
          "them separates the two conditions (Table~\\ref{tab:si-absten})."))
 
-print("\n총", len(made), "개")
+print("\ntotal", len(made), "tables")
 for f in made[7:]: print("  ", f)
 
-# ───────────────────────── sessionsim : 측정 재현성
+# ------------------------- sessionsim : measurement reproducibility
 CMx = pd.read_csv(f"{DATA}/v3_measured_cosine_matrix.csv").rename(
     columns={"Unnamed: 0": "agent"}).set_index("agent")
 ACQ = PRE["acq_sep"]
@@ -397,7 +400,7 @@ made.append(table(
          "rather than by the session. All acquisitions were taken within a single hour on "
          "one instrument, so day-to-day reproducibility remains untested."))
 
-# ───────────────────────── loo : 실측 라이브러리 leave-one-molecule-out
+# ------------------------- loo : leave-one-molecule-out on the measured library
 LOO = pd.read_csv(f"{DATA}/v3_measured_only_loo.csv")
 rows = []
 for a in ORDER:
@@ -435,7 +438,7 @@ made.append(table(
          "deleting the entire class does not (Table~\\ref{tab:si-loco}). HN2 falls to a "
          "Novichok agent, consistent with the anomaly reported in Section~S5."))
 
-# ───────────────────────── nov : A-시리즈 상호유사도 (실측 vs 계산)
+# ------------------------- nov : mutual similarity within the A-series (measured vs computed)
 AS = pd.read_csv(f"{DATA}/v3_aseries_margins.csv")
 Hs = H.groupby("agent")
 rows = []
@@ -463,7 +466,7 @@ made.append(table(
          "therefore fails on them not because the congeners are too much alike but "
          "because the correct entry is not drawn well enough."))
 
-# ───────────────────────── bands / bandlist : 대응 밴드쌍
+# ------------------------- bands / bandlist : paired bands
 sys.path.insert(0, ROOT); sys.path.insert(0, os.path.join(ROOT, "scripts"))
 from v3_step3_headtohead import (load_measured, load_library, measured_peaks,
                                  JOB, CUT, AGENTS)
@@ -482,8 +485,8 @@ for a in ORDER:
     f = f[keep]
     w_all = np.asarray(mpk[a], float)
     if not len(f) or not len(w_all): continue
-    # 1대1 할당 (선형 할당 문제). 최근접 매칭은 계산 밴드 하나를 여러 측정 밴드가
-    # 가져가 부호가 반대인 잔차가 상쇄되므로 쓰지 않는다 (본문 Analysis와 동일 기준).
+    # one-to-one assignment (a linear assignment problem). Nearest-neighbour matching is not used:
+    # several measured bands would claim the same computed band and residuals of opposite sign would cancel (same criterion as Analysis in the main text).
     C = np.abs(w_all[:, None] - f[None, :])
     C = np.where(C > TOL, 1e6, C)
     ri, ci = linear_sum_assignment(C)
@@ -544,7 +547,7 @@ made.append(table(
     ["Agent", "Meas.", "Comp.", "$\\Delta$", "Agent", "Meas.", "Comp.", "$\\Delta$"],
     rows, note=None))
 
-# ───────────────────────── census : 짝짓기 대장 (T1-14)
+# ------------------------- census : pairing register (T1-14)
 rows = []
 for _, r in CEN.iterrows():
     rows.append([nm(r.agent), str(int(r.n_meas)), str(int(r.n_calc)), str(int(r.n_pair)),
@@ -568,7 +571,7 @@ made.append(table(
          f"{np.sqrt((PD.resid**2).mean()):.1f}\\,\\wn{{}}. Both are reported so that the "
          "effect of the tolerance gate is visible."))
 
-# ───────────────────────── theory : B2 10건 + 밴드 이동
+# ------------------------- theory : the ten B2 pairs and the band shifts
 BE = pd.read_csv(f"{DATA}/v3_b2_evaluation.csv")
 VN = {"V1_cpcm": "CPCM", "V2_tightP": "tight P/F/S/Cl", "V3_wb97xd3": "$\\omega$B97X-D3"}
 BE = BE.assign(delta=BE["new_600–850"] - BE["base_600–850"]).sort_values("delta",
@@ -580,8 +583,8 @@ for _, r in BE.iterrows():
     rows.append([nm(r.agent), VN.get(r.variant, esc(r.variant)),
                  f"{r['base_600–850']:.3f}", b(f"{r['new_600–850']:.3f}"),
                  b(f"{d:+.3f}"), f"{r.self_base:.3f}", f"{r.self_new:.3f}",
-                 ("\\checkmark" if r.correct_base else "---") + " $\\rightarrow$ " +
-                 ("\\checkmark" if r.correct_new else "---")])
+                 ("\\checkmark" if r.correct_base else "$\\times$") + " $\\rightarrow$ " +
+                 ("\\checkmark" if r.correct_new else "$\\times$")])
 _d = BE["new_600\u2013850"] - BE["base_600\u2013850"]
 _theory_note = (
     f"Of the {len(BE)} pairs, {int((_d > 0.10).sum())} improved the window substantially "
@@ -621,9 +624,9 @@ made.append(table(
          f"differs only in the ester substituent and was already within "
          f"{abs(BS.loc[BS.agent == 'GD', 'err_base'].iloc[0]):.0f}\\,\\wn{{}}, does not."))
 
-print("\n최종", len(made), "개 표")
+print("\nfinal", len(made), "tables")
 
-# ───────────────────────── calibgrid : 순환 대안 (에디터 요청으로 인쇄본 유지)
+# ------------------------- calibgrid : the circular alternative (kept in print at the editor's request)
 try:
     CG = pd.read_csv(f"{DATA}/v3_calibgrid.csv", index_col=0)
     CGM = json.load(open(f"{DATA}/v3_calibgrid_meta.json"))
@@ -663,16 +666,16 @@ try:
              "in the resulting figures would signal the problem."))
     print("  calibgrid.tex")
 except FileNotFoundError:
-    print("  (calibgrid 데이터 없음 — v3_calibgrid.py 먼저 실행)")
+    print("  (no calibgrid data; run v3_calibgrid.py first)")
 
 
 # ══════════════════════════════════════════════════════════════════
-#  v3.1 추가 표 — 심사 대응 (T1-6/8/9/10/14b, T1-18, T1-19)
+#  tables added in v3.1 in response to review (T1-6/8/9/10/14b, T1-18, T1-19)
 # ══════════════════════════════════════════════════════════════════
 WIDE |= {"metrics.tex", "detect.tex", "decomp.tex", "agentstat.tex", "pfmult.tex", "aucci.tex"}
 new = []
 
-# ── detect : 밴드 검출 기준 × 허용창 민감도
+# -- detect : band-detection criterion vs tolerance-window sensitivity
 DS = pd.read_csv(f"{DATA}/v3_detect_sensitivity.csv")
 rows = [[r.criterion, f"{r.tol:.0f}", f"{r.s_low:.3f}", f"{r.s_high:.3f}",
          f"{r.rmse:.1f}", str(int(r.n_pair)), str(int(r.n_meas)), str(int(r.n_calc)),
@@ -683,7 +686,7 @@ new.append(table(
     "pairing tolerance. The criterion in the first row is the one used throughout this work.",
     "tab:si-detect", "lrrrrrrrr",
     ["Detection criterion", "Tol.\\ (\\wn)", "$s_\\mathrm{low}$", "$s_\\mathrm{high}$",
-     "RMSE (\\wn)", "Paired", "Meas.\\ bands", "Comp.\\ bands", "Penalised RMSE"], rows,
+     "RMSE (\\wn)", "Paired", "Meas.\\ bands", "Comp.\\ bands", "Penalized RMSE"], rows,
     note=f"The scale factors move by at most "
          f"{max((DS.s_low.max()-DS.s_low.min())/DS.s_low.mean(), (DS.s_high.max()-DS.s_high.min())/DS.s_high.mean())*100:.1f}\\% "
          f"and the paired RMSE stays between {DS.rmse.min():.1f} and {DS.rmse.max():.1f}\\,\\wn{{}} "
@@ -693,20 +696,20 @@ new.append(table(
          f"{DS.rmse_pen.mean():.0f}\\,\\wn{{}} and is the honest upper bound on the positional "
          "disagreement, the paired RMSE being the value over bands that found a partner."))
 
-# ── agentstat : 작용제 단위 정확도 + McNemar
+# -- agentstat : per-agent accuracy and McNemar
 AA = pd.read_csv(f"{DATA}/v3_agent_accuracy.csv")
-QN = {"meas_mol": "Measured library, molecular", "dft_mol": "Computed library, molecular (10-member)",
+QN = {"meas_mol": "Measured library, molecular", "dft_mol": f"Computed library, molecular ({_CLOSN}-member)",
       "dft53_mol": f"Computed library, molecular ({_LIBN}-member)", "meas_cls": "Measured library, class",
       "dft_cls": "Computed library, class"}
 AM = json.load(open(f"{DATA}/v3_agent_stats_meta.json"))
-SUBN = {"HN2 \ud3ec\ud568 (9\uc885)": "All nine agents",
-        "HN2 \uc81c\uc678 (8\uc885)": "HN2 excluded (eight agents)"}
+SUBN = {"HN2 included (9 agents)": "All nine agents",
+        "HN2 excluded (8 agents)": "HN2 excluded (eight agents)"}
 rows = []
 for sub in AA.subset.unique():
     for _, r in AA[AA.subset == sub].iterrows():
         rows.append([SUBN.get(sub, sub), QN.get(r.quantity, r.quantity),
                      f"{int(r.k)}/{int(r.n)}", f"[{r.lo:.2f}, {r.hi:.2f}]"])
-_k9 = AM["HN2 포함 (9종)"]; _k8 = AM["HN2 제외 (8종)"]
+_k9 = AM["HN2 included (9 agents)"]; _k8 = AM["HN2 excluded (8 agents)"]
 new.append(table(
     "agentstat.tex",
     "Accuracy with the agent, not the acquisition, as the unit of analysis. Each agent is "
@@ -724,12 +727,12 @@ new.append(table(
          "direction on a sample too small to reach conventional significance, and we report "
          "it as such."))
 
-# ── hn2 : HN2 포함/제외
+# -- hn2 : with and without HN2
 HNE = pd.read_csv(f"{DATA}/v3_hn2_effect.csv").set_index("subset")
 FLD = [("Queries", "n", "{:.0f}"), ("Measured, molecular", "meas_mol", "{:.0f}"),
-       ("Computed, molecular (10-member)", "dft_mol", "{:.0f}"),
+       (f"Computed, molecular ({_CLOSN}-member)", "dft_mol", "{:.0f}"),
        (f"Computed, molecular ({_LIBN}-member)", "dft53_mol", "{:.0f}"),
-       ("Measured, class", "meas_cls", "{:.0f}"), ("Computed, class (10-member)", "dft_cls", "{:.0f}"),
+       ("Measured, class", "meas_cls", "{:.0f}"), (f"Computed, class ({_CLOSN}-member)", "dft_cls", "{:.0f}"),
        (f"Computed, class ({_LIBN}-member)", "dft53_cls", "{:.0f}"),
        ("Measured self-similarity", "meas_self", "{:.3f}"),
        ("Computed self-similarity", "dft_self", "{:.3f}"),
@@ -750,7 +753,7 @@ new.append(table(
          "quote the HN2-excluded values in the abstract and the conclusions and retain the "
          "full set here."))
 
-# ── pfmult : 인 대비 다중비교
+# -- pfmult : multiple comparison of the phosphorus contrast
 PM = pd.read_csv(f"{DATA}/v3_pf_multiplicity.csv")
 rows = [[r.region.replace("_", " "), f"{r.mean_p:.3f}", f"{r.mean_np:.3f}", f"{r.delta:+.3f}",
          f"{r.p_two:.3f}", f"{r.p_bonf:.3f}", f"{r.p_holm:.3f}"] for _, r in PM.iterrows()]
@@ -770,10 +773,10 @@ new.append(table(
          f"$|\\Delta| \\leq {PM.delta.drop(PM.delta.idxmax()).abs().max():.3f}$ elsewhere, and on "
          "the sign reversal in all four other windows."))
 
-# ── aucci : AUC 작용제 단위 CI
+# -- aucci : agent-level confidence interval for the AUC
 AC = pd.read_csv(f"{DATA}/v3_auc_ci.csv")
 SN = {"S1_top1": "top-1 cosine", "S2_margin": "margin", "S3_psr": "peak-to-sidelobe",
-      "S4_libz": "library-normalised $z$", "S5_resid": "unmixing residual",
+      "S4_libz": "library-normalized $z$", "S5_resid": "unmixing residual",
       "S6_bandfrac": "band-match fraction"}
 piv = AC.pivot(index="score", columns="library")
 rows = []
@@ -798,30 +801,30 @@ new.append(table(
          "on the observed data; the intervals are wide, so this is a statement about what nine "
          "agents can establish and not a proof that no score could separate them."))
 
-# ── metrics : T1-18 지표 비교
+# -- metrics : T1-18 comparison of similarity metrics
 MT = pd.read_csv(f"{DATA}/v3_t118_metrics.csv")
-MEAS_CTRL = {"cosine, Γ=22": (30, 30, 0.983), "1차 미분 코사인, Γ=22": (30, 30, 0.981),
-             "±3px 이동허용 코사인, Γ=22": (30, 30, 0.983),
-             "피크리스트 HQI, tol=10": (28, 30, 0.801), "피크리스트 HQI, tol=20": (29, 30, 0.835),
-             "피크리스트 HQI, tol=35": (29, 30, 0.856), "밴드위치 Dice, tol=20": (28, 29, 0.891),
-             "밴드위치 Dice, tol=35": (25, 28, 0.898)}
+MEAS_CTRL = {"cosine, Γ=22": (30, 30, 0.983), "first-derivative cosine, Γ=22": (30, 30, 0.981),
+             "shift-tolerant cosine ±3px, Γ=22": (30, 30, 0.983),
+             "peak-list HQI, tol=10": (28, 30, 0.801), "peak-list HQI, tol=20": (29, 30, 0.835),
+             "peak-list HQI, tol=35": (29, 30, 0.856), "band-position Dice, tol=20": (28, 29, 0.891),
+             "band-position Dice, tol=35": (25, 28, 0.898)}
 ENG = {"cosine, Γ=22": "Full-profile cosine, $\\Gamma$ = 22\\,\\wn{} (adopted)",
        "cosine, Γ=30": "Full-profile cosine, $\\Gamma$ = 30\\,\\wn{}",
        "cosine, Γ=40": "Full-profile cosine, $\\Gamma$ = 40\\,\\wn{}",
        "cosine, Γ=50": "Full-profile cosine, $\\Gamma$ = 50\\,\\wn{}",
        "cosine, Γ=per-agent": "Full-profile cosine, per-agent measured $\\Gamma$",
-       "1차 미분 코사인, Γ=22": "First-derivative cosine",
-       "±3px 이동허용 코사인, Γ=22": "Shift-tolerant cosine, $\\pm$3 pixels ($\\pm$17\\,\\wn{})",
-       "피크리스트 HQI, tol=10": "Peak-list hit quality, 10\\,\\wn{} tolerance",
-       "피크리스트 HQI, tol=20": "Peak-list hit quality, 20\\,\\wn{} tolerance",
-       "피크리스트 HQI, tol=35": "Peak-list hit quality, 35\\,\\wn{} tolerance",
-       "밴드위치 Dice, tol=20": "Band-position Dice, 20\\,\\wn{} tolerance",
-       "밴드위치 Dice, tol=35": "Band-position Dice, 35\\,\\wn{} tolerance"}
+       "first-derivative cosine, Γ=22": "First-derivative cosine",
+       "shift-tolerant cosine ±3px, Γ=22": "Shift-tolerant cosine, $\\pm$3 pixels ($\\pm$17\\,\\wn{})",
+       "peak-list HQI, tol=10": "Peak-list hit quality, 10\\,\\wn{} tolerance",
+       "peak-list HQI, tol=20": "Peak-list hit quality, 20\\,\\wn{} tolerance",
+       "peak-list HQI, tol=35": "Peak-list hit quality, 35\\,\\wn{} tolerance",
+       "band-position Dice, tol=20": "Band-position Dice, 20\\,\\wn{} tolerance",
+       "band-position Dice, tol=35": "Band-position Dice, 35\\,\\wn{} tolerance"}
 rows = []
 for _, r in MT.iterrows():
     mc = MEAS_CTRL.get(r.metric)
     rows.append([ENG.get(r.metric, r.metric),
-                 f"{mc[0]}/30" if mc else "---", f"{mc[2]:.3f}" if mc else "---",
+                 f"{mc[0]}/30" if mc else "n/a", f"{mc[2]:.3f}" if mc else "n/a",
                  f"{int(r.mol_closed)}/30", f"{int(r.mol_open)}/30",
                  f"{int(r.agent_closed)}/9", f"{r.self_mean:.3f}"])
 _MTc = MT.copy()
@@ -829,7 +832,7 @@ _MT_adopt = f"{int(_MTc[_MTc.metric.str.startswith('cosine, Γ=22')].mol_closed.
 _bi = _MTc.mol_closed.idxmax()
 _MT_best = f"{int(_MTc.loc[_bi,'mol_closed'])} of 30"
 _MT_bestname = ENG.get(_MTc.loc[_bi,'metric'], _MTc.loc[_bi,'metric']).split(',')[0].rstrip()
-_pl = _MTc[_MTc.metric.str.contains('피크리스트|밴드위치', na=False)]
+_pl = _MTc[_MTc.metric.str.contains('HQI|Dice', na=False)]
 _MT_plmin, _MT_plmax = int(_pl.mol_closed.min()), int(_pl.mol_closed.max())
 _mv = [v[0] for v in MEAS_CTRL.values()]
 _MT_meas_lo, _MT_meas_hi = int(min(_mv)), int(max(_mv))
@@ -840,8 +843,8 @@ new.append(table(
     "performs poorly on the computed library can be distinguished from a metric that is "
     "simply badly implemented.",
     "tab:si-metrics", "lccccc" + "c",
-    ["Metric", "Meas.\\ top-1", "Meas.\\ self", "Comp.\\ top-1 (10)",
-     "Comp.\\ top-1 (53)", "Comp.\\ by agent", "Comp.\\ self"], rows,
+    ["Metric", "Meas.\\ top-1", "Meas.\\ self", f"Comp.\\ top-1 ({_CLOSN})",
+     f"Comp.\\ top-1 ({_LIBN})", "Comp.\\ by agent", "Comp.\\ self"], rows,
     note=f"No metric rescues the computed library. The adopted metric gives "
          f"{_MT_adopt}, the best of the twelve is {_MT_best} ({_MT_bestname}), and every "
          f"peak-list metric, which is what commercial library search actually uses, lies "
@@ -851,7 +854,7 @@ new.append(table(
          f"and not of the comparison. The similarity metric is therefore excluded as an "
          f"explanation of the result."))
 
-# ── decomp : T1-19 성분 분해
+# -- decomp : T1-19 component decomposition
 DC = pd.read_csv(f"{DATA}/v3_t119_decompose.csv")
 rows = [[nm(r.agent), "$\\bullet$" if r.phos else "$\\circ$",
          f"{int(r.n_pair)}/{int(r.n_calc)}/{int(r.n_meas)}",
@@ -882,7 +885,7 @@ new.append(table(
          "remaining component is neither position nor intensity nor width but the set of bands "
          "itself (Table~\\ref{tab:si-unmatched})."))
 
-# ── unmatched : 미짝 밴드 강도 비율
+# -- unmatched : intensity fraction in unmatched bands
 UM = pd.read_csv(f"{DATA}/v3_t119_unmatched.csv")
 rows = [[nm(r.agent), str(int(r.n_c)), str(int(r.n_m)), str(int(r.pair)),
          f"{r.unm_calc*100:.0f}\\%", f"{r.unm_meas*100:.0f}\\%"] for _, r in UM.iterrows()]
@@ -906,4 +909,4 @@ new.append(table(
          "separately in Sections~S5 and~S8."))
 
 for f in new: print("  +", f)
-print(f"\n추가 {len(new)} 개 표 (총 {len(made) + len(new)})")
+print(f"\nadded {len(new)} tables (total {len(made) + len(new)})")

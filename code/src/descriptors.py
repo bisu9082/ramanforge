@@ -1,17 +1,17 @@
 """
-ramanforge Step 4-b 보조
-SMILES -> 구조 특징벡터 (AL surrogate 입력).
+ramanforge Step 4-b helper
+SMILES -> structural feature vector (input to the AL surrogate).
 
-full 스펙트럼(라벨)을 예측하기 위한 '값싼' 구조 기술자.
-DFT 없이 얻을 수 있는 위상/조성/물리화학 특징만 사용
-(AL의 요점: 비싼 라벨을 적게 쓰는 것이므로 입력은 값싸야 함).
+A 'cheap' structural descriptor for predicting the full spectrum (the label).
+Only topological, compositional and physicochemical features obtainable without DFT are used
+(the point of AL is to use few expensive labels, so the input must be cheap).
 """
 from __future__ import annotations
 import numpy as np
 from rdkit import Chem
 from rdkit.Chem import Descriptors, rdMolDescriptors, AllChem
 
-# 고정 특징 순서 (재현성)
+# fixed feature order, for reproducibility
 _FUNC = [
     ("MolWt", Descriptors.MolWt),
     ("HeavyAtomCount", lambda m: m.GetNumHeavyAtoms()),
@@ -41,13 +41,13 @@ def feature_names() -> list[str]:
     return base + [f"MorganBit_{i}" for i in range(_N_MORGAN)]
 
 
-_N_MORGAN = 32  # 짧은 Morgan fingerprint (구조 위상 보강)
+_N_MORGAN = 32  # short Morgan fingerprint, to reinforce structural topology
 
 
 def smiles_to_features(smiles: str) -> np.ndarray:
     mol = Chem.MolFromSmiles(smiles)
     if mol is None:
-        raise ValueError(f"SMILES 파싱 실패: {smiles}")
+        raise ValueError(f"SMILES parsing failed: {smiles}")
     mol = Chem.AddHs(mol)
     scalar = np.array([f(mol) for _, f in _FUNC], dtype=float)
 

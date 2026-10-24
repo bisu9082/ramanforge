@@ -1,11 +1,11 @@
 """
-orca_io.py — ORCA 인풋 생성 + 아웃풋(Raman) 파싱.
+orca_io.py: ORCA input generation plus output (Raman) parsing.
 
-인풋: opt+freq+Raman (Kim 2026 프로토콜: B3LYP/6-311++G(d,p), scaling 미적용).
-파싱: ORCA 'RAMAN SPECTRUM' 블록 → (frequency cm-1, activity) 리스트.
+Input: opt+freq+Raman (Kim 2026 protocol: B3LYP/6-311++G(d,p), no scaling applied).
+Parsing: ORCA 'RAMAN SPECTRUM' block → list of (frequency cm-1, activity).
 
-※ ORCA 버전별로 Raman 트리거/출력 포맷이 다를 수 있음. 6.x 기준으로 작성.
-   Ku 환경에서 1개 샘플로 keyword/파싱을 먼저 검증할 것 (README 참고).
+Note: the Raman trigger and the output format may differ between ORCA versions; written for 6.x.
+   Verify the keyword and the parsing on a single sample in Ku's environment first (see README).
 """
 from __future__ import annotations
 import os, re
@@ -16,15 +16,15 @@ def write_input(name: str, xyz_block: str, cfg: dict, charge: int = 0, mult: int
     kw = [o["functional"], o["basis"]]
     if o.get("opt", True):
         kw.append("TightOpt")
-    # Raman 활성도는 수치미분(NumFreq)으로 안정적으로 얻는다. analytic Freq는
-    # 하이브리드(B3LYP) + 극성률 도함수 조합에서 ORCA가 "use LibXC" 에러를 냄.
+    # Raman activities come out reliably from numerical differentiation (NumFreq); analytic Freq
+    # raises a "use LibXC" error in ORCA for a hybrid (B3LYP) combined with polarisability derivatives.
     kw.append("NumFreq" if o.get("raman", True) else "Freq")
     if o.get("extra_keywords"):
         kw.append(o["extra_keywords"])
     header = f"! {' '.join(kw)}\n"
     blocks = f"%pal nprocs {o['nprocs']} end\n%maxcore {o['maxcore_mb']}\n"
     if o.get("raman", True):
-        # Raman 활성도: 극성률 도함수 요청
+        # Raman activities: request polarisability derivatives
         blocks += "%elprop Polar 1 end\n"
     geom = f"* xyz {charge} {mult}\n{xyz_block}\n*\n"
     return header + blocks + geom
@@ -39,19 +39,19 @@ def save_input(name: str, xyz_block: str, cfg: dict, out_dir: str,
     return path
 
 
-# ORCA 'RAMAN SPECTRUM' 표: "  Mode   freq(cm**-1)   Activity   Depolarization"
+# ORCA 'RAMAN SPECTRUM' table: "  Mode   freq(cm**-1)   Activity   Depolarization"
 _RAMAN_HDR = re.compile(r"RAMAN SPECTRUM", re.I)
 _ROW = re.compile(r"^\s*(\d+):\s+(-?\d+\.\d+)\s+(-?\d+\.\d+)\s+(-?\d+\.\d+)")
 
 
 def parse_raman(out_path: str) -> list[dict]:
-    """ORCA .out → [{mode, freq, activity, depol}] (freq>0만)."""
+    """ORCA .out → [{mode, freq, activity, depol}] (freq>0 only)."""
     with open(out_path, "r", errors="ignore") as f:
         lines = f.readlines()
     peaks, in_block = [], False
     for ln in lines:
         if _RAMAN_HDR.search(ln):
-            in_block, peaks = True, []      # 마지막 블록 채택
+            in_block, peaks = True, []      # take the last block
             continue
         if in_block:
             m = _ROW.match(ln)
@@ -60,20 +60,20 @@ def parse_raman(out_path: str) -> list[dict]:
                 if freq > 0:
                     peaks.append({"mode": mode, "freq": freq, "activity": act, "depol": dep})
             elif peaks and ln.strip() == "":
-                # 블록 종료 후 빈 줄 → 계속 스캔 (다음 블록 있으면 갱신)
+                # a blank line after the block ends -> keep scanning (a later block supersedes this one)
                 in_block = False
     return peaks
 
 
 def parse_converged(out_path: str) -> bool:
-    """정상 종료 + 허수진동 없음 확인."""
+    """Check normal termination + no imaginary frequencies."""
     try:
         txt = open(out_path, "r", errors="ignore").read()
     except FileNotFoundError:
         return False
     if "ORCA TERMINATED NORMALLY" not in txt:
         return False
-    # 허수(음수) 진동수 존재 시 실패로 간주
+    # treat the presence of an imaginary (negative) frequency as a failure
     imags = re.findall(r"\*\*\*imaginary mode\*\*\*", txt, re.I)
     return len(imags) == 0
 

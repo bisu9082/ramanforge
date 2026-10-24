@@ -1,9 +1,9 @@
 """
-작용제별 구간 코사인을 현재 보정에서 재생성한다.
+Regenerates the per-agent region cosines under the current calibration.
 
-기존 data/v3_region_by_agent.csv 는 밴드 짝짓기를 1대1로 고치기 이전(2026-09-18)의
-잔존 파일이었고 어떤 v3 스크립트도 그것을 다시 만들지 않았다. 그 결과 Table S15가
-Table S20과 같은 양에 대해 다른 값을 보고했다(예: GF 0.562 대 0.548).
+The existing data/v3_region_by_agent.csv was a leftover file from before band pairing was
+corrected to one-to-one (2026-09-18), and no v3 script rebuilt it. As a result Table S15
+reported a different value from Table S20 for the same quantity (for example, GF 0.562 vs 0.548).
 """
 import os, sys
 import numpy as np, pandas as pd
@@ -30,8 +30,8 @@ for a in ags:
                for n, lo, hi in REG}
 D = pd.DataFrame(rows).T.round(3)
 D.to_csv(os.path.join(ROOT, "data", "v3_region_by_agent.csv"))
-print(f"[보정] s=({SL:.3f}, {SH:.3f})\n")
+print(f"[calibration] s=({SL:.3f}, {SH:.3f})\n")
 print(D.to_string())
 P = {"GD", "GF", "VX", "A230", "A232", "A234", "A242"}
-print("\n인 함유 평균:", D.loc[[a for a in D.index if a in P]].mean().round(3).to_dict())
-print("비인   평균:", D.loc[[a for a in D.index if a not in P]].mean().round(3).to_dict())
+print("\nP-containing mean:", D.loc[[a for a in D.index if a in P]].mean().round(3).to_dict())
+print("P-free       mean:", D.loc[[a for a in D.index if a not in P]].mean().round(3).to_dict())

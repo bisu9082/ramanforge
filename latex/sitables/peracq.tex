@@ -1,0 +1,46 @@
+\begin{table}[htbp]
+\centering
+\caption{Assignment of every individual acquisition. Each row is one genuine acquisition queried against each library in turn.}
+\label{tab:si-peracq}
+\footnotesize
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llllrrllrr}
+\toprule
+Agent & Acq. & Measured top-1 & OK & Self & Margin & Computed top-1 & OK & Self & Margin \\
+\midrule
+A-230 & 1 & A230 & \checkmark & 0.968 & 0.130 & EXP\_A230 & \checkmark & 0.780 & 0.035 \\
+A-230 & 2 & A230 & \checkmark & 0.971 & 0.124 & EXP\_A230 & \checkmark & 0.816 & 0.056 \\
+A-230 & 3 & A230 & \checkmark & 0.972 & 0.148 & EXP\_A230 & \checkmark & 0.808 & 0.052 \\
+A-232 & 1 & A232 & \checkmark & 1.000 & 0.120 & EXP\_A242 & $\times$ & 0.648 & 0.036 \\
+A-232 & 2 & A232 & \checkmark & 1.000 & 0.119 & EXP\_A242 & $\times$ & 0.652 & 0.033 \\
+A-232 & 3 & A232 & \checkmark & 1.000 & 0.117 & EXP\_A242 & $\times$ & 0.655 & 0.035 \\
+A-234 & 1 & A234 & \checkmark & 0.842 & 0.022 & GF\_cyclosarin\_glob & $\times$ & 0.680 & 0.008 \\
+A-234 & 2 & A234 & \checkmark & 0.952 & 0.095 & GF\_cyclosarin\_glob & $\times$ & 0.717 & 0.024 \\
+A-234 & 3 & A234 & \checkmark & 0.971 & 0.102 & EXP\_A232\_Eglob & $\times$ & 0.737 & 0.000 \\
+A-234 & 4 & A234 & \checkmark & 0.971 & 0.103 & EXP\_A232\_Eglob & $\times$ & 0.741 & 0.000 \\
+A-234 & 5 & A234 & \checkmark & 0.971 & 0.103 & EXP\_A232\_Eglob & $\times$ & 0.737 & 0.000 \\
+A-242 & 1 & A242 & \checkmark & 0.918 & 0.206 & EXP\_A242 & \checkmark & 0.744 & 0.091 \\
+A-242 & 2 & A242 & \checkmark & 0.982 & 0.288 & EXP\_A242 & \checkmark & 0.684 & 0.125 \\
+A-242 & 3 & A242 & \checkmark & 0.972 & 0.289 & EXP\_A242 & \checkmark & 0.691 & 0.137 \\
+GD & 1 & GD & \checkmark & 0.998 & 0.210 & EXP\_GD\_soman & \checkmark & 0.852 & 0.099 \\
+GD & 2 & GD & \checkmark & 1.000 & 0.210 & EXP\_GD\_soman & \checkmark & 0.853 & 0.098 \\
+GD & 3 & GD & \checkmark & 1.000 & 0.210 & EXP\_GD\_soman & \checkmark & 0.852 & 0.097 \\
+GD & 4 & GD & \checkmark & 1.000 & 0.210 & EXP\_GD\_soman & \checkmark & 0.853 & 0.098 \\
+GF & 1 & GF & \checkmark & 1.000 & 0.291 & EXP\_GD\_soman & $\times$ & 0.515 & 0.083 \\
+GF & 2 & GF & \checkmark & 1.000 & 0.289 & EXP\_GD\_soman & $\times$ & 0.517 & 0.082 \\
+GF & 3 & GF & \checkmark & 1.000 & 0.288 & EXP\_GD\_soman & $\times$ & 0.518 & 0.083 \\
+HN1 & 1 & HN1 & \checkmark & 1.000 & 0.065 & EXP\_HN3 & $\times$ & 0.832 & 0.004 \\
+HN1 & 2 & HN1 & \checkmark & 1.000 & 0.065 & EXP\_HN3 & $\times$ & 0.831 & 0.004 \\
+HN1 & 3 & HN1 & \checkmark & 1.000 & 0.065 & EXP\_HN3 & $\times$ & 0.831 & 0.004 \\
+HN2 & 1 & HN2 & \checkmark & 1.000 & 0.832 & EXP\_A242 & $\times$ & 0.057 & 0.090 \\
+HN2 & 2 & HN2 & \checkmark & 1.000 & 0.833 & EXP\_A242 & $\times$ & 0.058 & 0.090 \\
+HN2 & 3 & HN2 & \checkmark & 1.000 & 0.830 & EXP\_A242 & $\times$ & 0.057 & 0.092 \\
+HN3 & 1 & HN3 & \checkmark & 0.999 & 0.062 & EXP\_HN3 & \checkmark & 0.833 & 0.037 \\
+HN3 & 2 & HN3 & \checkmark & 0.999 & 0.066 & EXP\_HN3 & \checkmark & 0.830 & 0.038 \\
+HN3 & 3 & HN3 & \checkmark & 0.999 & 0.065 & EXP\_HN3 & \checkmark & 0.828 & 0.034 \\
+\bottomrule
+\end{tabular}
+}
+
+\begin{flushleft}\footnotesize The agent-mean figures quoted elsewhere in the literature average over these rows. We report the per-acquisition result because it is what a single interrogation delivers.\end{flushleft}
+\end{table}

@@ -1,0 +1,26 @@
+\begin{table}[htbp]
+\centering
+\caption{Nested leave-one-agent-out calibration. The two frequency scale factors were refitted with each agent's band positions excluded in turn.}
+\label{tab:si-loao}
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Agent held out & $s_\mathrm{low}$ & $s_\mathrm{high}$ & RMSE (\wn) & Band pairs \\
+\midrule
+GD & 1.0160 & 0.9960 & 10.64 & 72 \\
+GF & 1.0160 & 0.9900 & 10.35 & 77 \\
+VX & 1.0160 & 0.9900 & 10.54 & 73 \\
+HD & 1.0160 & 0.9880 & 10.68 & 70 \\
+HN1 & 1.0160 & 0.9960 & 10.21 & 74 \\
+HN2 & 1.0160 & 0.9900 & 10.41 & 81 \\
+HN3 & 1.0160 & 0.9900 & 10.26 & 74 \\
+A-230 & 1.0160 & 0.9900 & 10.33 & 68 \\
+A-232 & 1.0160 & 0.9900 & 10.29 & 73 \\
+A-234 & 1.0160 & 0.9960 & 9.52 & 73 \\
+A-242 & 1.0140 & 0.9900 & 10.61 & 72 \\
+\textbf{All agents} & \textbf{1.0160} & \textbf{0.9900} & \textbf{10.41} & \textbf{81} \\
+\bottomrule
+\end{tabular}
+
+\begin{flushleft}\footnotesize $s_\mathrm{low}$ varies over 1.0140--1.0160, a range of 0.20\%, and $s_\mathrm{high}$ over 0.9880--0.9960, a range of 0.81\%. No agent drives the calibration, and the identification results are obtained under factors effectively independent of the agent being identified.\end{flushleft}
+\end{table}

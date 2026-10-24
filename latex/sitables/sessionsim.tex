@@ -1,0 +1,17 @@
+\begin{table}[htbp]
+\centering
+\caption{Measurement repeatability. Pairwise cosine similarities between genuine acquisitions, partitioned by whether the pair is the same agent, two agents of the same toxicological class, or two classes.}
+\label{tab:si-sessionsim}
+\small
+\begin{tabular}{lrr}
+\toprule
+Pair type & $n$ & Mean cosine \\
+\midrule
+Same agent, different acquisition & 37 & 0.967 \\
+Same class, different agent & 127 & 0.642 \\
+Different class & 332 & 0.469 \\
+\bottomrule
+\end{tabular}
+
+\begin{flushleft}\footnotesize Computed on the 32 genuine acquisitions only; the derived copies present in the delivered files were excluded, which the previous version of this analysis did not do. Mann--Whitney: same agent against same class $p = 4.0e-18$, same class against different class $p = 3.8e-24$. The spectra are determined by the material rather than by the session. All acquisitions were taken within a single hour on one instrument, so day-to-day reproducibility remains untested.\end{flushleft}
+\end{table}

@@ -1,0 +1,27 @@
+\begin{table}[htbp]
+\centering
+\caption{Inventory of raw acquisitions. Genuine acquisitions are those whose RawData column contains integer detector counts; the derived files reproduce a genuine parent to a multiplicative factor near unity with an added offset and noise, and are excluded throughout. Integration time is recorded per file by the instrument. Bands are those detected above a normalized intensity of 0.10 in the 250--1800\,\wn{} region.}
+\label{tab:si-sessions}
+\footnotesize
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrrrrr}
+\toprule
+Agent & Genuine & Derived & Integration (ms) & Peak counts & SNR & Counts\,s$^{-1}$ & Bands \\
+\midrule
+GD & 4 & 1 & 1161--1936 & 34783 & 420 & 27194 & 20 \\
+GF & 3 & 2 & 834 & 35376 & 491 & 42418 & 22 \\
+VX & 1 & 4 & 1700 & 32511 & 317 & 19124 & 21 \\
+HD & 1 & 4 & 25995 & 10668 & 36 & 410 & 7 \\
+HN1 & 3 & 2 & 1014 & 36217 & 454 & 35717 & 17 \\
+HN2 & 3 & 2 & 119 & 34193 & 643 & 287336 & 8 \\
+HN3 & 3 & 2 & 5840 & 34517 & 88 & 5910 & 7 \\
+A-230 & 3 & 2 & 20851--30000 & 10590 & 28 & 392 & 10 \\
+A-232 & 3 & 2 & 5445 & 35369 & 302 & 6496 & 18 \\
+A-234 & 5 & 0 & 1471--4937 & 29004 & 345 & 18611 & 19 \\
+A-242 & 3 & 2 & 5356--24634 & 23176 & 153 & 3674 & 15 \\
+\bottomrule
+\end{tabular}
+}
+
+\begin{flushleft}\footnotesize Total: 32 genuine acquisitions of 11 agents from 55 files. HD and VX have a single genuine acquisition each and are never used as queries.\end{flushleft}
+\end{table}

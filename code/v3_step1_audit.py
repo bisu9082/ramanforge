@@ -1,4 +1,4 @@
-"""v3 STEP 1 — 원시 데이터 감사 (격자·노출·복제본 출처)."""
+"""v3 STEP 1: raw data audit (grid, exposure, replicate provenance)."""
 import os, itertools
 import numpy as np, pandas as pd
 import matplotlib; matplotlib.use("Agg")
@@ -25,7 +25,7 @@ def asls(y, lam=1e5, p=0.01, niter=20):
     return z
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-R = load_all(os.path.join(ROOT,"data","raw_files"))
+R = load_all(os.path.join(ROOT,"data","raw"))
 rs = R[0]["df"]["RamanShift"].values
 FP = (rs>=250)&(rs<=1800); NOISE=(rs>=2200)&(rs<=2560)
 

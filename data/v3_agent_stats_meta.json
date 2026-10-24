@@ -1,5 +1,5 @@
 {
- "HN2 포함 (9종)": {
+ "HN2 included (9 agents)": {
   "mcnemar_mol_b": 5,
   "mcnemar_mol_c": 0,
   "mcnemar_mol_p": 0.0625,
@@ -7,7 +7,7 @@
   "mcnemar_cls_c": 0,
   "mcnemar_cls_p": 1.0
  },
- "HN2 제외 (8종)": {
+ "HN2 excluded (8 agents)": {
   "mcnemar_mol_b": 4,
   "mcnemar_mol_c": 0,
   "mcnemar_mol_p": 0.125,

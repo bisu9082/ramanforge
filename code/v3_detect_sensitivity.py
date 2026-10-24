@@ -1,10 +1,11 @@
 """
-T1-14b — 밴드 검출 기준과 짝짓기 허용창에 대한 보정 민감도.
+T1-14b: calibration sensitivity to the band detection criterion and the pairing tolerance window.
 
-심사 지적(R1-M2): 35 cm-1 허용창은 피크 검출의 최소 간격과 비슷해 배정이 거의
-축퇴 상태이며, 관문을 통과한 생존자에 대해서만 계산한 RMSE는 최악의 밴드를
-설계상 배제하므로 낙관적이다. 여기서 검출 기준 셋 × 허용창 둘을 모두 보고한다.
-미짝 밴드 벌점은 비교 가능하도록 항상 35 cm-1로 고정한다.
+Reviewer comment (R1-M2): the 35 cm-1 tolerance window is comparable to the minimum peak
+detection spacing, so the assignment is nearly degenerate, and an RMSE computed only over
+the survivors that pass the gate is optimistic because it excludes the worst bands by
+design. Here all three detection criteria × both tolerance windows are reported.
+The penalty for unmatched bands is always fixed at 35 cm-1 so that the results stay comparable.
 """
 import os, sys
 import numpy as np, pandas as pd

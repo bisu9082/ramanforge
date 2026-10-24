@@ -1,5 +1,5 @@
-# def2-TZVPP on P, F, S and Cl only: relieves the classic bottleneck for phosphorus frequencies (insufficient tight d functions).
-# Starting geometry: converged structure from GF_cyclosarin.out
+# P·F·S·Cl만 def2-TZVPP로 승격. 인 진동수의 고전적 병목(tight-d 부족) 해소.
+# 출발 기하: GF_cyclosarin.out 수렴 구조
 ! B3LYP 6-311++G(d,p) TightOpt NumFreq
 %pal nprocs 8 end
 %maxcore 1400

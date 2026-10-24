@@ -1,13 +1,13 @@
 """
-spectrum.py — peak 리스트(freq, activity) ↔ 연속 스펙트럼 벡터 변환 + 진단 밴드 추출.
+spectrum.py: conversion between a peak list (freq, activity) ↔ a continuous spectrum vector, plus diagnostic band extraction.
 
-- to_vector: Lorentzian broadening으로 (x_min..x_max) 그리드 벡터 생성 → ML 입력용.
-- diagnostic_bands: 지정 밴드 창에서 최대활성 peak 위치 추출 → AL surrogate 타깃.
+- to_vector: builds an (x_min..x_max) grid vector by Lorentzian broadening → for the ML input.
+- diagnostic_bands: extracts the position of the most active peak in a given band window → the AL surrogate target.
 """
 from __future__ import annotations
 import numpy as np
 
-# 진단 밴드 창 (cm-1) — Kim 2026 Table 5 근거 (Novichok 판별 밴드)
+# diagnostic band windows (cm-1), after Kim 2026 Table 5 (Novichok discriminating bands)
 BAND_WINDOWS = {
     "P=O":       (1220, 1265),
     "C=N":       (1595, 1690),
@@ -24,7 +24,7 @@ def grid(cfg: dict) -> np.ndarray:
 
 
 def to_vector(peaks: list[dict], cfg: dict) -> np.ndarray:
-    """peaks → Lorentzian 합성 스펙트럼 (정규화 max=1)."""
+    """peaks → synthesized Lorentzian spectrum (normalized max=1)."""
     s = cfg["spectrum"]
     x = grid(cfg)
     y = np.zeros_like(x)
@@ -40,7 +40,7 @@ def to_vector(peaks: list[dict], cfg: dict) -> np.ndarray:
 
 
 def diagnostic_bands(peaks: list[dict], targets: list[str], cfg: dict) -> dict:
-    """각 타깃 밴드 창에서 최대활성 peak의 freq 반환 (없으면 nan)."""
+    """Return the freq of the maximum-activity peak in each target band window (nan if none)."""
     scale = cfg["spectrum"].get("freq_scale", 1.0)
     res = {}
     for t in targets:

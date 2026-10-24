@@ -1034,10 +1034,10 @@ Quantity & All acquisitions & HN2 excluded \\
 \midrule
 Queries & 30 & 27 \\
 Measured, molecular & 30 & 27 \\
-Computed, molecular (10-member) & 13 & 13 \\
+Computed, molecular (11-member) & 13 & 13 \\
 Computed, molecular (54-member) & 13 & 13 \\
 Measured, class & 30 & 27 \\
-Computed, class (10-member) & 25 & 25 \\
+Computed, class (11-member) & 25 & 25 \\
 Computed, class (54-member) & 25 & 25 \\
 Measured self-similarity & 0.983 & 0.981 \\
 Computed self-similarity & 0.674 & 0.742 \\
@@ -1605,21 +1605,21 @@ Table~\ref{tab:si-b2jobs}.
 \toprule
 Agent & Correction & 600--850 base & Improved & $\Delta$ & Self base & Self new & Top-1 \\
 \midrule
-GF & $\omega$B97X-D3 & 0.548 & \textbf{0.918} & \textbf{+0.370} & 0.643 & 0.793 & $\times$ $\rightarrow$ \checkmark \\
-GF & tight P/F/S/Cl & 0.548 & \textbf{0.832} & \textbf{+0.284} & 0.643 & 0.797 & $\times$ $\rightarrow$ \checkmark \\
-A-232 & $\omega$B97X-D3 & 0.199 & \textbf{0.315} & \textbf{+0.116} & 0.606 & 0.564 & $\times$ $\rightarrow$ --- \\
-A-230 & tight P/F/S/Cl & 0.627 & 0.694 & +0.068 & 0.810 & 0.811 & \checkmark $\rightarrow$ \checkmark \\
-A-232 & CPCM & 0.199 & 0.239 & +0.040 & 0.606 & 0.659 & $\times$ $\rightarrow$ --- \\
-A-232 & tight P/F/S/Cl & 0.199 & 0.226 & +0.027 & 0.606 & 0.616 & $\times$ $\rightarrow$ --- \\
-GF & CPCM & 0.548 & 0.552 & +0.005 & 0.643 & 0.623 & $\times$ $\rightarrow$ --- \\
-HD & tight P/F/S/Cl & 0.969 & 0.959 & -0.010 & 0.868 & 0.865 & \checkmark $\rightarrow$ \checkmark \\
-GD & tight P/F/S/Cl & 0.888 & \textbf{0.726} & \textbf{-0.161} & 0.859 & 0.766 & \checkmark $\rightarrow$ \checkmark \\
-A-234 & tight P/F/S/Cl & 0.673 & \textbf{0.485} & \textbf{-0.188} & 0.759 & 0.724 & $\times$ $\rightarrow$ --- \\
+GF & $\omega$B97X-D3 & 0.549 & \textbf{0.918} & \textbf{+0.369} & 0.640 & 0.793 & $\times$ $\rightarrow$ \checkmark \\
+GF & tight P/F/S/Cl & 0.549 & \textbf{0.835} & \textbf{+0.286} & 0.640 & 0.793 & $\times$ $\rightarrow$ \checkmark \\
+A-232 & $\omega$B97X-D3 & 0.199 & \textbf{0.315} & \textbf{+0.116} & 0.596 & 0.564 & $\times$ $\rightarrow$ $\times$ \\
+A-230 & tight P/F/S/Cl & 0.627 & 0.694 & +0.068 & 0.808 & 0.811 & \checkmark $\rightarrow$ \checkmark \\
+A-232 & CPCM & 0.199 & 0.243 & +0.043 & 0.596 & 0.660 & $\times$ $\rightarrow$ $\times$ \\
+A-232 & tight P/F/S/Cl & 0.199 & 0.226 & +0.026 & 0.596 & 0.616 & $\times$ $\rightarrow$ $\times$ \\
+GF & CPCM & 0.549 & 0.552 & +0.004 & 0.640 & 0.623 & $\times$ $\rightarrow$ $\times$ \\
+HD & tight P/F/S/Cl & 0.969 & 0.959 & -0.010 & 0.866 & 0.862 & \checkmark $\rightarrow$ \checkmark \\
+GD & tight P/F/S/Cl & 0.888 & \textbf{0.726} & \textbf{-0.162} & 0.854 & 0.766 & \checkmark $\rightarrow$ \checkmark \\
+A-234 & tight P/F/S/Cl & 0.674 & \textbf{0.485} & \textbf{-0.189} & 0.745 & 0.724 & $\times$ $\rightarrow$ $\times$ \\
 \bottomrule
 \end{tabular}
 }
 
-\begin{flushleft}\footnotesize Of the 10 pairs, 3 improved the window substantially ($\Delta > 0.10$), 2 improved modestly, 3 were unchanged and 2 degraded. Across all 10 the refitted scale factors stay within 1.012--1.026 and 0.988--0.992, and the global band-position RMSE between 10.2 and 11.4\,\wn{}, so no global adjustment reaches these errors.\end{flushleft}
+\begin{flushleft}\footnotesize Of the 10 pairs, 3 improved the window substantially ($\Delta > 0.10$), 2 improved modestly, 3 were unchanged and 2 degraded. Across all 10 the refitted scale factors stay within 1.012--1.026 and 0.988--0.992, and the global band-position RMSE between 10.1 and 11.2\,\wn{}, so no global adjustment reaches these errors.\end{flushleft}
 \end{table}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage
@@ -1670,16 +1670,16 @@ was in the sixth, while the baseline errors scatter in sign.
 \toprule
 Agent & Measured & Baseline & Error & tight P & Error & Shift \\
 \midrule
-GF & 752 & 728 & -24 & 745 & -7 & +18 \\
-GD & 752 & 747 & -5 & 759 & +7 & +12 \\
-A-230 & 708 & 723 & +15 & 721 & +13 & -2 \\
-A-232 & 708 & 657 & -51 & 662 & -46 & +5 \\
-A-234 & 714 & 768 & +53 & 794 & +80 & +26 \\
-HD & 733 & 741 & +8 & 744 & +11 & +3 \\
+GF & 752 & 729 & -23 & 747 & -5 & +18 \\
+GD & 752 & 748 & -3 & 762 & +10 & +14 \\
+A-230 & 708 & 724 & +16 & 724 & +16 & -0 \\
+A-232 & 708 & 658 & -50 & 663 & -45 & +5 \\
+A-234 & 714 & 769 & +55 & 792 & +78 & +23 \\
+HD & 733 & 743 & +10 & 746 & +12 & +3 \\
 \bottomrule
 \end{tabular}
 
-\begin{flushleft}\footnotesize The shift is upward in 5 of the 6 molecules, by 3 to 26\,\wn{}, and essentially absent ($-$1.6\,\wn{}) in the remaining one, while the baseline errors scatter from $-$51 to $+$53\,\wn{}. A correction of fixed sign can only help the subset whose error is negative and of comparable size. GF satisfies that condition; GD, which differs only in the ester substituent and was already within 5\,\wn{} of the measured band, does not, and the shift carries it 7\,\wn{} past that band. Positions are the strongest computed line in the window, compared with the strongest measured band.\end{flushleft}
+\begin{flushleft}\footnotesize The shift is upward in 5 of the 6 molecules, by 3 to 23\,\wn{}, and downward by 0\,\wn{} in the remaining one, while the baseline errors scatter from $-$50 to $+$55\,\wn{}. A correction of fixed sign can only help the subset whose error is negative and of comparable size. GF satisfies that condition; GD, which differs only in the ester substituent and was already within 3\,\wn{}, does not.\end{flushleft}
 \end{table}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage
@@ -1710,7 +1710,10 @@ main text.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{table}[htbp]
 \centering
-\caption{The ten trials under both band-pairing rules. $\Delta$ is the change in the 600--850\,\wn{} cosine; the assignment columns give the open-set top-1 result against the pre-correction 53-member library before and after the correction, with \checkmark{} for a correct assignment and $\times$ for an incorrect one.}
+\caption{The ten trials under both band-pairing rules. $\Delta$ is the change in the
+600--850\,\wn{} cosine; the assignment columns give the open-set top-1 result against the
+pre-correction 54-member library before and after the correction, with \checkmark{} for a
+correct assignment and $\times$ for an incorrect one.}
 \label{tab:si-pairrule}
 \footnotesize
 \resizebox{\textwidth}{!}{%
@@ -1720,21 +1723,28 @@ main text.
 \cmidrule(lr){3-4}\cmidrule(lr){5-6}
 Agent & Correction & One-to-one & Nearest & One-to-one & Nearest \\
 \midrule
-GF & $\omega$B97X-D3 & \textbf{+0.370} & \textbf{+0.306} & $\times$ $\rightarrow$ \checkmark & $\times$ $\rightarrow$ \checkmark \\
-GF & tight P/F/S/Cl & \textbf{+0.284} & \textbf{+0.294} & $\times$ $\rightarrow$ \checkmark & $\times$ $\rightarrow$ \checkmark \\
-A-232 & $\omega$B97X-D3 & \textbf{+0.116} & +0.046 & $\times$ $\rightarrow$ $\times$ & $\times$ $\rightarrow$ $\times$ \\
+GF & $\omega$B97X-D3 & \textbf{+0.369} & \textbf{+0.306} & $\times$ $\rightarrow$ \checkmark & $\times$ $\rightarrow$ \checkmark \\
+GF & tight P/F/S/Cl & \textbf{+0.286} & \textbf{+0.294} & $\times$ $\rightarrow$ \checkmark & $\times$ $\rightarrow$ \checkmark \\
+A-232 & $\omega$B97X-D3 & \textbf{+0.116} & +0.097 & $\times$ $\rightarrow$ $\times$ & $\times$ $\rightarrow$ $\times$ \\
 A-230 & tight P/F/S/Cl & +0.068 & +0.023 & \checkmark $\rightarrow$ \checkmark & \checkmark $\rightarrow$ \checkmark \\
-A-232 & CPCM & +0.040 & +0.038 & $\times$ $\rightarrow$ $\times$ & $\times$ $\rightarrow$ $\times$ \\
-A-232 & tight P/F/S/Cl & +0.027 & +0.029 & $\times$ $\rightarrow$ $\times$ & $\times$ $\rightarrow$ $\times$ \\
-GF & CPCM & +0.005 & -0.013 & $\times$ $\rightarrow$ $\times$ & $\times$ $\rightarrow$ $\times$ \\
+A-232 & CPCM & +0.043 & +0.038 & $\times$ $\rightarrow$ $\times$ & $\times$ $\rightarrow$ $\times$ \\
+A-232 & tight P/F/S/Cl & +0.026 & +0.029 & $\times$ $\rightarrow$ $\times$ & $\times$ $\rightarrow$ $\times$ \\
+GF & CPCM & +0.004 & -0.013 & $\times$ $\rightarrow$ $\times$ & $\times$ $\rightarrow$ $\times$ \\
 HD & tight P/F/S/Cl & -0.010 & -0.016 & \checkmark $\rightarrow$ \checkmark & \checkmark $\rightarrow$ \checkmark \\
-GD & tight P/F/S/Cl & \textbf{-0.161} & \textbf{-0.247} & \checkmark $\rightarrow$ \checkmark & \checkmark $\rightarrow$ \textbf{$\times$} \\
-A-234 & tight P/F/S/Cl & \textbf{-0.188} & \textbf{-0.150} & $\times$ $\rightarrow$ $\times$ & $\times$ $\rightarrow$ $\times$ \\
+GD & tight P/F/S/Cl & \textbf{-0.162} & \textbf{-0.247} & \checkmark $\rightarrow$ \checkmark & \checkmark $\rightarrow$ $\times$ \\
+A-234 & tight P/F/S/Cl & \textbf{-0.189} & \textbf{-0.150} & $\times$ $\rightarrow$ $\times$ & $\times$ $\rightarrow$ $\times$ \\
 \bottomrule
 \end{tabular}
 }
 
-\begin{flushleft}\footnotesize The baseline calibration itself differs between the rules, shown here on the pre-correction library so that the two rules are compared on identical inputs: one-to-one assignment gives $s_{\mathrm{low}}$ = 1.018, $s_{\mathrm{high}}$ = 0.988 with a position RMSE of 10.6\,\wn{} over 72 pairs, nearest-neighbor matching gives 1.020 and 0.988 with 12.7\,\wn{} over 81 pairs. The one-to-one values are the ones used throughout this work, including in the identification results of Section~\ref{si:ident}. The single qualitative difference between the rules is soman's assignment under the larger phosphorus basis.\end{flushleft}
+\begin{flushleft}\footnotesize The baseline calibration itself differs between the rules,
+shown here on the pre-correction library so that the two rules are compared on identical
+inputs: one-to-one assignment gives $s_{\mathrm{low}}$ = 1.018,
+$s_{\mathrm{high}}$ = 0.990 with a position RMSE of 10.4\,\wn{}
+over 80 pairs, nearest-neighbor matching gives 1.020 and
+0.988 with 12.4\,\wn{} over 89 pairs. The one-to-one
+values are the ones used throughout this work, including in the identification results of
+Section~\ref{si:ident}. The only assignment the two rules disagree on is GD under tight P/F/S/Cl.\end{flushleft}
 \end{table}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage
@@ -1876,7 +1886,8 @@ Different class & 332 & 0.469 \\
 
 The preprocessing module, the analysis scripts that generate every table and figure in
 this work, the calibrated computed library, and the ORCA inputs and outputs are deposited
-at [repository URL] and archived at [Zenodo DOI].
+at \url{https://github.com/bisu9082/ramanforge}, at the tagged release
+\texttt{v1.0.0} from which every number in this work was produced.
 
 Raw acquisition files of the authentic agents are not included in that deposit. They are
 analytical data on Schedule 1 chemicals generated in an OPCW designated laboratory, and

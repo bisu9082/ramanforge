@@ -1,0 +1,18 @@
+\begin{table}[htbp]
+\centering
+\caption{The four Novichok agents compared with one another and with themselves, in each library. \emph{Sibling} is the highest similarity to another A-series agent.}
+\label{tab:si-nov}
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Agent & Measured self & Measured sibling & Computed self & Computed sibling \\
+\midrule
+A-230 & 0.970 & 0.847 & 0.801 & 0.928 \\
+A-232 & 1.000 & 0.881 & 0.652 & 0.928 \\
+A-234 & 0.941 & 0.881 & 0.722 & 0.925 \\
+A-242 & 0.958 & 0.710 & 0.706 & 0.844 \\
+\bottomrule
+\end{tabular}
+
+\begin{flushleft}\footnotesize The mutual similarities are comparable in the two libraries (0.71--0.88 measured against 0.84--0.93 computed), while the similarity to the correct molecule is not. The four agents share the P(=O)(F)--N=C amidine core and differ only in the phosphorus substituent and, for A-242, in guanidine substitution. The computed library therefore fails on them not because the congeners are too much alike but because the correct entry is not drawn well enough.\end{flushleft}
+\end{table}

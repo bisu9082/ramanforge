@@ -13,7 +13,7 @@ fig.text(0.030,0.930,"A computed Raman library does not replace measured referen
 fig.text(0.030,0.875,"Eleven authentic chemical warfare agents at 1064 nm  ·  same queries, same pipeline, same metric  ·  only the library differs",
          fontsize=9.8,color=INK2,va="bottom")
 
-# ── 왼쪽: 쿼리 (두 패널 중앙 높이에 정렬)
+# -- left: the query, aligned to the mid-height of the two panels
 axq=fig.add_axes([0.030,0.300,0.200,0.420]); axq.set_facecolor(BG)
 axq.plot(X,meas,color=INK,lw=1.6); axq.fill_between(X,0,meas,color=INK,alpha=0.07)
 axq.set_xlim(250,1800); axq.set_ylim(-0.03,1.12); axq.set_yticks([])

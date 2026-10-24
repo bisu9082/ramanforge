@@ -17,5 +17,5 @@ fingerprint low,400.0,,0.628,0.499,0.129
 fingerprint high,1600.0,,0.62,0.495,0.124
 fingerprint high,1700.0,,0.619,0.496,0.124
 fingerprint high,1800.0,,0.619,0.496,0.123
-normalisation,max,1.0,0.619,0.496,0.123
-normalisation,snv,0.8254,0.495,0.306,0.188
+normalization,max,1.0,0.619,0.496,0.123
+normalization,snv,0.8254,0.495,0.306,0.188

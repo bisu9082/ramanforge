@@ -1,26 +1,27 @@
 """
 ramanforge Step 4-b
-Pool-based Active Learning *replay* 엔진.
+Pool-based Active Learning *replay* engine.
 
-전제: 풀 전체(44종)를 DFT로 1회 계산해두고, 그 라벨을 캐시로 삼아
-      여러 acquisition 전략을 '소급(replay)' 비교한다.
-      -> 계산비용 = 풀크기 x 1 (전략 수와 무관).
+Premise: the whole pool (44 species) is computed once with DFT and those labels are
+      cached, so several acquisition strategies can be compared in 'replay'.
+      -> computational cost = pool size x 1 (independent of the number of strategies).
 
-비교군(baseline):
-  ucb_diversity : AL (uncertainty + diversity)   <- 제안 방법
-  ucb_only      : uncertainty 단독
-  diversity_only: diversity 단독
-  random        : 무작위 선택
-  full          : 전수 학습 (상한선, 학습곡선의 천장)
+Baselines:
+  ucb_diversity : AL (uncertainty + diversity)   <- the proposed method
+  ucb_only      : uncertainty alone
+  diversity_only: diversity alone
+  random        : random selection
+  full          : training on everything (the ceiling, the top of the learning curve)
 
-지표(라운드별):
-  - held-out 스펙트럼 예측 RMSE (회귀: 구조기술자 -> full 스펙트럼)
-  - 식별 정확도 (nearest-neighbor: 예측 스펙트럼 -> 풀 내 최근접 라벨)
-  vs 누적 DFT 호출수(=라벨 개수).
+Metrics (per round):
+  - held-out spectrum prediction RMSE (regression: structural descriptors -> full spectrum)
+  - identification accuracy (nearest-neighbor: predicted spectrum -> nearest label in the pool)
+  vs the cumulative number of DFT calls (= the number of labels).
 
 surrogate:
-  다중출력 GPR (RBF). uncertainty = 예측 분산 평균, diversity = 특징공간
-  최소거리(기존 라벨과의). 회귀 타깃 = full 스펙트럼 벡터(801-dim, PCA 축소).
+  multi-output GPR (RBF). uncertainty = mean predictive variance, diversity = minimum
+  distance in feature space (to the existing labels). Regression target = full spectrum
+  vector (801-dim, PCA reduced).
 """
 
 from __future__ import annotations
@@ -32,7 +33,7 @@ import pandas as pd
 import yaml
 from sklearn.exceptions import ConvergenceWarning
 
-# 소량 데이터 GPR 적합 시 뜨는 무해한 수렴 경고 억제(콘솔 가독성)
+# suppress the harmless convergence warning raised when fitting a GPR to little data (console readability)
 warnings.filterwarnings("ignore", category=ConvergenceWarning)
 
 from sklearn.gaussian_process import GaussianProcessRegressor
@@ -41,7 +42,7 @@ from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 
 from . import spectra as S
-from . import descriptors as D  # 구조 -> 특징벡터 (아래 fallback 포함)
+from . import descriptors as D  # structure -> feature vector (with the fallback below)
 
 
 # ------------------------------------------------------------------ config
@@ -51,20 +52,20 @@ def load_config(root: Path) -> dict:
         return yaml.safe_load(f)
 
 
-# ------------------------------------------------------------------ 데이터 로드
+# ------------------------------------------------------------------- load data
 @dataclass
 class Pool:
     names: list[str]
-    X_feat: np.ndarray      # (N, d)  구조 특징 (AL 입력)
-    Y_spec: np.ndarray      # (N, P)  full 스펙트럼 (라벨)
+    X_feat: np.ndarray      # (N, d)  structural features (input to the AL loop)
+    Y_spec: np.ndarray      # (N, P)  the full spectrum (the label)
     is_anchor: np.ndarray   # (N,) bool
     grid: np.ndarray
 
 
 def load_pool(root: Path, cfg: dict) -> Pool:
     """
-    pool_bench.csv + 완료된 .out 로 풀 구성.
-    아직 계산 안 끝난 분자는 자동 제외(증분 실행 가능).
+    Build the pool from pool_bench.csv plus the completed .out files.
+    Molecules whose calculation has not finished are excluded automatically (incremental runs are possible).
     """
     bench = pd.read_csv(root / "data" / "pool_bench.csv")
     outdir = root / "orca" / "outputs"
@@ -103,7 +104,7 @@ def _make_gpr() -> GaussianProcessRegressor:
 
 @dataclass
 class Surrogate:
-    """구조특징 -> (PCA 축소) 스펙트럼. 각 PC마다 독립 GPR."""
+    """Structural features -> (PCA-reduced) spectrum. Independent GPR for each PC."""
     n_pc: int = 8
     scaler: StandardScaler = field(default_factory=StandardScaler)
     pca: PCA = None
@@ -129,14 +130,14 @@ class Surrogate:
         Zmean = np.vstack(means).T          # (n, npc)
         Zstd = np.vstack(stds).T
         Yhat = self.pca.inverse_transform(Zmean)
-        # 불확실성: PC별 표준편차 평균 (스칼라 per sample)
+        # uncertainty: mean of the per-PC standard deviations (one scalar per sample)
         unc = Zstd.mean(axis=1)
         return Yhat, unc
 
 
 # ------------------------------------------------------------------ acquisition
 def acquire(strategy: str, cand_idx, surr, Xf, labeled_idx, cfg, rng):
-    """다음 배치 인덱스 선택."""
+    """Select the next batch indices."""
     bs = cfg["active_learning"]["batch_size"]
     kappa = cfg["active_learning"]["ucb_kappa"]
     lam = cfg["active_learning"]["diversity_lambda"]
@@ -145,7 +146,7 @@ def acquire(strategy: str, cand_idx, surr, Xf, labeled_idx, cfg, rng):
         return list(rng.choice(cand_idx, size=min(bs, len(cand_idx)), replace=False))
 
     _, unc = surr.predict(Xf[cand_idx])
-    # diversity: 라벨셋과의 특징공간 최소거리
+    # diversity: minimum feature-space distance to the labeled set
     Xl = Xf[labeled_idx]
     d = np.array([np.min(np.linalg.norm(Xl - Xf[i], axis=1)) for i in cand_idx])
 
@@ -165,19 +166,19 @@ def acquire(strategy: str, cand_idx, surr, Xf, labeled_idx, cfg, rng):
     return [cand_idx[i] for i in order]
 
 
-# ------------------------------------------------------------------ 평가
+# ------------------------------------------------------------------- evaluation
 def spectral_rmse(surr, pool, test_idx):
-    """surrogate가 test 분자의 스펙트럼을 얼마나 잘 예측하나 (구조->스펙트럼)."""
+    """How well the surrogate predicts the spectra of test molecules (structure->spectrum)."""
     Yhat, _ = surr.predict(pool.X_feat[test_idx])
     return float(np.sqrt(np.mean((Yhat - pool.Y_spec[test_idx]) ** 2)))
 
 
 def add_noise(spec, snr_db, rng):
-    """실측 모사: 스펙트럼 신호 대비 SNR(dB) 가우시안 노이즈 + 소량 baseline 드리프트."""
+    """Measurement emulation: Gaussian noise at SNR (dB) relative to the spectrum signal + slight baseline drift."""
     sig_p = np.mean(spec ** 2)
     noise_p = sig_p / (10 ** (snr_db / 10.0))
     noisy = spec + rng.normal(0, np.sqrt(noise_p), size=spec.shape)
-    # 완만한 baseline (저차 다항) 드리프트
+    # gentle baseline drift (a low-order polynomial)
     x = np.linspace(0, 1, len(spec))
     noisy = noisy + rng.normal(0, 0.02) * x + rng.normal(0, 0.01)
     return np.clip(noisy, 0, None)
@@ -186,11 +187,11 @@ def add_noise(spec, snr_db, rng):
 def identify_accuracy(surr, pool, labeled_idx, query_idx, seed,
                       snr_db=20.0, reps=5):
     """
-    실사용 식별 시나리오:
-      DB = 라벨분자는 실측 DFT 스펙트럼, 미계산분은 surrogate 예측(하이브리드).
-      쿼리 = query 분자의 실측 스펙트럼에 노이즈 주입(실험 모사).
-      식별 = DB에서 코사인 최근접. 맞으면 자기 자신.
-    AL은 '어느 분자를 실제 계산할지' 골라 DB를 예리하게 만들어 식별률을 높인다.
+    Operational identification scenario:
+      DB = actual DFT spectra for the labeled molecules, surrogate predictions for the uncomputed ones (hybrid).
+      query = actual spectrum of the query molecule with noise injected (simulating an experiment).
+      identification = nearest cosine neighbor in the DB; a correct call returns the molecule itself.
+    AL sharpens the DB by choosing 'which molecules to actually compute', which raises the identification rate.
     """
     rng = np.random.default_rng(10_000 + seed)
     N = len(pool.names)
@@ -215,17 +216,17 @@ def identify_accuracy(surr, pool, labeled_idx, query_idx, seed,
 
 
 def evaluate(surr, pool, labeled_idx, test_idx, seed):
-    """(스펙트럼 RMSE, 식별 정확도) 동시 반환."""
+    """Return (spectrum RMSE, identification accuracy) together."""
     rmse = spectral_rmse(surr, pool, test_idx)
     acc = identify_accuracy(surr, pool, labeled_idx, test_idx, seed)
     return rmse, acc
 
 
-# ------------------------------------------------------------------ 한 번의 replay
+# -------------------------------------------------------------- a single replay
 def pick_test_set(pool: Pool, cfg: dict, rng) -> np.ndarray:
     """
-    고정 held-out test set을 비앵커 분자에서 추출.
-    가용 비앵커의 절반을 넘지 않도록 캡(학습셋 확보), 최소 2.
+    Draw a fixed held-out test set from the non-anchor molecules.
+    Capped so as not to exceed half of the available non-anchors (to preserve the training set), minimum 2.
     """
     non_anchor = np.where(~pool.is_anchor)[0]
     target = cfg["active_learning"].get("n_test", 8)
@@ -236,8 +237,8 @@ def pick_test_set(pool: Pool, cfg: dict, rng) -> np.ndarray:
 
 def run_full_ceiling(pool: Pool, cfg: dict, test_idx: np.ndarray, seed: int = 0):
     """
-    상한선(ceiling): test 제외 전량 학습 → 동일 고정 test set 평가.
-    모든 라벨을 다 썼을 때 달성 가능한 성능. 학습곡선의 수평 천장.
+    Ceiling: train on everything except the test set → evaluate on the same fixed test set.
+    The performance attainable when all labels are used; the horizontal ceiling of the learning curve.
     """
     N = len(pool.names)
     test_set = set(test_idx.tolist())
@@ -251,18 +252,18 @@ def run_full_ceiling(pool: Pool, cfg: dict, test_idx: np.ndarray, seed: int = 0)
 def run_replay(pool: Pool, strategy: str, cfg: dict, seed: int,
                test_idx: np.ndarray):
     """
-    고정 test set 프로토콜: test_idx는 절대 라벨/획득하지 않고,
-    매 라운드 '동일한' test_idx로만 평가 → 전략 간 공정 비교.
+    Fixed test set protocol: test_idx is never labeled or acquired, and every round
+    is evaluated on the 'same' test_idx → a fair comparison across strategies.
     """
     if strategy == "full":
         return run_full_ceiling(pool, cfg, test_idx, seed)
 
-    rng = np.random.default_rng(seed + 1000)  # 획득 난수는 test 분할과 분리
+    rng = np.random.default_rng(seed + 1000)  # the acquisition random stream is kept separate from the test split
     N = len(pool.names)
     all_idx = np.arange(N)
     test_set = set(test_idx.tolist())
 
-    # 초기 라벨 = 앵커(테스트 제외). 앵커 없으면 비테스트서 init_labeled 무작위.
+    # initial labels = the anchors (excluding the test set); with no anchors, init_labeled are drawn at random from the non-test entries
     init = [i for i in np.where(pool.is_anchor)[0] if i not in test_set]
     if not init:
         pool_ids = [i for i in all_idx if i not in test_set]
@@ -289,20 +290,20 @@ def run_replay(pool: Pool, strategy: str, cfg: dict, seed: int,
     return pd.DataFrame(history)
 
 
-# ------------------------------------------------------------------ 전체 벤치마크
+# ------------------------------------------------------------ the full benchmark
 def run_benchmark(root: Path):
     cfg = load_config(root)
     pool = load_pool(root, cfg)
-    print(f"[pool] 완료분자 {len(pool.names)}종, 앵커 {pool.is_anchor.sum()}종, "
-          f"특징 {pool.X_feat.shape[1]}d, 스펙트럼 {pool.Y_spec.shape[1]}d")
+    print(f"[pool] completed molecules {len(pool.names)}, anchors {pool.is_anchor.sum()}, "
+          f"features {pool.X_feat.shape[1]}d, spectra {pool.Y_spec.shape[1]}d")
     if len(pool.names) < 10:
-        print("  ! 완료분자 <10 : 학습곡선 예비용(계산 더 쌓이면 재실행).")
+        print("  ! completed molecules <10 : learning-curve preliminary only (rerun as more computations accumulate).")
 
     strategies = cfg["active_learning"]["baselines"]
     n_seeds = cfg["active_learning"]["n_seeds"]
     rows = []
     for sd in range(n_seeds):
-        # seed마다 고정 test set을 한 번 뽑아 모든 전략이 공유(공정 비교)
+        # one fixed test set is drawn per seed and shared by every strategy, so the comparison is fair
         test_idx = pick_test_set(pool, cfg, np.random.default_rng(sd))
         for strat in strategies:
             h = run_replay(pool, strat, cfg, seed=sd, test_idx=test_idx)

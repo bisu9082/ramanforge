@@ -1,22 +1,23 @@
 """
-ramanforge — 순환 없는(non-circular) 재구성.
+ramanforge: non-circular reconstruction.
 
-문제:
-  기존 보정은 (s, Γ)를 '9종 식별 정확도'를 최대화하도록 골랐다.
-  그런데 그 9종 식별 정확도가 논문의 결과다 -> 순환.
-  144개 격자 중 6/9에 도달하는 칸은 6개뿐이고, s를 0.4% 옮기면 4/9로 떨어진다.
+Problem:
+  The previous calibration chose (s, Γ) so as to maximize the 'identification accuracy over
+  the 9 species'. But that accuracy over the 9 species is the result of the paper -> circularity.
+  Only 6 of the 144 grid cells reach 6/9, and shifting s by 0.4% drops it to 4/9.
 
-해결:
-  s는 '밴드 위치'로만 적합한다. 밴드 위치는 식별과 독립인 물리 관측량이다.
-  Γ는 실측 밴드의 겉보기 폭에서 고정한다.
-  식별 정확도는 어디에도 사용하지 않고, 결과로만 보고한다.
+Solution:
+  s is fitted on 'band positions' only. Band positions are a physical observable that is
+  independent of identification.
+  Γ is fixed from the apparent width of the measured bands.
+  Identification accuracy is not used anywhere; it is reported only as a result.
 
-결과 (자유 파라미터 0개):
-  s_low(<800 cm-1) = 1.024, s_high(>800) = 0.987   [밴드 위치 적합]
-  Γ = 30 cm-1                                      [실측 밴드폭]
-  band RMSE 13.5 cm-1 | molecular 5/9 | class 9/9 | 오답 4건 전부 동일 클래스
-  라이브러리 9->53 확장에도 5/9, 9/9 불변
-  정답을 라이브러리에서 제거해도 클래스 회복 9/9
+Result (0 free parameters):
+  s_low(<800 cm-1) = 1.024, s_high(>800) = 0.987   [band position fit]
+  Γ = 30 cm-1                                      [measured band width]
+  band RMSE 13.5 cm-1 | molecular 5/9 | class 9/9 | all 4 incorrect calls within the same class
+  5/9 and 9/9 unchanged when the library is expanded from 9 to 53
+  class recovery 9/9 even when the correct entry is removed from the library
 """
 from __future__ import annotations
 import glob, os, sys
@@ -30,7 +31,7 @@ from src.calibrate import scattering_factor, _cos
 
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 GRID = np.arange(250.0, 1800.0 + 1e-9, 2.0)
-CUT = 800.0          # 저/고주파 경계
+CUT = 800.0          # boundary between the low- and high-frequency regions
 LASER, TEMP = 1064.0, 298.0
 
 AGENT2JOB = {"GD": "EXP_GD_soman", "GF": "GF_cyclosarin", "HD": "EXP_HD",
@@ -45,16 +46,16 @@ CLASS = {"EXP_GD_soman": "Nerve", "GF_cyclosarin": "Nerve",
 
 
 def cls(job: str) -> str:
-    """OP-F 유사체는 전부 신경작용제 계열."""
+    """All OP-F analogues belong to the nerve agent class."""
     return CLASS.get(job, "Nerve")
 
 
-# ------------------------------------------------------------------ 데이터 로드
+# ------------------------------------------------------------------- load data
 def load_library() -> dict:
     out = {}
     for f in sorted(glob.glob(os.path.join(ROOT, "orca", "outputs", "*.out"))):
         name = os.path.basename(f)[:-4]
-        if name == "GB_sarin_fast":      # GB_sarin 재실행본 (중복)
+        if name == "GB_sarin_fast":      # re-run of GB_sarin (duplicate)
             continue
         out[name] = parse_raman(f)
     return out
@@ -69,7 +70,7 @@ def load_measured() -> dict:
     return {k: (lambda m: m / m.max())(np.mean(v, axis=0)) for k, v in acc.items()}
 
 
-# ------------------------------------------------------------------ 보정
+# ----------------------------------------------------------------- calibration
 def scale_freqs(f: np.ndarray, s_low: float, s_high: float) -> np.ndarray:
     return np.where(f < CUT, f * s_low, f * s_high)
 
@@ -92,7 +93,7 @@ def measured_peaks(meas: dict) -> dict:
 
 
 def band_rmse(lib, mpk, s_low, s_high, tol=35.0):
-    """식별을 전혀 쓰지 않는 목적함수: 실측 밴드 위치 vs 스케일된 조화 진동수."""
+    """Objective function that uses no identification at all: measured band positions vs scaled harmonic frequencies."""
     d = []
     for ag, job in AGENT2JOB.items():
         pk = lib[job]
@@ -119,7 +120,7 @@ def fit_scale_on_positions(lib, mpk, min_pairs=85):
     return best
 
 
-# ------------------------------------------------------------------ 식별
+# -------------------------------------------------------------- identification
 def identify(lib_spec: dict, meas: dict, exclude_self=False):
     rows = []
     for ag, gold in AGENT2JOB.items():
@@ -139,23 +140,23 @@ def main():
     mpk = measured_peaks(meas)
 
     rmse, s_low, s_high, npairs = fit_scale_on_positions(lib, mpk)
-    print(f"[1] 밴드 위치 적합 (식별 미사용): s_low={s_low:.3f} s_high={s_high:.3f} "
+    print(f"[1] band position fit (not used for identification): s_low={s_low:.3f} s_high={s_high:.3f} "
           f"RMSE={rmse:.1f} cm-1 (n={npairs})")
 
-    fwhm = 30.0   # 실측 밴드 겉보기 FWHM 25-55 cm-1 의 중앙값
+    fwhm = 30.0   # median of the apparent FWHM of the measured bands, 25-55 cm-1
     spec = {n: synth(v, s_low, s_high, fwhm) for n, v in lib.items()}
 
     R = identify(spec, meas)
-    print(f"[2] 식별(결과): molecular {R.mol_ok.sum()}/9, class {R.cls_ok.sum()}/9")
+    print(f"[2] identification (result): molecular {R.mol_ok.sum()}/9, class {R.cls_ok.sum()}/9")
     print(R[["agent", "top1", "score", "margin", "mol_ok", "cls_ok"]].to_string(index=False))
 
     Rx = identify(spec, meas, exclude_self=True)
-    print(f"[3] 정답을 라이브러리에서 제거: class 회복 {Rx.cls_ok.sum()}/9")
+    print(f"[3] correct answer removed from library: class recovery {Rx.cls_ok.sum()}/9")
     print(Rx[["agent", "top1", "score", "cls_ok"]].to_string(index=False))
 
     R.to_csv(os.path.join(ROOT, "data", "noncircular_identification.csv"), index=False)
     Rx.to_csv(os.path.join(ROOT, "data", "noncircular_leave_one_out.csv"), index=False)
-    print("\n저장: data/noncircular_identification.csv, data/noncircular_leave_one_out.csv")
+    print("\nsaved: data/noncircular_identification.csv, data/noncircular_leave_one_out.csv")
 
 
 if __name__ == "__main__":

@@ -1,22 +1,23 @@
 """
-v3 A2 — 기권(abstention) 규칙.
+v3 A2: abstention rule.
 
-문제: 계산 라이브러리는 정답 클래스가 없어도 기권하지 않고 자신 있게 오답을 낸다.
-      절대 유사도 임계값으로는 분리 불가(REMEDIATION §0(2): LOCO 0.74–0.85 vs 정답 0.70–0.91).
+Problem: the computed library does not abstain even when the correct class is absent; it
+      returns an incorrect answer with confidence. An absolute similarity threshold cannot
+      separate the two (REMEDIATION §0(2): LOCO 0.74–0.85 vs correct 0.70–0.91).
 
-평가 설계
-  IN    전체 계산 라이브러리 (정답 클래스 존재)        → 기권하면 안 됨
-  LOCO  쿼리의 클래스를 라이브러리에서 통째로 제거      → 반드시 기권해야 함
-  LOMO  쿼리의 분자만 제거 (클래스는 남음)             → 클래스 판정은 유효, 참고용
-  HN2   시료가 HN2가 아님(자기 cos 0.061) = 자연 발생 out-of-library 양성대조
+Evaluation design
+  IN    the full computed library (the correct class is present)   → must not abstain
+  LOCO  the class of the query removed from the library entirely   → must abstain
+  LOMO  only the molecule of the query removed (the class remains) → the class call stays valid, for reference
+  HN2   the sample is not HN2 (self cosine 0.061) = a naturally occurring out-of-library positive control
 
-후보 점수 (전부 단일 특징, 임계값 선택은 nested leave-one-agent-out)
-  S1 top1        최고 코사인 (기준선 — 실패할 것으로 예상)
-  S2 margin      1위 − 2위
-  S3 psr         (1위 − 나머지 평균) / 나머지 표준편차      [peak-to-sidelobe]
-  S4 libz        라이브러리 내부 유사도 분포로 정규화한 z    [국소 정규화]
-  S5 resid       상위 m개 비음수 조합으로 설명되지 않는 비율 [언믹싱 잔차]
-  S6 bandfrac    실측 밴드 중 대응 계산 밴드가 있는 비율     [물리적·비코사인]
+Candidate scores (all single features; the threshold is selected by nested leave-one-agent-out)
+  S1 top1        the highest cosine (baseline, expected to fail)
+  S2 margin      first − second
+  S3 psr         (first − mean of the rest) / standard deviation of the rest   [peak-to-sidelobe]
+  S4 libz        z normalized by the within-library similarity distribution    [local normalization]
+  S5 resid       the fraction not explained by a non-negative combination of the top m entries [unmixing residual]
+  S6 bandfrac    the fraction of measured bands with a corresponding computed band [physical, non-cosine]
 """
 import os, sys, json, itertools, collections
 import numpy as np, pandas as pd
@@ -36,13 +37,13 @@ P = dict(warm_red="#C94F4A", amber="#E8943A", gold="#F0C040", teal="#4AACB0",
 plt.rcParams.update({"axes.labelsize": 16, "xtick.labelsize": 15, "ytick.labelsize": 15,
                      "legend.fontsize": 13, "font.size": 15, "font.family": "DejaVu Sans"})
 
-TOL = 35.0        # 밴드 대응 허용오차 (A1과 동일)
-TOPM = 5          # 언믹싱에 쓸 상위 후보 수
+TOL = 35.0        # tolerance for band correspondence (as in A1)
+TOPM = 5          # number of top candidates used for unmixing
 
 
-# ------------------------------------------------------------------ 점수들
+# ----------------------------------------------------------------------- scores
 def library_stats(dft):
-    """각 라이브러리 항목이 '보통 다른 항목과 얼마나 닮는지' — 국소 정규화용."""
+    """How much each library entry 'typically resembles the other entries'; for local normalization."""
     keys = list(dft)
     M = np.array([[cos(dft[i], dft[j]) for j in keys] for i in keys])
     np.fill_diagonal(M, np.nan)
@@ -52,7 +53,7 @@ def library_stats(dft):
 
 
 def unmix_residual(q, dft, order, m=TOPM):
-    """상위 m개 라이브러리 스펙트럼의 비음수 조합으로 q를 설명하고 남는 비율."""
+    """Fraction of q left unexplained by a non-negative combination of the top m library spectra."""
     A = np.stack([dft[k] for k, _ in order[:m]], 1)
     qn = q / (np.linalg.norm(q) + 1e-12)
     An = A / (np.linalg.norm(A, axis=0, keepdims=True) + 1e-12)
@@ -61,7 +62,7 @@ def unmix_residual(q, dft, order, m=TOPM):
 
 
 def band_fraction(qpk, dpk, tol=TOL):
-    """실측 밴드 중 계산 밴드가 tol 안에 있는 비율."""
+    """Fraction of measured bands with a computed band within tol."""
     if not len(qpk) or not len(dpk):
         return 0.0
     return float(np.mean([np.min(np.abs(dpk - w)) <= tol for w in qpk]))
@@ -86,15 +87,15 @@ def score_query(q, qpk, dft, dftpk, libstat, pool):
     )
 
 
-# ------------------------------------------------------------------ 평가
+# ------------------------------------------------------------------- evaluation
 SCORES = ["S1_top1", "S2_margin", "S3_psr", "S4_libz", "S5_resid", "S6_bandfrac"]
-# resid는 값이 클수록 '기권해야 함' → 부호 반전
+# a larger residual means 'should abstain', so the sign is inverted
 HIGHER_IS_IN = {"S1_top1": True, "S2_margin": True, "S3_psr": True,
                 "S4_libz": True, "S5_resid": False, "S6_bandfrac": True}
 
 
 def auc(pos, neg):
-    """pos = IN(기권하면 안 됨), neg = LOCO(기권해야 함). 값이 클수록 IN인 점수 기준."""
+    """pos = IN (must not abstain), neg = LOCO (must abstain). Higher score means more IN."""
     pos, neg = np.asarray(pos, float), np.asarray(neg, float)
     if not len(pos) or not len(neg):
         return np.nan
@@ -112,13 +113,15 @@ def main():
     dft = {k: synth_native(v, X, SL, SH) for k, v in lib.items()}
     dftpk = {k: X[find_peaks(v, prominence=0.05, distance=2)[0]] for k, v in dft.items()}
     libstat = library_stats(dft)
-    # 심사 대응: 계산 라이브러리를 측정 라이브러리와 동일한 11종으로 제한해
-    # 후보 수 교락(54 대 11)을 제거한다. 환경변수 RF_FULLLIB=1 이면 종전대로 54종.
-    if os.environ.get("RF_FULLLIB") == "1":
-        full = list(dft)
-    else:
+    # Default: the full 54-member computed library, which is the adopted analysis and the
+    # basis of the main abstention table. Set RF_LIB11=1 for the candidate-count control
+    # added in response to review, which restricts the computed library to the same eleven
+    # members as the measured one and so removes the confound of candidate-set size.
+    if os.environ.get("RF_LIB11") == "1":
         full = [JOB[a] for a in AGENTS if a in JOB]
-    print(f"계산 라이브러리 {len(full)}종, 보정 s=({SL:.3f},{SH:.3f}), Γ={GAMMA:.0f}\n")
+    else:
+        full = list(dft)
+    print(f"computed library {len(full)} agents, calibration s=({SL:.3f},{SH:.3f}), Γ={GAMMA:.0f}\n")
 
     queryable = [a for a in AGENTS if len(acq[a]) >= 2 and a in JOB]
     rows = []
@@ -144,20 +147,20 @@ def main():
     D = pd.DataFrame(rows)
     D.to_csv(os.path.join(ROOT, "data", "v3_abstention_scores.csv"), index=False)
 
-    # HN2는 시료 자체가 out-of-library → IN 조건이어도 '기권해야 함' 쪽
+    # the HN2 sample is itself out of library, so it belongs on the 'should abstain' side even under the IN condition
     IN = D[(D.cond == "IN") & (D.agent != "HN2")]
     HN2 = D[(D.cond == "IN") & (D.agent == "HN2")]
     LOCO = D[(D.cond == "LOCO") & (D.agent != "HN2")]
     LOMO = D[(D.cond == "LOMO") & (D.agent != "HN2")]
 
-    print(f"IN {len(IN)}건 / LOCO {len(LOCO)}건 / LOMO {len(LOMO)}건 / HN2 {len(HN2)}건\n")
-    print("LOCO 조건에서 top-1 클래스가 맞는 비율 (= 조용한 실패 확인): "
-          f"{LOCO.cls_correct.mean()*100:.0f}%  ← 0%가 정상 (클래스를 통째로 뺐으므로)")
+    print(f"IN {len(IN)} / LOCO {len(LOCO)} / LOMO {len(LOMO)} / HN2 {len(HN2)} cases\n")
+    print("Fraction of correct top-1 class under LOCO (= silent failure check): "
+          f"{LOCO.cls_correct.mean()*100:.0f}%  ← 0% is expected (the whole class was removed)")
 
     print("\n" + "=" * 74)
-    print("기권 점수 후보 — IN(기권 금지) vs LOCO(기권 필수) 분리력")
+    print("Abstention score candidates: separation of IN (must not abstain) vs LOCO (must abstain)")
     print("=" * 74)
-    print(f"{'점수':<14}{'IN 중앙값':>11}{'LOCO 중앙값':>13}{'HN2 중앙값':>12}{'AUC':>8}{'완전분리':>9}")
+    print(f"{'score':<14}{'IN median':>11}{'LOCO median':>13}{'HN2 median':>12}{'AUC':>8}{'separated':>9}")
     res = []
     for s in SCORES:
         sign = 1.0 if HIGHER_IS_IN[s] else -1.0
@@ -167,14 +170,14 @@ def main():
                         in_med=float(IN[s].median()), loco_med=float(LOCO[s].median()),
                         hn2_med=float(HN2[s].median())))
         print(f"{s:<14}{IN[s].median():>11.3f}{LOCO[s].median():>13.3f}"
-              f"{HN2[s].median():>12.3f}{a_:>8.3f}{'  예' if sep else '  아니오':>9}")
+              f"{HN2[s].median():>12.3f}{a_:>8.3f}{'  yes' if sep else '  no':>9}")
     RES = pd.DataFrame(res)
     RES.to_csv(os.path.join(ROOT, "data", "v3_abstention_auc.csv"), index=False)
 
-    # -------- 운용 임계값: nested leave-one-agent-out --------
+    # -------- operating threshold: nested leave-one-agent-out --------
     print("\n" + "=" * 74)
-    print("운용 규칙 — 임계값을 작용제 하나씩 빼고 정하는 nested LOAO")
-    print("  (규칙: 점수 < τ 이면 기권. τ는 held-out을 제외한 LOCO를 전부 잡는 최솟값)")
+    print("Operating rule: nested LOAO, threshold set with one agent left out at a time")
+    print("  (rule: abstain if score < τ. τ is the smallest value that catches every LOCO case except the held-out one)")
     print("=" * 74)
     oper = []
     for s in SCORES:
@@ -186,7 +189,7 @@ def main():
             tr_loco = LOCO[LOCO.agent != held]
             if not len(tr_loco):
                 continue
-            tau = (sign * tr_loco[s]).max()          # 학습 LOCO를 전부 기권시키는 경계
+            tau = (sign * tr_loco[s]).max()          # the boundary that makes every training LOCO case abstain
             taus.append(tau)
             te_in = IN[IN.agent == held]
             te_loco = LOCO[LOCO.agent == held]
@@ -199,15 +202,15 @@ def main():
                          abstain_LOCO=float(np.mean(abst_loco)),
                          abstain_HN2=float(np.mean(abst_hn2))))
         print(f"  {s:<12} τ≈{np.median(taus)*sign:+8.3f}   "
-              f"IN 기권 {np.mean(abst_in)*100:5.1f}% (낮을수록 좋음)   "
-              f"LOCO 기권 {np.mean(abst_loco)*100:5.1f}% (100%가 목표)   "
-              f"HN2 기권 {np.mean(abst_hn2)*100:5.0f}%")
+              f"IN abstain {np.mean(abst_in)*100:5.1f}% (lower is better)   "
+              f"LOCO abstain {np.mean(abst_loco)*100:5.1f}% (100% is the target)   "
+              f"HN2 abstain {np.mean(abst_hn2)*100:5.0f}%")
     OP = pd.DataFrame(oper)
     OP.to_csv(os.path.join(ROOT, "data", "v3_abstention_operating.csv"), index=False)
 
-    # -------- 2-특징 AND 규칙 (가장 유망한 두 개) --------
+    # -------- two-feature AND rule (the two most promising features) --------
     best2 = OP.sort_values(["abstain_LOCO", "abstain_IN"], ascending=[False, True]).score.tolist()[:2]
-    print(f"\n2-특징 AND 규칙 시도: {best2[0]} 과 {best2[1]} 둘 다 통과해야 수용")
+    print(f"\n2-feature AND rule: accept only if {best2[0]} and {best2[1]} both pass")
     s1, s2 = best2
     g1 = 1.0 if HIGHER_IS_IN[s1] else -1.0
     g2 = 1.0 if HIGHER_IS_IN[s2] else -1.0
@@ -215,11 +218,11 @@ def main():
     acc_in = float(np.mean((g1 * IN[s1] > t1) & (g2 * IN[s2] > t2)))
     acc_loco = float(np.mean((g1 * LOCO[s1] > t1) & (g2 * LOCO[s2] > t2)))
     acc_hn2 = float(np.mean((g1 * HN2[s1] > t1) & (g2 * HN2[s2] > t2)))
-    print(f"  IN 수용 {acc_in*100:.1f}%   LOCO 수용 {acc_loco*100:.1f}%   HN2 수용 {acc_hn2*100:.0f}%")
+    print(f"  IN accept {acc_in*100:.1f}%   LOCO accept {acc_loco*100:.1f}%   HN2 accept {acc_hn2*100:.0f}%")
 
-    # ============================================ 실측 라이브러리 대조 (핵심)
+    # ===================================== measured-library control (the core comparison)
     print("\n" + "=" * 74)
-    print("같은 기권 문제를 '실측 라이브러리'로 — 전방 모델이 정확하면 어떻게 되나")
+    print("The same abstention problem on the 'measured library': what happens when the forward model is accurate")
     print("=" * 74)
     mrows = []
     for a in queryable:
@@ -247,7 +250,7 @@ def main():
     MLOCO = M[(M.cond == "LOCO") & (M.agent != "HN2")]
     MHN2 = M[(M.cond == "IN") & (M.agent == "HN2")]
 
-    print(f"{'점수':<14}{'계산 AUC':>11}{'실측 AUC':>11}{'계산 완전분리':>15}{'실측 완전분리':>15}")
+    print(f"{'score':<14}{'comp AUC':>11}{'meas AUC':>11}{'comp separated':>15}{'meas separated':>15}")
     cmp_rows = []
     for s_ in SCORES:
         g = 1.0 if HIGHER_IS_IN[s_] else -1.0
@@ -258,17 +261,17 @@ def main():
         cmp_rows.append(dict(score=s_, auc_computed=a_c, auc_measured=a_m,
                              sep_computed=bool(sc_), sep_measured=bool(sm_)))
         print(f"{s_:<14}{a_c:>11.3f}{a_m:>11.3f}"
-              f"{('예' if sc_ else '아니오'):>15}{('예' if sm_ else '아니오'):>15}")
+              f"{('yes' if sc_ else 'no'):>15}{('yes' if sm_ else 'no'):>15}")
     CMP = pd.DataFrame(cmp_rows)
     CMP.to_csv(os.path.join(ROOT, "data", "v3_abstention_compare.csv"), index=False)
 
     s_best = "S1_top1"
     tau_m = MLOCO[s_best].max()
-    print(f"\n실측 라이브러리 + 단일 임계값 τ={tau_m:.3f} (S1 top-1 코사인):")
-    print(f"  IN 수용 {(MIN_[s_best] > tau_m).mean()*100:.0f}%   "
-          f"LOCO 수용 {(MLOCO[s_best] > tau_m).mean()*100:.0f}%   "
-          f"HN2 수용 {(MHN2[s_best] > tau_m).mean()*100:.0f}%")
-    print("  → 기권은 별도로 어려운 문제가 아니다. 전방 모델이 정확하면 임계값 하나로 해결된다.")
+    print(f"\nmeasured library + single threshold τ={tau_m:.3f} (S1 top-1 cosine):")
+    print(f"  IN accept {(MIN_[s_best] > tau_m).mean()*100:.0f}%   "
+          f"LOCO accept {(MLOCO[s_best] > tau_m).mean()*100:.0f}%   "
+          f"HN2 accept {(MHN2[s_best] > tau_m).mean()*100:.0f}%")
+    print("  → Abstention is not a separately hard problem; if the forward model is accurate, one threshold solves it.")
 
     meta = dict(n_in=len(IN), n_loco=len(LOCO), n_lomo=len(LOMO), n_hn2=len(HN2),
                 loco_cls_correct=float(LOCO.cls_correct.mean()),

@@ -1,0 +1,34 @@
+\begin{table}[htbp]
+\centering
+\caption{Sensitivity of the preprocessing specification. Cosine is taken against the adopted setting (bold); separation is the mean within-class minus the mean between-class cosine over the eleven measured agents. Entries for the fingerprint limits change the grid itself, so no cosine is defined.}
+\label{tab:si-preproc}
+\small
+\begin{tabular}{llrrrr}
+\toprule
+Parameter & Value & Cosine vs adopted & Within & Between & Separation \\
+\midrule
+AsLS lambda & 1000.0 & 0.9960 & 0.607 & 0.485 & 0.122 \\
+AsLS lambda & 3000.0 & 0.9987 & 0.614 & 0.489 & 0.125 \\
+AsLS lambda & \textbf{10000.0} & 1.0000 & 0.619 & 0.496 & \textbf{0.123} \\
+AsLS lambda & 30000.0 & 0.9973 & 0.625 & 0.506 & 0.119 \\
+AsLS lambda & 100000.0 & 0.9863 & 0.636 & 0.522 & 0.113 \\
+AsLS lambda & 1000000.0 & 0.9666 & 0.642 & 0.539 & 0.104 \\
+AsLS p & 0.001 & 0.9821 & 0.659 & 0.559 & 0.100 \\
+AsLS p & 0.005 & 0.9984 & 0.631 & 0.516 & 0.115 \\
+AsLS p & \textbf{0.01} & 1.0000 & 0.619 & 0.496 & \textbf{0.123} \\
+AsLS p & 0.02 & 0.9988 & 0.605 & 0.474 & 0.131 \\
+AsLS p & 0.05 & 0.9924 & 0.579 & 0.440 & 0.139 \\
+fingerprint low & 200.0 & n/a & 0.616 & 0.496 & 0.120 \\
+fingerprint low & 250.0 & n/a & 0.619 & 0.496 & 0.123 \\
+fingerprint low & 300.0 & n/a & 0.625 & 0.497 & 0.128 \\
+fingerprint low & 400.0 & n/a & 0.628 & 0.499 & 0.129 \\
+fingerprint high & 1600.0 & n/a & 0.620 & 0.495 & 0.124 \\
+fingerprint high & 1700.0 & n/a & 0.619 & 0.496 & 0.124 \\
+fingerprint high & 1800.0 & n/a & 0.619 & 0.496 & 0.123 \\
+normalization & \textbf{max} & 1.0000 & 0.619 & 0.496 & \textbf{0.123} \\
+normalization & snv & 0.8254 & 0.495 & 0.306 & 0.188 \\
+\bottomrule
+\end{tabular}
+
+\begin{flushleft}\footnotesize The baseline parameters were fixed at values conventional in the literature before any identification was run. Over three orders of magnitude in $\lambda$ the spectra stay within a cosine of 0.967 of the adopted setting and the separation moves between 0.104 and 0.125; over $p$ from 0.001 to 0.05 the cosine stays above 0.982 and the separation moves between 0.100 and 0.139. Standard-normal-variate normalization gives a higher separation (0.188) while changing the spectra substantially, and both are reported rather than the better-scoring one being adopted.\end{flushleft}
+\end{table}

@@ -1,0 +1,22 @@
+\begin{table}[htbp]
+\centering
+\caption{Six abstention scores evaluated on the same queries under three conditions: the class present in the library (accept), the query's entire toxicological class removed (decline), and the HN2 acquisitions. Thresholds are set by nested leave-one-agent-out, so no threshold is chosen on the queries it is applied to.}
+\label{tab:si-absten}
+\footnotesize
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrrcrcrr}
+\toprule
+Score & In-library & Class absent & HN2 & AUC & Separable? & AUC (meas.) & Sep.? & Decline IN & Decline LOCO \\
+\midrule
+top-1 cosine & 0.780 & 0.699 & 0.206 & 0.829 & no & 1.000 & \textbf{yes} & 48\% & 93\% \\
+margin & 0.038 & 0.018 & 0.043 & 0.775 & no & 0.909 & no & 59\% & 96\% \\
+peak-to-sidelobe ratio & 2.843 & 2.095 & 4.657 & 0.852 & no & 0.985 & no & 30\% & 96\% \\
+library-normalized $z$ & 0.782 & -0.188 & -7.165 & 0.775 & no & 1.000 & \textbf{yes} & 56\% & 93\% \\
+unmixing residual & 0.553 & 0.681 & 0.978 & 0.798 & no & 1.000 & \textbf{yes} & 44\% & 93\% \\
+band-match fraction & 0.833 & 0.538 & 0.333 & 0.770 & no & 0.824 & no & 74\% & 93\% \\
+\bottomrule
+\end{tabular}
+}
+
+\begin{flushleft}\footnotesize Against the computed library no score separates the two conditions. Driving the class-absent acceptance to zero requires a conjunction of the library-normalized $z$ and the top-1 cosine, and costs 63\% of the legitimate queries. Against the measured library three scores separate completely and a top-1 cosine threshold of 0.729 accepts 27 of 27 and declines 27 of 27. That threshold is an upper bound obtained on one instrument, one session and one vial per agent, and is not a transferable operating value; the contrast between the libraries is the result.\end{flushleft}
+\end{table}

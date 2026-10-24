@@ -1,10 +1,10 @@
 """
-featurize.py — 값싼 분자 피처 (AL surrogate 입력).
+featurize.py: cheap molecular features (input to the AL surrogate).
 
-DFT 없이 계산 가능한 피처로 surrogate를 학습해, 아직 계산 안 한 구조의
-스펙트럼 특성을 예측 → acquisition이 '다음 계산할 구조'를 고른다.
+The surrogate is trained on features computable without DFT and predicts the spectral
+properties of structures not yet computed → acquisition then picks the 'next structure to compute'.
 
-피처: RDKit 2D descriptor(정규화) + Morgan fingerprint(반경2, 1024bit).
+Features: RDKit 2D descriptors (normalized) + Morgan fingerprint (radius 2, 1024 bit).
 """
 from __future__ import annotations
 import numpy as np
@@ -12,7 +12,7 @@ from rdkit import Chem, DataStructs
 from rdkit.Chem import rdFingerprintGenerator
 from rdkit.ML.Descriptors import MoleculeDescriptors
 
-# 대표 물리화학 descriptor (분자량, 극성, 회전결합, P/N/F 관련 대리 지표 등)
+# representative physicochemical descriptors (molecular weight, polarity, rotatable bonds, P/N/F proxies)
 _DESC = [
     "MolWt", "TPSA", "NumRotatableBonds", "NumHAcceptors", "NumHDonors",
     "FractionCSP3", "NumHeavyAtoms", "MolLogP", "NumValenceElectrons",
@@ -34,7 +34,7 @@ def featurize_smiles(smiles: str, n_bits: int = 1024, radius: int = 2) -> np.nda
 
 
 def featurize_frame(names, smiles_list, **kw):
-    """(names, X, valid_mask) 반환. 파싱 실패 구조는 제외."""
+    """Return (names, X, valid_mask). Structures that fail parsing are excluded."""
     X, keep = [], []
     for nm, smi in zip(names, smiles_list):
         v = featurize_smiles(smi, **kw)

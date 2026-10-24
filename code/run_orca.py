@@ -1,9 +1,9 @@
 """
-run_orca.py — ORCA 실행 래퍼 (subprocess 스트리밍 + 주기적 상태 출력).
+run_orca.py: ORCA execution wrapper (subprocess streaming plus periodic status output).
 
-로컬 ORCA를 호출해 .inp → .out 실행. 계산 모니터링 원칙에 맞춰
-30초마다 진행 상황(경과시간, out 파일 크기, 마지막 SCF 라인)을 출력한다.
-샌드박스처럼 ORCA가 없으면 명확히 에러 반환.
+Calls the local ORCA to run .inp → .out. In keeping with the calculation monitoring policy,
+the progress (elapsed time, out file size, last SCF line) is printed every 30 seconds.
+If ORCA is absent, as in the sandbox, a clear error is returned.
 """
 from __future__ import annotations
 import os, subprocess, time, shutil
@@ -12,11 +12,11 @@ import os, subprocess, time, shutil
 def run_one(inp_path: str, out_path: str, orca_exe: str, poll: int = 30) -> dict:
     exe = shutil.which(orca_exe) or (orca_exe if os.path.isfile(orca_exe) else None)
     if exe is None:
-        return {"ok": False, "reason": f"ORCA 실행파일 없음: {orca_exe}", "out": out_path}
+        return {"ok": False, "reason": f"ORCA executable not found: {orca_exe}", "out": out_path}
 
     t0 = time.time()
     with open(out_path, "w") as fout:
-        # ORCA는 병렬 실행 시 절대경로 인풋 권장
+        # ORCA recommends absolute input paths when running in parallel
         proc = subprocess.Popen([exe, os.path.abspath(inp_path)],
                                  stdout=fout, stderr=subprocess.STDOUT)
         last = 0.0

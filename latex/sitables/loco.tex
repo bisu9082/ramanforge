@@ -1,0 +1,23 @@
+\begin{table}[htbp]
+\centering
+\caption{Leave-one-class-out. Every library member of the query's toxicological class was deleted before matching, so the correct answer is absent by construction and the workflow should decline.}
+\label{tab:si-loco}
+\small
+\begin{tabular}{llp{4.4cm}rrr}
+\toprule
+Agent & $n$ & Assigned to & Top-1 cosine & Margin & Library $z$ \\
+\midrule
+GD & 4 & EXP\_HN2 ($\times$4) & 0.755 & 0.003 & +1.27 \\
+GF & 3 & EXP\_HN2 ($\times$3) & 0.588 & 0.024 & -0.17 \\
+HN1 & 3 & EtGB ($\times$2), GB\_sarin & 0.699 & 0.000 & -0.01 \\
+HN2 & 3 & EXP\_A242 ($\times$3) & 0.207 & 0.043 & -7.16 \\
+HN3 & 3 & GB\_sarin ($\times$3) & 0.646 & 0.016 & -0.54 \\
+A-230 & 3 & OP\_nPr\_iBu ($\times$3) & 0.757 & 0.030 & -0.11 \\
+A-232 & 3 & OP\_nPr\_iBu ($\times$3) & 0.681 & 0.021 & -1.10 \\
+A-234 & 5 & OP\_Et\_iBu ($\times$3), OP\_Me\_Me ($\times$2) & 0.767 & 0.027 & +0.40 \\
+A-242 & 3 & OP\_sBu\_Me ($\times$3) & 0.590 & 0.005 & -1.87 \\
+\bottomrule
+\end{tabular}
+
+\begin{flushleft}\footnotesize Class-level accuracy under this condition is 0 by construction. The workflow does not signal the absence: the similarities and margins it returns fall inside the ranges it returns when the answer is present, which is why no threshold on them separates the two conditions (Table~\ref{tab:si-absten}).\end{flushleft}
+\end{table}

@@ -44,26 +44,49 @@ submission to the OPCW Central Analytical Database, through which they are avail
 States Parties and designated laboratories. Everything needed to reproduce every number in
 the manuscript from the deposited preprocessed spectra is in this repository.
 
-ORCA inputs and outputs for all 57 computed structures are under `orca/` (62 MB).
+ORCA inputs and outputs for all 57 computed structures are under `orca/` (62 MB); see
+`orca/README.md` for what is there and why some of the working comments in the inputs are
+in Korean.
 
 ## Reproducing the results
 
 ```bash
 pip install numpy scipy pandas matplotlib
-cd code
-python v3_step3_headtohead.py      # head-to-head; writes data/v3_headtohead*.csv
-python v3_region_by_agent.py       # window-resolved cosines
-python v3_t118_metrics.py          # twelve-metric control
-python v3_t119_decompose.py        # position / intensity / width decomposition
-python v3_step5_a2_abstention.py   # abstention and the class-absent condition
-python v3_si_tables.py             # regenerates every table in the SI
+python code/v3_step3_headtohead.py      # head-to-head; writes data/v3_headtohead*.csv
+python code/v3_region_by_agent.py       # window-resolved cosines
+python code/v3_t118_metrics.py          # twelve-metric control
+python code/v3_t119_decompose.py        # position / intensity / width decomposition
+python code/v3_step5_a2_abstention.py   # abstention and the class-absent condition
+python code/v3_agent_stats.py           # per-agent accuracy, McNemar, bootstrap CIs
+python code/v3_detect_sensitivity.py    # band-detection criterion sensitivity
+python code/v3_axis_checks.py           # affine calibration and the axis-offset scan
+python code/v3_preproc_symmetry.py      # preprocessing applied symmetrically
+python code/v3_loao_topk.py             # leave-one-agent-out identification, top-k ranks
+python code/v3_pairrule.py              # one-to-one vs nearest-neighbour band pairing
+python code/v3_geomwindow.py            # window-resolved effect of the geometry correction
+python code/v3_si_tables.py             # regenerates the SI tables into latex/sitables/
 ```
 
 Scripts resolve paths relative to the repository root and write into `data/`. Run
-`v3_step3_headtohead.py` first; the others import from it.
+`v3_step3_headtohead.py` first; the others import from it. The order above is also the
+dependency order: `v3_si_tables.py` reads what the earlier scripts write, and
+`v3_agent_stats.py` reads the abstention scores, so it must follow
+`v3_step5_a2_abstention.py`.
+
+`v3_step1_audit.py` and `v3_step2_preprocess.py` rebuild `data/v3_measured.npz` from the
+raw acquisition files, which are not in this repository (see **What is not here**). They
+expect those files in `data/raw/`.
+
+Two environment variables select a non-default condition:
+
+| Variable | Effect |
+|---|---|
+| `RF_LIB11=1` | restricts the computed library to the same eleven members as the measured one, the candidate-count control of Table S-abstsize |
+| `RF_PRECORR=1` | rebuilds the pre-correction library, needed for the level-of-theory trials of Section S8 and for Table S-geomwindow, whose captions state that they are computed on the pre-correction geometries |
 
 Every number in the manuscript is produced by one of these scripts. No table is
-hand-entered.
+hand-entered. All 345 data rows in the Supplementary Information tables were checked
+against the output of a clean re-run.
 
 ## Compliance
 
