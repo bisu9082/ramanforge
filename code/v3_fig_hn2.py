@@ -66,7 +66,7 @@ for nu, _ in ABS:
 b.set_xlim(250, 1800); b.set_ylim(-0.012, 0.075)
 b.set_xlabel("Raman shift (cm$^{-1}$)", fontsize=11, color=INK2)
 b.set_ylabel("normalized intensity", fontsize=11, color=INK2)
-b.set_title("Same spectrum, 13$\\times$ vertical zoom: three of Kondo's four HN2 bands are present and reproduce in all three acquisitions",
+b.set_title("Same spectrum, 13$\\times$ vertical zoom: three of Kondo's four HN2 bands clear 3$\\sigma$ in this mean spectrum, two of them in every acquisition",
             fontsize=11.5, color=INK, loc="left")
 b.text(0.995, 0.97, "grey, lower row: positions a monosubstituted ring would require (702, 787, 1030) — all below 1.5$\\sigma$",
        transform=b.transAxes, ha="right", fontsize=9, color="0.45")

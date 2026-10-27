@@ -62,11 +62,13 @@ def main():
              "of this measurement.", fontsize=9.3, color=INK2)
     fig.text(0.012, 0.012,
              "The vial labeled HN2 is the only one that reproduces none of them at this floor.\n"
-             "Its three bands (994, 1176, 1585 cm$^{-1}$) are not in Kondo's HN2, and a dominant "
-             "band near 1000 cm$^{-1}$ with a partner\nnear 1590 cm$^{-1}$ is consistent with a "
-             "monosubstituted aromatic ring, which no nitrogen mustard contains.",
+             "Its four strong bands (606, 994, 1176, 1585 cm$^{-1}$) are the Raman-active "
+             "fundamentals of liquid benzene, and the three\npositions a monosubstituted ring "
+             "would require (702, 787, 1030 cm$^{-1}$) are absent. Scored against the local noise "
+             "instead of\nthis floor, two of the four bands Kondo reports for HN2 are present in "
+             "every acquisition and a third in two of three.",
              fontsize=9.3, color=ORANGE)
-    fig.subplots_adjust(left=0.012, right=0.985, top=0.900, bottom=0.095, hspace=0.52)
+    fig.subplots_adjust(left=0.012, right=0.985, top=0.900, bottom=0.120, hspace=0.52)
     out = os.path.join(ROOT, "figures", "kondo_comparison.png")
     fig.savefig(out, dpi=200, facecolor=BG)
     print("saved figures/kondo_comparison.png")

@@ -163,6 +163,6 @@ Code: MIT (see `LICENSE`). Data and figures: CC BY 4.0.
 
 ## Citation
 
-Release `v1.2.0` is the state from which every number in the manuscript was produced.
+Release `v1.2.1` is the state from which every number in the manuscript was produced.
 `CITATION.cff` carries the version and the repository; the article DOI will be added here
 when it is issued.
