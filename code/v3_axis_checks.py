@@ -33,8 +33,8 @@ def affine_vs_two_region():
     def pos_rmse(mapper, tol=35.0):
         d = []
         for ag in CAL:
-            pk = lib[H.JOB[ag]]; f = mapper(pk[:, 0])
-            keep = (f > 250) & (f < 1800) & (pk[:, 1] > 0.02 * pk[:, 1].max()); f = f[keep]
+            pk = lib[H.JOB[ag]]
+            f = H.peaks_of_lines(mapper(pk[:, 0]), pk[:, 1], H.GRID)
             w = np.asarray(mpk[ag], float)
             if not len(f) or not len(w): continue
             C = np.abs(w[:, None] - f[None, :]); C = np.where(C > tol, 1e6, C)

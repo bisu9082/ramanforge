@@ -19,7 +19,7 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from v3_step3_headtohead import (ROOT, load_measured, load_library, synth_native,
+from v3_step3_headtohead import (ROOT, load_measured, load_library, synth_native, computed_peaks,
                                  measured_peaks, cos, JOB, AGENTS, CUT)
 from src.spectra import parse_raman
 
@@ -37,10 +37,7 @@ def pos_rmse(lib, mpk, agents, s_low, s_high, rule, tol=35.0):
         job = JOB.get(ag)
         if job is None or job not in lib:
             continue
-        pk = lib[job]
-        f = np.where(pk[:, 0] < CUT, pk[:, 0] * s_low, pk[:, 0] * s_high)
-        keep = (f > 250) & (f < 1800) & (pk[:, 1] > 0.02 * pk[:, 1].max())
-        f = f[keep]
+        f = computed_peaks(lib[job], s_low, s_high)
         w = np.asarray(mpk[ag], float)
         if not len(f) or not len(w):
             continue

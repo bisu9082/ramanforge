@@ -3,7 +3,8 @@ Is the window diagnosis an artifact of the two-region frequency map?
 
 The adopted map multiplies harmonic wavenumbers below 800 cm-1 by 1.016 and those above it
 by 0.990. The branch is taken on the unscaled wavenumber, so the map is discontinuous at
-the boundary: 800- maps to 812.8 and 800+ to 792.0, a 20.8 cm-1 overlap in which the order
+the boundary: under the adopted factors 800- maps to 811.2 and 800+ to 784.0, a 27.2 cm-1
+overlap in which the order
 of two modes can be reversed. Four library entries have a mode pair in that overlap, and
 the overlap sits inside the 600-850 cm-1 window the diagnosis of Section 3.2 rests on.
 
@@ -48,9 +49,8 @@ def fit_affine(lib, mpk, agents, tol=35.0):
             res, n = [], 0
             for a in agents:
                 pk = lib[H.JOB[a]]
-                f = g * pk[:, 0] + b
-                keep = (f > 250) & (f < 1800) & (pk[:, 1] > 0.02 * pk[:, 1].max())
-                f = f[keep]; w = np.asarray(mpk[a], float)
+                f = H.peaks_of_lines(g * pk[:, 0] + b, pk[:, 1], H.GRID)
+                w = np.asarray(mpk[a], float)
                 if not len(f) or not len(w):
                     continue
                 C = np.abs(w[:, None] - f[None, :])
@@ -109,8 +109,9 @@ def main():
     tex = """\\begin{table}[htbp]
 \\centering
 \\caption{The window diagnosis under both calibrations. The adopted two-region map is
-discontinuous at 800\\,\\wn{}, where it sends 800$^-$ to 812.8 and 800$^+$ to 792.0; four
-library entries have a mode pair inside that overlap and have their order reversed by it.
+discontinuous at 800\\,\\wn{}, where under the adopted factors it sends 800$^-$ to 811.2
+and 800$^+$ to 784.0; five of the eleven measured agents have a mode pair inside that
+27.2\\,\\wn{} overlap and have their order reversed by it.
 The affine map of Table~\\ref{tab:si-affine} is monotone. Both columns are computed with
 the same spectra, the same window definitions and the same ten agents. Produced by
 \\texttt{code/v3\\_affine\\_window.py}.}
@@ -129,11 +130,13 @@ Window (\\wn) & P & no P & $\\Delta$ & P & no P & $\\Delta$ \\\\
 \\begin{{flushleft}}\\footnotesize The diagnosis does not depend on the map. Under the
 adopted calibration the 600--850\\,\\wn{{}} window gives $\\Delta = {d2.delta:+.3f}$ against
 at most ${other2:.3f}$ in absolute value elsewhere; under the affine map it gives
-$\\Delta = {da.delta:+.3f}$ against at most ${othera:.3f}$. In both cases 600--850\\,\\wn{{}}
+$\\Delta = {da.delta:+.3f}$ against at most ${othera:.3f}$. Under the affine map 600--850\\,\\wn{{}}
 is the only window in which the phosphorus-free agents score higher than the
-phosphorus-containing ones, and in both cases it is the largest contrast in the row. The
+phosphorus-containing ones; under the adopted map one other window, 1150--1400\\,\\wn{{}},
+carries a small contrast of the same sign. In both cases 600--850\\,\\wn{{}} carries much
+the largest contrast of the five. The
 discontinuity is therefore a defect of the adopted map that should be stated, but it does
-not generate the localisation it sits inside.\\end{{flushleft}}
+not generate the localization it sits inside.\\end{{flushleft}}
 \\end{{table}}
 """
     open(os.path.join(ROOT, "latex", "sitables", "affwindow.tex"), "w").write(tex)

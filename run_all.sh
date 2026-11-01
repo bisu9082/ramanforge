@@ -30,13 +30,17 @@ run v3_step3_headtohead               # the head-to-head comparison
 run v3_region_by_agent                # window-resolved cosines
 run v3_t118_metrics                   # twelve-metric control
 run v3_t119_decompose                 # position / intensity / width decomposition
+run v3_t119_unmatched                 # unpaired bands in the 600-850 window (Figure 4d)
 # The level-of-theory trials of Section S8 were run on the pre-correction library, as
 # their captions state, so this one step needs RF_PRECORR=1 to reproduce those tables.
 run v3_step4_b2_evaluate RF_PRECORR=1 # level-of-theory trials
+run v3_b2_bandshift                   # dominant-band positions for Figure 5d / Table S40
 run v3_step5_a2_abstention            # abstention and the class-absent condition
 run v3_abstention_bycls               # abstention AUC by deleted class
 run v3_agent_stats                    # per-agent accuracy, McNemar, bootstrap intervals
-run v3_detect_sensitivity             # band-detection criterion sensitivity
+run v3_detect_sensitivity             # band-detection criterion sensitivity, both sides
+run v3_calibgrid                      # the declined identification-tuned calibration
+run v3_lomo_measured                  # leave-one-molecule-out, measured library
 run v3_axis_checks                    # affine calibration and the axis-offset scan
 run v3_preproc_symmetry               # preprocessing applied symmetrically
 run v3_loao_topk                      # leave-one-agent-out identification, top-k ranks

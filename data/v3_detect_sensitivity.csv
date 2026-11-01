@@ -1,9 +1,17 @@
-criterion,tol,s_low,s_high,rmse,n_pair,n_meas,n_calc,rmse_pen
-"prominence $>$ 0.05, separation 2 points",35.0,1.016,0.99,10.409446959675426,81,176,175,29.83298469482879
-"prominence $>$ 0.05, separation 2 points",20.0,1.016,0.99,8.640911744018021,76,176,175,30.117923810995823
-"height $>$ 0.10 and prominence $>$ 0.05, separation 4 points",35.0,1.016,0.988,10.566623287900425,75,132,175,29.4122756581073
-"height $>$ 0.10 and prominence $>$ 0.05, separation 4 points",20.0,1.016,0.988,8.305395902658447,69,132,175,29.8303742666817
-"height $>$ 0.12, separation 6 points",35.0,1.016,0.988,10.422987992161174,71,121,175,29.541936007168317
-"height $>$ 0.12, separation 6 points",20.0,1.016,0.988,8.227197830130292,65,121,175,29.9891496228758
-"prominence $>$ max(0.05, $5\sigma$) per agent, separation 2 points",35.0,1.016,0.99,9.94817963198847,72,119,175,29.322344277748385
-"prominence $>$ max(0.05, $5\sigma$) per agent, separation 2 points",20.0,1.016,0.99,8.488287332721065,68,119,175,29.632667745625305
+criterion,side,tol,s_low,s_high,rmse,n_pair,n_meas,n_calc,rmse_pen
+"prominence $>$ 0.05, separation 2 points",symmetric,35.0,1.014,0.98,12.16746696825337,94,176,125,27.12837986047391
+"prominence $>$ 0.05, separation 2 points",symmetric,20.0,1.014,0.98,10.04360681339975,84,176,125,28.104349596703766
+"height $>$ 0.10 and prominence $>$ 0.05, separation 4 points",symmetric,35.0,1.022,0.98,12.417971027532285,90,132,127,25.588174552340504
+"height $>$ 0.10 and prominence $>$ 0.05, separation 4 points",symmetric,20.0,1.022,0.98,10.41856970836052,81,132,127,26.77594029194881
+"height $>$ 0.12, separation 6 points",symmetric,35.0,1.016,0.98,12.241385892588118,86,121,121,25.145376219854015
+"height $>$ 0.12, separation 6 points",symmetric,20.0,1.016,0.98,10.681441882115676,78,121,121,26.39397446632044
+"prominence $>$ max(0.05, $5\sigma$) per agent, separation 2 points",symmetric,35.0,1.014,0.98,13.055888348566121,82,119,116,25.686955323075228
+"prominence $>$ max(0.05, $5\sigma$) per agent, separation 2 points",symmetric,20.0,1.014,0.98,10.5535031648325,73,119,116,26.892042895904765
+"prominence $>$ 0.05, separation 2 points",linelist,35.0,1.016,0.99,10.409446959675426,81,176,175,29.83298469482879
+"prominence $>$ 0.05, separation 2 points",linelist,20.0,1.016,0.99,8.640911744018021,76,176,175,30.117923810995823
+"height $>$ 0.10 and prominence $>$ 0.05, separation 4 points",linelist,35.0,1.016,0.988,10.566623287900425,75,132,175,29.4122756581073
+"height $>$ 0.10 and prominence $>$ 0.05, separation 4 points",linelist,20.0,1.016,0.988,8.305395902658447,69,132,175,29.8303742666817
+"height $>$ 0.12, separation 6 points",linelist,35.0,1.016,0.988,10.422987992161174,71,121,175,29.541936007168317
+"height $>$ 0.12, separation 6 points",linelist,20.0,1.016,0.988,8.227197830130292,65,121,175,29.9891496228758
+"prominence $>$ max(0.05, $5\sigma$) per agent, separation 2 points",linelist,35.0,1.016,0.99,9.94817963198847,72,119,175,29.322344277748385
+"prominence $>$ max(0.05, $5\sigma$) per agent, separation 2 points",linelist,20.0,1.016,0.99,8.488287332721065,68,119,175,29.632667745625305

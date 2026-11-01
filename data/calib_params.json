@@ -1,0 +1,7 @@
+{
+  "scale": 1.0,
+  "fwhm": 30.0,
+  "laser_nm": 1064.0,
+  "temp_K": 298.0,
+  "scattering": true
+}

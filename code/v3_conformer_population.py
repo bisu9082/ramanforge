@@ -50,6 +50,7 @@ def main():
         rows.append(dict(agent=NM[job], job=job, n_conformers=len(e),
                          p_global_pct=round(float(w.max()) * 100, 1),
                          n_effective=round(float(1 / np.square(w).sum()), 1),
+                         perplexity=round(float(np.exp(-(w * np.log(w + 1e-300)).sum())), 1),
                          second_kcal=round(float(np.sort(e)[1]), 2) if len(e) > 1 else np.nan))
     D = pd.DataFrame(rows)
     D["sort"] = D.agent.map({a: i for i, a in enumerate(ORDER)})

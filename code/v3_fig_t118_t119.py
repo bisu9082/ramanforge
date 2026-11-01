@@ -85,7 +85,7 @@ d.bar(xu + w/2, U.unm_meas * 100, w, color=P["dark_teal"], label="measured inten
 d.set_xticks(xu); d.set_xticklabels([s.replace("A2", "A-2") for s in U.agent], rotation=30, ha="right")
 d.set_ylabel("share of window intensity (%)"); d.set_ylim(0, 118)
 d.legend(loc="upper left", frameon=False, fontsize=11)
-d.set_title("(d) The calculation adds bands the measurement does not show", loc="left", fontsize=14)
+d.set_title("(d) The two band sets differ, in both directions", loc="left", fontsize=14)
 
 for A in ax.ravel():
     A.spines[["top", "right"]].set_visible(False)

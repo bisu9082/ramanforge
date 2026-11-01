@@ -78,8 +78,15 @@ def main():
     ax.set_xlim(-0.42, 0.42)
     ax.set_xlabel("$\\Delta$ cosine, 600–850 cm$^{-1}$")
     ax.set_title("Ten agent–correction trials", fontsize=15.5)
-    _nimp = int((T.delta > 0.10).sum()); _ndeg = int((T.delta < -0.10).sum())
-    ax.text(0.97, 0.055, f"{_nimp} improved\n{_ndeg} degraded",
+    # Round-4: the gate was +/-0.10, which after the detection correction returned
+    # "0 degraded" over three visibly negative bars. Count every trial that moves
+    # the window at all, at the same threshold in both directions.
+    _nimp = int((T.delta > 0.10).sum()); _nunch = int((T.delta.abs() <= 0.01).sum())
+    _ndeg = int((T.delta < -0.01).sum())
+    _nmod = len(T) - _nimp - _nunch - _ndeg
+    ax.text(0.97, 0.055,
+            f"{_nimp} improved substantially\n{_nmod} improved modestly\n"
+            f"{_nunch} unchanged\n{_ndeg} degraded",
             transform=ax.transAxes, ha="right",
             fontsize=12.5, style="italic", color=P["brown"])
     letter(ax, "a", -0.34)

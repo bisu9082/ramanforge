@@ -2,10 +2,11 @@
 ramanforge: sensitivity of the corrected library to the calibration.
 
 Produces SI table \\label{tab:si-calibsens}. After the GF and A-232 geometries were
-replaced by their global minima the frequency scale was refitted, which moved it by
-0.2 per cent. This script reports the identification outcome with the scale held at its
-pre-correction values and with it refitted, so that the sensitivity of the result to that
-change is explicit.
+replaced by their global minima the frequency scale was refitted. This script reports the
+identification outcome with the scale held at its pre-correction values and with it
+refitted, so that the sensitivity of the result to that change is explicit. Round-4: the
+pre-correction pair is now refitted from the pre-correction library under the symmetric
+detection criterion rather than hardcoded.
 """
 import os, sys
 import numpy as np
@@ -15,8 +16,18 @@ sys.path.insert(0, ROOT)
 sys.path.insert(0, os.path.join(ROOT, "scripts"))
 import v3_step3_headtohead as H
 
-HELD = (1.018, 0.988)      # pre-correction calibration
-COLS = [("Scale held at (%.3f, %.3f)" % HELD, HELD)]
+def _precorr_scale(X, mpk, calib):
+    """Refit the scale on the PRE-correction library, under the same criterion."""
+    import importlib
+    os.environ["RF_PRECORR"] = "1"
+    importlib.reload(H)
+    H.GRID = X
+    lib0 = H.load_library()
+    _, sl, sh, _ = H.fit_scale(lib0, mpk, calib)
+    del os.environ["RF_PRECORR"]
+    importlib.reload(H)
+    H.GRID = X
+    return float(sl), float(sh)
 
 
 def main():
@@ -26,6 +37,9 @@ def main():
     mpk = {a: H.measured_peaks(X, mean[a]) for a in H.AGENTS}
     calib = [a for a in H.AGENTS if a in H.JOB]
     _, SLr, SHr, _ = H.fit_scale(lib, mpk, calib)
+    HELD = _precorr_scale(X, mpk, calib)
+    lib = H.load_library()
+    print(f"[pre-correction] s={HELD}   [corrected] s=({SLr:.3f}, {SHr:.3f})")
     core = [H.JOB[a] for a in H.AGENTS if a in H.JOB]
     queryable = [a for a in H.AGENTS if len(acq[a]) >= 2]
     queries = [(a, r, s) for a in queryable for r, s in acq[a]]
@@ -58,7 +72,7 @@ def main():
 \\centering
 \\caption{{Sensitivity of the corrected library to the calibration. The two columns differ
 only in the frequency scale: the left holds it at the pre-correction values, the right
-refits it to the corrected library, a change of 0.2 per cent.}}
+refits it to the corrected library, a change of {abs(SLr-HELD[0])/HELD[0]*100:.1f} per cent in $s_\\mathrm{{low}}$ and {abs(SHr-HELD[1])/HELD[1]*100:.1f} per cent in $s_\\mathrm{{high}}$.}}
 \\label{{tab:si-calibsens}}
 \\small
 \\begin{{tabular}}{{lcc}}
@@ -71,9 +85,9 @@ HN1 assignment & {esc(h['hn1'])} ({mark(h['hn1'],'HN1')}) & {esc(r['hn1'])} ({ma
 \\bottomrule
 \\end{{tabular}}
 
-\\begin{{flushleft}}\\footnotesize A 0.2\\,\\% change in the scale factors moves the
+\\begin{{flushleft}}\\footnotesize A change of {abs(SLr-HELD[0])/HELD[0]*100:.1f}\\,\\% in $s_\\mathrm{{low}}$ and {abs(SHr-HELD[1])/HELD[1]*100:.1f}\\,\\% in $s_\\mathrm{{high}}$ moves the
 molecular total by {abs(h['mol']-r['mol'])} of {h['n']} and flips all three HN1
-acquisitions, whose pre-correction margin was 0.022. The refitted values are the ones
+acquisitions, which the held calibration assigns correctly and the refitted one does not. The refitted values are the ones
 reported throughout, because the calibration procedure is defined before the
 identification is computed and is not permitted to depend on it. That the outcome of the
 computed library is not determined to the precision at which its calibration is

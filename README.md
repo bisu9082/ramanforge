@@ -39,14 +39,22 @@ the global minimum, an affine wavenumber calibration, an imposed axis offset of 
 | `latex/` | Manuscript and supporting information source. |
 | `figures/` | Figures as submitted. |
 
+## Warning on one deposited entry
+
+The measured spectrum deposited under the label `HN2` is the spectrum of **liquid
+benzene**, not of a nitrogen mustard. Do not use it as a reference spectrum. See
+`data/WARNING_HN2_IS_BENZENE.md` and Section S5.2 of the Supplementary Material.
+
 ## What is not here
 
 **Raw acquisition files of the authentic agents are not in this repository.** They are
 analytical data on Schedule 1 chemicals generated in a laboratory designated by the
-Organisation for the Prohibition of Chemical Weapons. The appropriate route for them is
-submission to the OPCW Central Analytical Database, through which they are available to
-States Parties and designated laboratories. Everything needed to reproduce every number in
-the manuscript from the deposited preprocessed spectra is in this repository.
+Organisation for the Prohibition of Chemical Weapons, and are retained under that
+facility's own records. We do not claim deposition in the OPCW Central Analytical
+Database: that database accepts spectra only for material the depositing laboratory has
+itself confirmed by two independent techniques, and no orthogonal confirmation was
+performed on any of the eleven materials used here. Everything needed to reproduce every
+number in the manuscript from the deposited preprocessed spectra is in this repository.
 
 `computed_library/MANIFEST.csv` maps every entry to its ORCA input and output, its line
 list, an **isomeric** SMILES and an InChIKey perceived from the optimised geometry, and
@@ -163,6 +171,6 @@ Code: MIT (see `LICENSE`). Data and figures: CC BY 4.0.
 
 ## Citation
 
-Release `v1.2.1` is the state from which every number in the manuscript was produced.
+Release `v1.3.0` is the state from which every number in the manuscript was produced.
 `CITATION.cff` carries the version and the repository; the article DOI will be added here
 when it is issued.

@@ -97,6 +97,8 @@ def load_measured():
             acq[ag].append((int(rep), d[k]))
     for a in acq:
         acq[a].sort()
+    global GRID
+    GRID = X
     return X, dict(acq)
 
 
@@ -110,12 +112,72 @@ def load_library():
 
 
 # ------------------------------------------- fit of s (non-circular)
-def measured_peaks(X, spec, prominence=0.05):
-    pk, _ = find_peaks(spec, prominence=prominence, distance=2)
+GRID = None          # measured native axis; set by load_measured(), used by computed_peaks()
+
+
+def measured_peaks(X, spec, prominence=0.05, distance=2):
+    pk, _ = find_peaks(spec, prominence=prominence, distance=distance)
     return X[pk]
 
 
-def position_rmse(lib, mpk, agents, s_low, s_high, tol=35.0):
+def computed_peaks(entry, s_low, s_high, gamma=GAMMA, prominence=0.05, distance=2, grid=None):
+    """Computed band positions under the SAME criterion as the measured side.
+
+    The line list is scaled, converted to intensity and broadened onto the measured
+    native grid by synth_native(), and the result is then reduced to local maxima with
+    the identical topographic prominence and minimum separation used on the measurement.
+    Two computed modes closer together than the adopted width are therefore not counted
+    as two bands, exactly as they would not be on a measured spectrum.
+
+    Round-4 revision. Before this, the computed side was the raw harmonic line list
+    thresholded at 2% of the molecule's maximum *activity* (computed_peaks_linelist
+    below), with no broadening, no prominence and no separation condition. That rule is
+    more permissive than the measured one and the asymmetry was undeclared; both rules
+    are now reported side by side in the detection-sensitivity table.
+    """
+    g = GRID if grid is None else grid
+    if g is None:
+        raise RuntimeError("computed_peaks needs the measured grid; call load_measured() first")
+    spec = synth_native(entry, g, s_low, s_high, gamma)
+    pk, _ = find_peaks(spec, prominence=prominence, distance=distance)
+    f = g[pk]
+    return f[(f > 250) & (f < 1800)]
+
+
+def peaks_of_lines(f_scaled, activities, grid, gamma=GAMMA, prominence=0.05, distance=2,
+                   lo=250.0, hi=1800.0, return_height=False):
+    """Local maxima of an already-scaled line list after broadening onto `grid`.
+
+    The general form of computed_peaks(): callers that use a frequency map other than
+    the adopted two-region one (the affine control of Section S6, the axis-offset scan)
+    pass their own scaled frequencies here, so that every arm of the paper detects
+    computed bands under the one criterion the measured side uses.
+    """
+    a = np.asarray(activities, float) * scattering_factor(np.asarray(f_scaled, float))
+    if a.max() > 0:
+        a = a / a.max()
+    g = gamma / 2.0
+    I = np.zeros_like(grid, dtype=float)
+    for ff, aa in zip(f_scaled, a):
+        I += aa * g * g / ((grid - ff) ** 2 + g * g)
+    I = I / (I.max() + 1e-12)
+    pk, _ = find_peaks(I, prominence=prominence, distance=distance)
+    m = (grid[pk] > lo) & (grid[pk] < hi)
+    return (grid[pk][m], I[pk][m]) if return_height else grid[pk][m]
+
+
+def computed_peaks_linelist(entry, s_low, s_high, floor=0.02):
+    """Superseded rule: raw harmonic line list above `floor` of maximum activity.
+
+    Retained only so that the detection-sensitivity table can report the asymmetric
+    criterion used before the Round-4 revision alongside the symmetric one.
+    """
+    f = np.where(entry[:, 0] < CUT, entry[:, 0] * s_low, entry[:, 0] * s_high)
+    keep = (f > 250) & (f < 1800) & (entry[:, 1] > floor * entry[:, 1].max())
+    return f[keep]
+
+
+def position_rmse(lib, mpk, agents, s_low, s_high, tol=35.0, mode="symmetric"):
     """
     Measured↔computed band position residuals. Paired by **one-to-one assignment** (the linear assignment problem).
 
@@ -128,10 +190,8 @@ def position_rmse(lib, mpk, agents, s_low, s_high, tol=35.0):
         job = JOB.get(ag)
         if job is None or job not in lib:
             continue
-        pk = lib[job]
-        f = np.where(pk[:, 0] < CUT, pk[:, 0] * s_low, pk[:, 0] * s_high)
-        keep = (f > 250) & (f < 1800) & (pk[:, 1] > 0.02 * pk[:, 1].max())
-        f = f[keep]
+        f = (computed_peaks(lib[job], s_low, s_high) if mode == "symmetric"
+             else computed_peaks_linelist(lib[job], s_low, s_high))
         w = np.asarray(mpk[ag], float)
         if not len(f) or not len(w):
             continue
@@ -145,11 +205,11 @@ def position_rmse(lib, mpk, agents, s_low, s_high, tol=35.0):
     return (float(np.sqrt((d ** 2).mean())) if len(d) else np.nan), len(d)
 
 
-def fit_scale(lib, mpk, agents, min_pairs=60):
+def fit_scale(lib, mpk, agents, min_pairs=60, mode="symmetric"):
     best = None
     for sl in np.arange(0.960, 1.0401, 0.002):
         for sh in np.arange(0.950, 1.0201, 0.002):
-            r, n = position_rmse(lib, mpk, agents, float(sl), float(sh))
+            r, n = position_rmse(lib, mpk, agents, float(sl), float(sh), mode=mode)
             if n >= min_pairs and (best is None or r < best[0]):
                 best = (r, float(sl), float(sh), n)
     return best
@@ -451,7 +511,8 @@ def main():
     ax.set_yticklabels([r.replace("\u2013", "–") for r in PF["region"]], fontsize=11.5)
     ax.set_xlim(0, 1.24); ax.set_xticks([0, 0.2, 0.4, 0.6, 0.8, 1.0])
     ax.set_xlabel("measured vs computed cosine")
-    ax.set_title("The deficit is specific to phosphorus", fontsize=15)
+    ax.set_title("Phosphorus-containing (n = 7) against phosphorus-free (n = 3) agents, by window",
+                 fontsize=13)
     ax.text(-0.26, 1.05, "f", transform=ax.transAxes, fontsize=26, fontweight="bold")
 
     fig.savefig(os.path.join(ROOT, "figures", "v3_fig_headtohead.png"), dpi=200)

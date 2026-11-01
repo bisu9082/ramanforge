@@ -8,21 +8,21 @@
 \toprule
 Metric & Meas.\ top-1 & Meas.\ self & Comp.\ top-1 (11) & Comp.\ top-1 (54) & Comp.\ by agent & Comp.\ self \\
 \midrule
-Full-profile cosine, $\Gamma$ = 22\,\wn{} (adopted) & 30/30 & 0.983 & 13/30 & 13/30 & 4/9 & 0.674 \\
-Full-profile cosine, $\Gamma$ = 30\,\wn{} & n/a & n/a & 16/30 & 16/30 & 5/9 & 0.688 \\
-Full-profile cosine, $\Gamma$ = 40\,\wn{} & n/a & n/a & 16/30 & 16/30 & 5/9 & 0.692 \\
-Full-profile cosine, $\Gamma$ = 50\,\wn{} & n/a & n/a & 16/30 & 16/30 & 5/9 & 0.688 \\
-Full-profile cosine, per-agent measured $\Gamma$ & n/a & n/a & 12/30 & 12/30 & 4/9 & 0.670 \\
-First-derivative cosine & 30/30 & 0.981 & 10/30 & 10/30 & 3/9 & 0.350 \\
-Shift-tolerant cosine, $\pm$3 pixels ($\pm$17\,\wn{}) & 30/30 & 0.983 & 16/30 & 16/30 & 5/9 & 0.720 \\
-Peak-list hit quality, 10\,\wn{} tolerance & 28/30 & 0.801 & 8/30 & 4/30 & 2/9 & 0.122 \\
-Peak-list hit quality, 20\,\wn{} tolerance & 29/30 & 0.835 & 11/30 & 11/30 & 3/9 & 0.232 \\
-Peak-list hit quality, 35\,\wn{} tolerance & 29/30 & 0.856 & 11/30 & 11/30 & 3/9 & 0.326 \\
-Band-position Dice, 20\,\wn{} tolerance & 28/30 & 0.891 & 8/30 & 6/30 & 2/9 & 0.459 \\
-Band-position Dice, 35\,\wn{} tolerance & 25/30 & 0.898 & 10/30 & 9/30 & 2/9 & 0.622 \\
+Full-profile cosine, $\Gamma$ = 22\,\wn{} (adopted) & 30/30 & 0.983 & 13/30 & 13/30 & 4/9 & 0.703 \\
+Full-profile cosine, $\Gamma$ = 30\,\wn{} & n/a & n/a & 13/30 & 13/30 & 4/9 & 0.715 \\
+Full-profile cosine, $\Gamma$ = 40\,\wn{} & n/a & n/a & 16/30 & 16/30 & 5/9 & 0.714 \\
+Full-profile cosine, $\Gamma$ = 50\,\wn{} & n/a & n/a & 16/30 & 16/30 & 5/9 & 0.706 \\
+Full-profile cosine, per-agent measured $\Gamma$ & n/a & n/a & 11/30 & 10/30 & 3/9 & 0.695 \\
+First-derivative cosine & 30/30 & 0.981 & 10/30 & 10/30 & 3/9 & 0.409 \\
+Shift-tolerant cosine, $\pm$3 pixels ($\pm$17\,\wn{}) & 30/30 & 0.983 & 16/30 & 16/30 & 5/9 & 0.731 \\
+Peak-list hit quality, 10\,\wn{} tolerance & 28/30 & 0.801 & 5/30 & 4/30 & 1/9 & 0.123 \\
+Peak-list hit quality, 20\,\wn{} tolerance & 29/30 & 0.835 & 11/30 & 10/30 & 3/9 & 0.247 \\
+Peak-list hit quality, 35\,\wn{} tolerance & 29/30 & 0.856 & 10/30 & 10/30 & 3/9 & 0.351 \\
+Band-position Dice, 20\,\wn{} tolerance & 28/30 & 0.891 & 15/30 & 14/30 & 5/9 & 0.544 \\
+Band-position Dice, 35\,\wn{} tolerance & 25/30 & 0.898 & 11/30 & 6/30 & 3/9 & 0.625 \\
 \bottomrule
 \end{tabular}
 }
 
-\begin{flushleft}\footnotesize No metric rescues the computed library. The adopted metric gives 13 of 30, the best of the twelve is 16 of 30 (Full-profile cosine), and every peak-list metric, which is what commercial library search actually uses, lies between 8 and 11 of 30. The measured library reaches 25 to 30 of 30 under the eight metrics for which it is defined --- the four linewidth variants are a property of the computed synthesis only --- so the peak-list implementations are sound and the collapse is a property of the computed library and not of the comparison. No metric tested accounts for the result.\end{flushleft}
+\begin{flushleft}\footnotesize No metric rescues the computed library. The adopted metric gives 13 of 30, the best of the twelve is 16 of 30 (Full-profile cosine), and every peak-list metric, which is what commercial library search actually uses, lies between 5 and 15 of 30. The measured library reaches 25 to 30 of 30 under the eight metrics for which it is defined --- the four linewidth variants are a property of the computed synthesis only --- so the peak-list implementations are sound and the collapse is a property of the computed library and not of the comparison. No metric tested accounts for the result.\end{flushleft}
 \end{table}

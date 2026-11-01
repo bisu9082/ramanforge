@@ -331,8 +331,8 @@ made.append(table(
          f"window against {_RNmin:.3f}--{_RNmax:.3f} for the {_nNP} that contain no phosphorus. "
          f"These data do not detect an ordering by conformational flexibility: a GFN2 "
          f"conformer census over all eleven computed molecules gives no association between "
-         f"conformational entropy and this cosine (Pearson $r$ = +0.23, $n$ = 10, 95\\% "
-         f"interval roughly $-0.45$ to $+0.75$). The interval excludes nothing, and the two "
+         f"conformational entropy and this cosine (Pearson $r$ = +0.33, $n$ = 10, 95\\% "
+         f"interval roughly $-0.37$ to $+0.80$). The interval excludes nothing, and the two "
          f"extremes of the comparison are {_RBbest}, which has a single genuine acquisition "
          f"and is never queried, and the post-correction {_RBworst}. Whether a "
          f"Boltzmann-weighted ensemble spectrum closes the deficit is untested here."))
@@ -398,8 +398,6 @@ print("\ntotal", len(made), "tables")
 for f in made[7:]: print("  ", f)
 
 # ------------------------- sessionsim : measurement reproducibility
-CMx = pd.read_csv(f"{DATA}/v3_measured_cosine_matrix.csv").rename(
-    columns={"Unnamed: 0": "agent"}).set_index("agent")
 ACQ = PRE["acq_sep"]
 _CLS = dict(GD="N", GF="N", VX="N", HD="B", HN1="B", HN2="B", HN3="B",
             A230="V", A232="V", A234="V", A242="V")
@@ -498,7 +496,7 @@ made.append(table(
 
 # ------------------------- bands / bandlist : paired bands
 sys.path.insert(0, ROOT); sys.path.insert(0, os.path.join(ROOT, "scripts"))
-from v3_step3_headtohead import (load_measured, load_library, measured_peaks,
+from v3_step3_headtohead import (load_measured, load_library, measured_peaks, computed_peaks,
                                  JOB, CUT, AGENTS)
 X, acq = load_measured(); lib = load_library()
 mean = {a: np.mean([s for _, s in acq[a]], 0) for a in AGENTS}
@@ -509,10 +507,7 @@ pairs = []; census = []
 for a in ORDER:
     job = JOB.get(a)
     if job is None or job not in lib: continue
-    pk = lib[job]
-    f = np.where(pk[:, 0] < CUT, pk[:, 0] * SL, pk[:, 0] * SH)
-    keep = (f > 250) & (f < 1800) & (pk[:, 1] > 0.02 * pk[:, 1].max())
-    f = f[keep]
+    f = computed_peaks(lib[job], SL, SH)
     w_all = np.asarray(mpk[a], float)
     if not len(f) or not len(w_all): continue
     # one-to-one assignment (a linear assignment problem). Nearest-neighbor matching is not used:
@@ -647,10 +642,11 @@ made.append(table(
     "fluorine, sulfur and chlorine to a polarized triple-zeta basis.",
     "tab:si-bandshift", "lrrrrrr",
     ["Agent", "Measured", "Baseline", "Error", "tight P", "Error", "Shift"], rows,
-    note=f"The shift is upward in {int((BS['shift'] > 0).sum())} "
-         f"of the {len(BS)} molecules, by {BS.loc[BS['shift'] > 0, 'shift'].min():.0f} to "
-         f"{BS['shift'].max():.0f}\\,\\wn{{}}, and downward by "
-         f"{abs(BS['shift'].min()):.0f}\\,\\wn{{}} in the remaining one, while the baseline errors "
+    note=f"The shift is upward in {int((BS['shift'] > 0.5).sum())} "
+         f"of the {len(BS)} molecules, by {BS.loc[BS['shift'] > 0.5, 'shift'].min():.0f} to "
+         f"{BS['shift'].max():.0f}\\,\\wn{{}}, leaves the band where it was in "
+         f"{int((BS['shift'].abs() <= 0.5).sum())}, and is downward in "
+         f"{int((BS['shift'] < -0.5).sum())}, while the baseline errors "
          f"scatter from ${'-' if BS.err_base.min() < 0 else '+'}${abs(BS.err_base.min()):.0f} to "
          f"$+${BS.err_base.max():.0f}\\,\\wn{{}}. A correction of fixed sign can only help the subset "
          "whose error is negative and of comparable size. GF satisfies that condition; GD, which "
@@ -711,29 +707,42 @@ new = []
 
 # -- detect : band-detection criterion vs tolerance-window sensitivity
 DS = pd.read_csv(f"{DATA}/v3_detect_sensitivity.csv")
-rows = [[r.criterion, f"{r.tol:.0f}", f"{r.s_low:.3f}", f"{r.s_high:.3f}",
+SIDE = {"symmetric": "both sides", "linelist": "measured only"}
+DSs = DS[DS.side == "symmetric"] if "side" in DS.columns else DS
+rows = [[r.criterion, SIDE.get(getattr(r, "side", ""), ""), f"{r.tol:.0f}",
+         f"{r.s_low:.3f}", f"{r.s_high:.3f}",
          f"{r.rmse:.1f}", str(int(r.n_pair)), str(int(r.n_meas)), str(int(r.n_calc)),
          f"{r.rmse_pen:.1f}"] for _, r in DS.iterrows()]
 new.append(table(
     "detect.tex",
     "Sensitivity of the frequency calibration to the band-detection criterion and "
     "to the pairing tolerance. The criterion in the first row is the one used throughout this "
-    "work. The last criterion scales the threshold to each spectrum's own noise, because the "
-    "measured spectra differ in noise by more than an order of magnitude and a single absolute "
-    "prominence therefore admits many more peaks from the noisiest of them; it removes 57 of "
-    "the 176 detected bands and gives the lowest penalized RMSE of the four, while leaving the "
-    "scale factors where they are.",
-    "tab:si-detect", "lrrrrrrrr",
-    ["Detection criterion", "Tol.\\ (\\wn)", "$s_\\mathrm{low}$", "$s_\\mathrm{high}$",
+    "work. The \\emph{Applied to} column records whether the criterion was applied to both "
+    "sides or, as in the analysis this work supersedes, to the measured side only, the "
+    "computed side then being the raw harmonic line list above 2\\% of maximum activity; "
+    "the computed band count is constant down the latter block because the criterion never "
+    "reached it. The noise-scaled criterion scales the threshold to each spectrum's own "
+    "noise, because the measured spectra differ in noise by more than an order of magnitude "
+    "and a single absolute prominence therefore admits many more peaks from the noisiest of "
+    "them.",
+    "tab:si-detect", "llrrrrrrrr",
+    ["Detection criterion", "Applied to", "Tol.\\ (\\wn)", "$s_\\mathrm{low}$", "$s_\\mathrm{high}$",
      "RMSE (\\wn)", "Paired", "Meas.\\ bands", "Comp.\\ bands", "Penalized RMSE"], rows,
     note=f"The scale factors move by at most "
          f"{max((DS.s_low.max()-DS.s_low.min())/DS.s_low.mean(), (DS.s_high.max()-DS.s_high.min())/DS.s_high.mean())*100:.1f}\\% "
          f"and the paired RMSE stays between {DS.rmse.min():.1f} and {DS.rmse.max():.1f}\\,\\wn{{}} "
-         "across all six combinations, so neither the detection threshold nor the tolerance "
-         "drives the calibration. The penalized RMSE charges every unpaired band a fixed "
-         "35\\,\\wn{} so that the six cells remain comparable; it is stable near "
-         f"{DS.rmse_pen.mean():.0f}\\,\\wn{{}} and is the honest upper bound on the positional "
-         "disagreement, the paired RMSE being the value over bands that found a partner."))
+         f"across the {len(DS)} combinations, and by at most "
+         f"{max((DSs.s_low.max()-DSs.s_low.min())/DSs.s_low.mean(), (DSs.s_high.max()-DSs.s_high.min())/DSs.s_high.mean())*100:.1f}\\% "
+         "across the eight that use the criterion adopted here, so neither the detection "
+         "threshold nor the tolerance drives the calibration. The penalized RMSE charges "
+         "every unpaired band a fixed 35\\,\\wn{} so that the cells remain comparable. It is "
+         "an imputation at the tolerance constant and not a bound: a band left unpaired "
+         "because nothing lies within 35\\,\\wn{} has a true residual larger than 35, while "
+         "one whose partner was claimed by the assignment may have a smaller one. Roughly "
+         "nine tenths of the penalized mean is contributed by imputed terms, which is why it "
+         "is stable near "
+         f"{DSs.rmse_pen.mean():.0f}\\,\\wn{{}} across criteria; we report it beside the paired "
+         "RMSE rather than in place of it."))
 
 # -- agentstat : per-agent accuracy and McNemar
 AA = pd.read_csv(f"{DATA}/v3_agent_accuracy.csv")
@@ -950,18 +959,24 @@ new.append(table(
     "tab:si-unmatched", "lrrrrr",
     ["Agent", "Computed bands", "Measured bands", "Paired",
      "Computed with no measured partner", "Measured with no computed partner"], rows,
-    note="Measured bands almost always find a computed partner: the share is zero for GD, "
-         "HN1, HN3, A-230 and A-234. The asymmetry runs the other way. The calculation places "
+    note="Both sides are detected under the single criterion of Section~2.7: the computed "
+         "line list is synthesized onto the measured native grid at the adopted width and then "
+         "reduced to local maxima with the same prominence and separation used on the "
+         "measurement. Neither direction dominates and both rest on one to six bands per "
+         "agent, so a single unpaired band moves a share by tens of percent; where the two "
+         "sides differ in band count the excess is unpaired before any spectroscopy enters. "
+         "The calculation places "
          f"on average {UM[UM.agent!='HN2'].unm_calc.mean()*100:.0f}\\% of the window intensity "
-         "in bands the measurement does not show, and "
-         f"{float(UM[UM.agent=='A232'].unm_calc.iloc[0])*100:.0f}\\% for A-232 and "
-         f"{float(UM[UM.agent=='GF'].unm_calc.iloc[0])*100:.0f}\\% for GF, two of the "
-         "misassigned agents. The deficit in this window is therefore not that the calculation "
-         "misplaces the measured bands but that it distributes intensity over a band set the "
-         "measurement does not have. The vial labeled HN2 pairs no band at all, so both of its "
-         f"shares are 100\\% by construction; including it raises the mean to "
+         "in bands the measurement does not show, and the measurement carries "
+         f"{UM[UM.agent!='HN2'].unm_meas.mean()*100:.0f}\\% in bands the calculation does not "
+         f"show. The extreme case in both directions is GF at "
+         f"{float(UM[UM.agent=='GF'].unm_calc.iloc[0])*100:.0f}\\% computed and "
+         f"{float(UM[UM.agent=='GF'].unm_meas.iloc[0])*100:.0f}\\% measured. We therefore "
+         "report that the two band sets differ and do not read a direction into the asymmetry. "
+         "The vial labeled HN2 pairs no band at all, so both of its "
+         f"shares are 100\\% by construction; including it raises the computed mean to "
          f"{UM.unm_calc.mean()*100:.0f}\\%, and we quote the figure without it. A-232 is "
-         "anomalous in both directions and is discussed separately in Section~S8."))
+         "discussed separately in Section~S9."))
 
 for f in new: print("  +", f)
 print(f"\nadded {len(new)} tables (total {len(made) + len(new)})")
