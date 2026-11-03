@@ -51,7 +51,8 @@
 \makeatother
 
 \title{Supplementary Material\\[0.4em]
-       \large The computed library, not the spectroscopy, limits Raman identification of authentic chemical warfare agents}
+       \large A calibrated single-conformer harmonic density functional theory Raman library
+       does not reach molecular identification of authentic chemical warfare agents}
 \author{%
 \begin{minipage}{0.95\textwidth}\centering
 Doo-Hee Lee\textsuperscript{a,b,$\dagger$},
@@ -60,6 +61,7 @@ Sungbong Kim\textsuperscript{c},
 Jinkwang Jeong\textsuperscript{c},\\
 Rosy Oh\textsuperscript{d},
 Hyein Kim\textsuperscript{a},
+Soohwan Kim\textsuperscript{a},
 Ku Kang\textsuperscript{a,*}\\[0.9em]
 \normalsize
 \textsuperscript{a}Chemical, Biological, Radiological and Nuclear (CBRN) Defense Research
@@ -238,7 +240,7 @@ A-242 & 15 & 13 & 11 & 153 & 0.180 & retained \\
 \bottomrule
 \end{tabular}
 
-\begin{flushleft}\footnotesize The vial labeled HN2 is the one failure, and the reason is spectral content rather than acquisition quality: its signal-to-noise ratio is the highest of the eleven vials and its count rate the second highest. The previous version of this work attributed the failure to a poor measurement, which these figures do not support. Failing the criterion does not remove the vial from the analysis: it is retained in both libraries and among the thirty queries, so that the two libraries face an identical query set. It is set aside where its unknown identity would leave a quantity undefined: from the per-agent window analyses, from the in-library and class-absent conditions of Section~S7, where it is reported as a condition of its own, and from the correlation against molecular size in Figure~\ref{fig:si-step4}. It contributes no band pair to the frequency calibration, which is therefore identical with and without it (Table~\ref{tab:si-loao}). Section~S6 gives the independent evidence from the computed library and Section~S11 the external evidence.\end{flushleft}
+\begin{flushleft}\footnotesize The vial labeled HN2 is the one failure, and the reason is spectral content rather than acquisition quality: its signal-to-noise ratio is the highest of the eleven vials and its count rate the second highest. The previous version of this work attributed the failure to a poor measurement, which these figures do not support. Failing the criterion does not remove the vial from the analysis: it is retained in both libraries and among the thirty queries, so that the two libraries face an identical query set. It is set aside where its unknown identity would leave a quantity undefined: from the per-agent window analyses, from the in-library and class-absent conditions of Section~S7, where it is reported as a condition of its own, and from the correlation against molecular size in Figure~\ref{fig:si-step4}. It contributes one of the 94 band pairs to the frequency calibration, and holding it out leaves the fitted factors and the position RMSE unchanged at 1.0140, 0.9800 and 12.17\,\wn{} (Table~\ref{tab:si-loao}). Section~S6 gives the independent evidence from the computed library and Section~S11 the external evidence.\end{flushleft}
 \end{table}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage
@@ -898,7 +900,35 @@ A multiplicative frequency scale factor is degenerate with a multiplicative erro
 instrument's wavenumber axis, and an \emph{additive} axis offset is not excluded by the
 two-region fit. An additive offset is the error that would most favor this study's
 conclusion, because it cancels in a measured-to-measured comparison and not in a
-measured-to-computed one. This section reports the three tests we ran on it.
+measured-to-computed one. This section reports the three tests we ran on it: an affine alternative (Table~\ref{tab:si-affine}), the window diagnosis under both maps (Table~\ref{tab:si-affwindow}), and a scan over an imposed additive offset (Table~\ref{tab:si-offsetscan}).
+
+\textbf{An in-campaign bound on the offset.} No certified Raman shift standard was run
+during the campaign; benzene is not among the eight materials ASTM E1840 recommends for
+that purpose, and that guide addresses neither traceability nor uncertainty (Ntziouni
+et al., \textit{Appl. Spectrosc.} \textbf{76}, 747, 2022). One reference liquid was
+nevertheless measured,
+inadvertently. The vial labeled HN2 contains liquid benzene
+(Section~\ref{si:hn2}) and was acquired between the HN3 and HN1 acquisitions, three and
+two minutes away, under the same instrument state as the agents. Its four strong bands lie
+at 605.6, 993.6, 1176.3 and 1585.4\,\wn{} against the benzene fundamentals at 606, 992,
+1178 and 1586\,\wn{} (Zhang et al., \textit{Sensors} \textbf{11}, 11510, 2011): residuals
+of $-0.4$, $+1.6$, $-1.7$ and
+$-0.6$\,\wn{}, a mean of $-0.3$ and an RMS of 1.2\,\wn{} over 606 to 1586\,\wn{}, the span
+containing 72 of the 94 paired bands. Over that span an additive
+offset on the measured axis is bounded at roughly 2\,\wn{}, below half the
+5.73\,\wn{} sampling and narrower than every non-zero value in the scan of
+Table~\ref{tab:si-offsetscan}. That scan is accordingly a sensitivity analysis over a
+range the measurement itself excludes, and the adopted $\delta$ = 0 is supported rather
+than assumed. Four positions from one liquid are not a substitute for a certified standard
+across the full range. Twenty-one of the 22 uncovered pairs lie below 606\,\wn{}, which is
+where Table~\ref{tab:si-affine} shows the two calibration models to be least separable, so
+the bound is silent exactly where it would be most useful. Only the ring-breathing band
+clears the 10\,\% criterion of Section~\ref{si:preproc}; the other three stand at 15 to 39
+standard deviations of the local noise, which determines their positions but does not make
+this vial a quality-criterion pass. We continue to recommend a certified standard for any
+replication, and what they
+establish is that the one error that would bias this study toward its own conclusion is
+not present at a magnitude that could do so.
 
 One property of the adopted map should be stated before the tests. The branch is taken on
 the unscaled harmonic wavenumber, so the map is discontinuous at the boundary: it sends
@@ -1194,7 +1224,7 @@ than one third of the 5.73\,\wn{} sampling, with benzene's intensity order. The
 assignment is settled by what is absent. A monosubstituted ring puts the ring-breathing
 mode near 1002--1004\,\wn{} rather than 992 and adds a band near 1030\,\wn{}; toluene
 requires 1004, 1030 and 787, chlorobenzene 1002 and 704, pyridine 991 and 1030. In these
-spectra 702, 787 and 1030\,\wn{} sit at 1.6, 1.3 and 0.9 standard deviations of the local
+spectra 702, 787 and 1030\,\wn{} sit at no more than 1.6, 1.3 and 0.9 standard deviations of the local
 noise. Benzene is the only one of these that fits, and it fits to within a third of a
 pixel on every band.
 
@@ -1895,7 +1925,7 @@ GD & tight P/F/S/Cl & 0.878 & 0.796 & -0.081 & 0.862 & 0.827 & \checkmark $\righ
 \end{tabular}
 }
 
-\begin{flushleft}\footnotesize Of the 10 pairs, 3 improved the window substantially ($\Delta > 0.10$), 2 improved modestly, 2 were unchanged and 3 degraded. Across all 10 the refitted scale factors stay within 1.006--1.024 and 0.980--0.982, and the global band-position RMSE between 11.7 and 12.5\,\wn{}, so no global adjustment reaches these errors.\end{flushleft}
+\begin{flushleft}\footnotesize Of the 10 pairs, 3 improved the window substantially ($\Delta > 0.10$), 2 improved modestly, 2 were unchanged ($|\Delta| \leq 0.02$, the same gate as panel (a) of the level-of-theory figure in the main text) and 3 degraded. Across all 10 the refitted scale factors stay within 1.006--1.024 and 0.980--0.982, and the global band-position RMSE between 11.7 and 12.5\,\wn{}, so no global adjustment reaches these errors.\end{flushleft}
 \end{table}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage
@@ -2147,17 +2177,26 @@ determined is itself a result about the library.\end{flushleft}
 The library holds one structure per molecule, and Section~\ref{si:ident} attributes the
 deficit to the computed spectra. The deposited ensembles allow a bound on how much of that
 attribution belongs to the single-conformer approximation rather than to the electronic
-structure. Table~\ref{tab:si-confpop} gives the Boltzmann weight at 298\,K of the structure
-the library actually uses.
+structure. Table~\ref{tab:si-confpop} gives the Boltzmann weight at 298\,K of the most
+populated conformer in each ensemble. That is an upper bound on the population any single
+structure can carry, and we read it as a bound rather than as the weight of the library
+entry itself: the library holds the B3LYP/6-311++G(d,p) minimum reached from its starting
+geometry, the ensemble weights are GFN2, and the two surfaces need not agree on which
+conformer is lowest --- Table~\ref{tab:si-a232} documents a GFN2 error of roughly
+3.5\,kcal\,mol$^{-1}$ on one configurational coordinate in this set, which is more than
+enough to reorder them. Identifying the library structure with the ensemble minimum would
+require a conformer-resolved comparison we did not run, so the figures below are the most
+favorable case.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{table}[htbp]
 \centering
-\caption{What fraction of the 298\,K population the single structure in the library
-carries. Conformer energies are the GFN2 metadynamic ensembles deposited under
-\texttt{conformers/}; $\Delta E_2$ is the energy of the second conformer above the
-minimum, $p$ the Boltzmann weight of the minimum and $N_\mathrm{eff}$ the inverse
-participation ratio of the weights. Produced by
+\caption{The largest fraction of the 298\,K population any single conformer carries, an
+upper bound on what the one structure in the library can represent. Conformer energies are
+the GFN2 metadynamic ensembles deposited under \texttt{conformers/}; $\Delta E_2$ is the
+energy of the second conformer above the minimum, $p$ the Boltzmann weight of the ensemble
+minimum --- not demonstrably that of the library entry, see the text above --- and
+$N_\mathrm{eff}$ the inverse participation ratio of the weights. Produced by
 \texttt{code/v3\_conformer\_population.py}.}
 \label{tab:si-confpop}
 \small
@@ -2178,9 +2217,11 @@ A-242 & 267 & 0.02 & 4.9 & 49.5 \\
 \bottomrule
 \end{tabular}
 
-\begin{flushleft}\footnotesize For 5 of the ten agents the structure the library
-uses carries under a tenth of the room-temperature population, and for HN1 it carries
-3.1\,\%. The two G-agents are the exception, at 59\,\%. These are GFN2 weights and inherit
+\begin{flushleft}\footnotesize For 5 of the ten agents no single conformer carries as much
+as a tenth of the room-temperature population, and for HN1 the most populated one carries
+3.1\,\%. The two G-agents are the exception, at 59\,\%. Since these are the largest
+weights available, the population the library entry actually carries is at most this and
+may be less. These are GFN2 weights and inherit
 that method's error --- Table~\ref{tab:si-a232} documents a 3.55\,kcal\,mol$^{-1}$ GFN2
 error on one configurational coordinate in this set --- so they bound the problem rather
 than quantify it. What they establish is that a single-conformer library spectrum is not a
@@ -2335,40 +2376,40 @@ Agent & Kondo (\wn) & Assignment & This work (\wn) & Residual (\wn) & Reproduced
 \midrule
 GD & 727 & P & 727 & $-0.2$ & \checkmark \\
  & 751 & P & 752 & $+0.8$ & \checkmark \\
- & 513 & P-O & --- & --- & $\times$ \\
+ & 513 & P--O & --- & --- & $\times$ \\
  & 802 & alkyl & 801 & $-0.6$ & \checkmark \\
 \addlinespace
 GF & 753 & P & 752 & $-1.2$ & \checkmark \\
- & 502 & P-O & 501 & $-1.4$ & \checkmark \\
+ & 502 & P--O & 501 & $-1.4$ & \checkmark \\
  & 792 & alkyl & 789 & $-2.9$ & \checkmark \\
  & 1447 & alkyl & 1444 & $-2.8$ & \checkmark \\
 \addlinespace
 VX & 695 & P & 695 & $+0.2$ & \checkmark \\
  & 742 & P & 739 & $-2.7$ & \checkmark \\
  & 768 & P & --- & --- & $\times$ \\
- & 500 & P-O & 501 & $+0.6$ & \checkmark \\
+ & 500 & P--O & 501 & $+0.6$ & \checkmark \\
  & 837 & alkyl & 838 & $+1.2$ & \checkmark \\
- & 1455 & N-C & 1460 & $+4.6$ & \checkmark \\
- & 667 & C-S & --- & --- & $\times$ \\
+ & 1455 & N--C & 1460 & $+4.6$ & \checkmark \\
+ & 667 & C--S & --- & --- & $\times$ \\
 \addlinespace
-HD & 698 & C-Cl & 702 & $+3.6$ & \checkmark \\
- & 746 & C-Cl & 733 & $-13.0$ & \checkmark \\
- & 648 & C-S & 644 & $-3.7$ & \checkmark \\
+HD & 698 & C--Cl & 702 & $+3.6$ & \checkmark \\
+ & 746 & C--Cl & 733 & $-13.0$ & \checkmark \\
+ & 648 & C--S & 644 & $-3.7$ & \checkmark \\
  & 855 & alkyl & --- & --- & $\times$ \\
  & 1428 & alkyl & 1439 & $+11.0$ & \checkmark \\
 \addlinespace
-HN1 & 721 & C-Cl & 720 & $-0.5$ & \checkmark \\
- & 787 & C-N-C & 770 & $-16.5$ & \checkmark \\
- & 1448 & N-C & 1449 & $+1.3$ & \checkmark \\
+HN1 & 721 & C--Cl & 720 & $-0.5$ & \checkmark \\
+ & 787 & C--N--C & 770 & $-16.5$ & \checkmark \\
+ & 1448 & N--C & 1449 & $+1.3$ & \checkmark \\
  & 664 & tert-amine & 663 & $-0.5$ & \checkmark \\
 \addlinespace
-HN2 & 729 & C-Cl & --- & --- & $\times$ \\
- & 1448 & N-C & --- & --- & $\times$ \\
+HN2 & 729 & C--Cl & --- & --- & $\times$ \\
+ & 1448 & N--C & --- & --- & $\times$ \\
  & 388 & skeletal & --- & --- & $\times$ \\
  & 664 & tert-amine & --- & --- & $\times$ \\
 \addlinespace
-HN3 & 722 & C-Cl & 720 & $-1.5$ & \checkmark \\
- & 1440 & N-C & 1444 & $+4.2$ & \checkmark \\
+HN3 & 722 & C--Cl & 720 & $-1.5$ & \checkmark \\
+ & 1440 & N--C & 1444 & $+4.2$ & \checkmark \\
  & 805 & alkyl & --- & --- & $\times$ \\
 \bottomrule
 \end{tabular}
@@ -2554,7 +2595,7 @@ Abstention, computed library, best AUC & 0.904 & unchanged \\
 The preprocessing module, the analysis scripts that generate every table and figure in
 this work, the calibrated computed library, and the ORCA inputs and outputs are deposited
 at \url{https://github.com/bisu9082/ramanforge}, at the tagged release
-\texttt{v1.3.0} from which every number in this work was produced.
+\texttt{v1.4.0} from which every number in this work was produced.
 
 Raw acquisition files of the authentic agents are not included in that deposit. They are
 analytical data on Schedule 1 chemicals generated in an OPCW designated laboratory and are
@@ -2573,7 +2614,7 @@ response and add nothing a reader needs in order to check the result. We judge t
 proliferation uplift of either to be nil for the reason given above --- these are
 identification data for materials whose structures are already public, with no route,
 precursor, quantity or scale-up information anywhere in this work --- and we apply the same
-judgement to both. One deposited entry carries a warning: the spectrum labeled HN2 is the
+judgment to both. One deposited entry carries a warning: the spectrum labeled HN2 is the
 spectrum of benzene (Section~\ref{si:hn2}), and it is flagged as such in the repository so
 that it cannot be taken up as a reference spectrum for a nitrogen mustard. Everything
 needed to reproduce every number in this work from the deposited preprocessed spectra is in

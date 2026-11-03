@@ -48,6 +48,11 @@ def main():
             continue
         w = np.exp(-e / KT); w = w / w.sum()
         rows.append(dict(agent=NM[job], job=job, n_conformers=len(e),
+                         # Largest Boltzmann weight in the ensemble, i.e. the weight of the
+                         # GFN2 ensemble minimum. This is an UPPER BOUND on the population
+                         # the library entry carries: the library holds the B3LYP minimum
+                         # reached from its starting geometry, and the two surfaces need not
+                         # agree on which conformer is lowest (see tab:si-a232).
                          p_global_pct=round(float(w.max()) * 100, 1),
                          n_effective=round(float(1 / np.square(w).sum()), 1),
                          perplexity=round(float(np.exp(-(w * np.log(w + 1e-300)).sum())), 1),
@@ -64,11 +69,12 @@ def main():
             f"{r.n_effective:.1f} \\\\" for r in D.itertuples() if r.agent != "the HN2 vial"]
     tex = """\\begin{table}[htbp]
 \\centering
-\\caption{What fraction of the 298\\,K population the single structure in the library
-carries. Conformer energies are the GFN2 metadynamic ensembles deposited under
-\\texttt{conformers/}; $\\Delta E_2$ is the energy of the second conformer above the
-minimum, $p$ the Boltzmann weight of the minimum and $N_\\mathrm{eff}$ the inverse
-participation ratio of the weights. Produced by
+\\caption{The largest fraction of the 298\\,K population any single conformer carries, an
+upper bound on what the one structure in the library can represent. Conformer energies are
+the GFN2 metadynamic ensembles deposited under \\texttt{conformers/}; $\\Delta E_2$ is the
+energy of the second conformer above the minimum, $p$ the Boltzmann weight of the ensemble
+minimum --- not demonstrably that of the library entry, see the text above --- and
+$N_\\mathrm{eff}$ the inverse participation ratio of the weights. Produced by
 \\texttt{code/v3\\_conformer\\_population.py}.}
 \\label{tab:si-confpop}
 \\small
@@ -80,9 +86,11 @@ Agent & Conformers & $\\Delta E_2$ (kcal\\,mol$^{-1}$) & $p$ (\\%) & $N_\\mathrm
 \\bottomrule
 \\end{{tabular}}
 
-\\begin{{flushleft}}\\footnotesize For {under10} of the ten agents the structure the library
-uses carries under a tenth of the room-temperature population, and for HN1 it carries
-3.1\\,\\%. The two G-agents are the exception, at 59\\,\\%. These are GFN2 weights and inherit
+\\begin{{flushleft}}\\footnotesize For {under10} of the ten agents no single conformer carries as much
+as a tenth of the room-temperature population, and for HN1 the most populated one carries
+3.1\\,\\%. The two G-agents are the exception, at 59\\,\\%. Since these are the largest
+weights available, the population the library entry actually carries is at most this and
+may be less. These are GFN2 weights and inherit
 that method's error --- Table~\\ref{{tab:si-a232}} documents a 3.55\\,kcal\\,mol$^{{-1}}$ GFN2
 error on one configurational coordinate in this set --- so they bound the problem rather
 than quantify it. What they establish is that a single-conformer library spectrum is not a

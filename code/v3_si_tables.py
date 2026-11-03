@@ -611,10 +611,15 @@ for _, r in BE.iterrows():
                  ("\\checkmark" if r.correct_base else "$\\times$") + " $\\rightarrow$ " +
                  ("\\checkmark" if r.correct_new else "$\\times$")])
 _d = BE["new_600\u2013850"] - BE["base_600\u2013850"]
+# One stated gate, applied symmetrically, identical to the gate used by the main-text
+# level-of-theory figure (code/v3_step4_b2_figure.py).
+_UNCH, _SUBST = 0.02, 0.10
 _theory_note = (
-    f"Of the {len(BE)} pairs, {int((_d > 0.10).sum())} improved the window substantially "
-    f"($\\Delta > 0.10$), {int(((_d > 0.03) & (_d <= 0.10)).sum())} improved modestly, "
-    f"{int((_d.abs() <= 0.03).sum())} were unchanged and {int((_d < -0.03).sum())} degraded. "
+    f"Of the {len(BE)} pairs, {int((_d > _SUBST).sum())} improved the window substantially "
+    f"($\\Delta > {_SUBST:.2f}$), {int(((_d > _UNCH) & (_d <= _SUBST)).sum())} improved modestly, "
+    f"{int((_d.abs() <= _UNCH).sum())} were unchanged ($|\\Delta| \\leq {_UNCH:.2f}$, the same "
+    f"gate as panel (a) of the level-of-theory figure in the main text) and "
+    f"{int((_d < -_UNCH).sum())} degraded. "
     f"Across all {len(BE)} the refitted scale factors stay within "
     f"{BE.s_low.min():.3f}--{BE.s_low.max():.3f} and {BE.s_high.min():.3f}--{BE.s_high.max():.3f}, "
     f"and the global band-position RMSE between {BE.pos_rmse.min():.1f} and "

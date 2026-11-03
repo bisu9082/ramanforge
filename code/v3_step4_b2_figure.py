@@ -66,8 +66,13 @@ def main():
     ax = fig.add_subplot(gs[0, 0])
     T = R.assign(delta=R["new_600–850"] - R["base_600–850"]).sort_values("delta")
     lbl = [f"{NICE[r.agent]}  {VNICE[r.variant]}" for r in T.itertuples()]
-    col = [P["dark_teal"] if d > 0.10 else (P["sage"] if d > 0.03 else
-           (P["tan"] if d > -0.03 else P["warm_red"])) for d in T.delta]
+    # One stated gate, applied symmetrically, and identical to the gate quoted in the
+    # Supplementary Material: |delta| <= 0.02 is unchanged, |delta| > 0.10 substantial.
+    # Round-4 used +/-0.10 and returned "0 degraded" over three visibly negative bars;
+    # an earlier patch then used 0.01, which disagreed with the SI at delta = +0.0148.
+    _UNCH, _SUBST = 0.02, 0.10
+    col = [P["dark_teal"] if d > _SUBST else (P["sage"] if d > _UNCH else
+           (P["tan"] if d >= -_UNCH else P["warm_red"])) for d in T.delta]
     y = np.arange(len(T))
     ax.barh(y, T.delta, 0.68, color=col)
     for i, d in enumerate(T.delta):
@@ -78,17 +83,18 @@ def main():
     ax.set_xlim(-0.42, 0.42)
     ax.set_xlabel("$\\Delta$ cosine, 600–850 cm$^{-1}$")
     ax.set_title("Ten agent–correction trials", fontsize=15.5)
-    # Round-4: the gate was +/-0.10, which after the detection correction returned
-    # "0 degraded" over three visibly negative bars. Count every trial that moves
-    # the window at all, at the same threshold in both directions.
-    _nimp = int((T.delta > 0.10).sum()); _nunch = int((T.delta.abs() <= 0.01).sum())
-    _ndeg = int((T.delta < -0.01).sum())
-    _nmod = len(T) - _nimp - _nunch - _ndeg
-    ax.text(0.97, 0.055,
+    _nunch = int((T.delta.abs() <= _UNCH).sum())
+    _nimp  = int((T.delta > _SUBST).sum())
+    _ndeg  = int((T.delta < -_UNCH).sum())
+    _nmod  = len(T) - _nimp - _nunch - _ndeg
+    assert _nimp + _nmod + _nunch + _ndeg == len(T)
+    # Gate thresholds are stated in the figure caption, not here: spelling them out in
+    # the annotation makes the longest line wide enough to run under the bars.
+    ax.text(0.03, 0.905,
             f"{_nimp} improved substantially\n{_nmod} improved modestly\n"
             f"{_nunch} unchanged\n{_ndeg} degraded",
-            transform=ax.transAxes, ha="right",
-            fontsize=12.5, style="italic", color=P["brown"])
+            transform=ax.transAxes, ha="left", va="top", linespacing=1.5,
+            fontsize=12.0, style="italic", color=P["brown"])
     letter(ax, "a", -0.34)
 
     # ---------- b : GF 600–850 ----------

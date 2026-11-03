@@ -17,6 +17,7 @@ The reverse is not evidence of disagreement.
 Writes data/v3_kondo_comparison.csv and latex/sitables/kondo.tex.
 """
 import os, sys
+import re
 import numpy as np, pandas as pd
 from scipy.signal import find_peaks
 
@@ -102,7 +103,14 @@ def write_table(D, inr, mt):
                 here, res, mark = "---", "---", "$\\times$"
             else:
                 here, res, mark = "out of range", "---", "---"
-            body.append(f"{lab} & {r.kondo_cm1:.0f} & {r.assignment} & {here} & {res} & {mark} \\\\")
+            # Bond labels carry an ASCII hyphen in the data columns; typeset them with
+            # an en dash, which is what a bond is set with and what the manuscript uses.
+            # Only when every part is an element symbol: "tert-amine" keeps its hyphen.
+            _parts = r.assignment.split("-")
+            assign_tex = ("--".join(_parts)
+                          if len(_parts) > 1 and all(re.fullmatch(r"[A-Z][a-z]?", q) for q in _parts)
+                          else r.assignment)
+            body.append(f"{lab} & {r.kondo_cm1:.0f} & {assign_tex} & {here} & {res} & {mark} \\\\")
         if ag != list(KONDO)[-1]:
             body.append("\\addlinespace")
     rms = float(np.sqrt((mt.residual ** 2).mean()))

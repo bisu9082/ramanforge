@@ -42,11 +42,14 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Authors
 %% ORCID (enter in Editorial Manager at submission):
-%%   Doo-Hee Lee  0000-0002-5116-2064
-%%   Sungbong Kim 0000-0003-3082-349X  etendard@kma.ac.kr
-%%   Rosy Oh      0000-0002-4024-5753  rosy.oh5@gmail.com
-%%   Ku Kang      0000-0001-8739-218X  bisu9082@gmail.com
-%%   Remaining ORCIDs: Seongchan Lee, Jinkwang Jeong, Hyein Kim
+%%   Doo-Hee Lee    0000-0002-5116-2064  dooheeleechem@gmail.com
+%%   Seongchan Lee  0009-0009-9034-7940  icfhwy@naver.com
+%%   Sungbong Kim   0000-0003-3082-349X  etendard@kma.ac.kr
+%%   Jinkwang Jeong (ORCID to be supplied)  10-14735@kma.ac.kr
+%%   Rosy Oh        0000-0002-4024-5753  rosy.oh5@gmail.com
+%%   Hyein Kim      (ORCID to be supplied)  wkdus19@naver.com
+%%   Soohwan Kim    0009-0004-7822-4861  tnghks1930@gmail.com
+%%   Ku Kang        0000-0001-8739-218X  bisu9082@gmail.com
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \author[1,2]{Doo-Hee Lee$^{\dagger}$}
 \author[1]{Seongchan Lee$^{\dagger}$}
@@ -54,6 +57,7 @@
 \author[3]{Jinkwang Jeong}
 \author[4]{Rosy Oh}
 \author[1]{Hyein Kim}
+\author[1]{Soohwan Kim}
 \author[1]{Ku Kang\corref{cor1}}
 \ead{bisu9082@gmail.com}
 
@@ -83,33 +87,28 @@
 \fntext[fn1]{Doo-Hee Lee and Seongchan Lee ($^{\dagger}$) contributed equally to this work.}
 
 \begin{abstract}
-For chemical warfare agents the reference library, not the spectrometer, is the binding
-constraint: authentic material is held by few laboratories. A computed library avoids that
-constraint at an unquantified cost. Eleven sealed vials of authentic agent spanning nerve,
-vesicant and fourth-generation classes were measured at 1064\,nm from raw detector counts.
-Thirty acquisitions of nine agents were queried against a measured and a calibrated
-54-member density functional theory library under an identical pipeline, grid and metric;
-no parameter was fitted to identification. The measured library assigns all thirty
-correctly, the computed thirteen; excluding a mislabeled vial leaves twenty-seven of
-twenty-seven against thirteen. The measured arm matches each acquisition against other
-interrogations of the same sealed vial in the same session, so its figure is a
-within-vial repeatability ceiling rather than a transferable one; on published band
-lists from another laboratory the two libraries reach three of five and two of five. Similarity to the correct entry falls from 0.983 to 0.703
-while similarities among congeners are comparable: what is missing is accuracy on the
-correct molecule, not separation between candidates. At class level the two are
-indistinguishable. Twelve metrics recover at most three of the seventeen errors. The deficit
-concentrates in the 600--850\,\wn{} window, which is both the worst reproduced and the
-one carrying most of the measured intensity, and within it the phosphorus-containing
-agents score lower, though not significantly at this sample size and not separably from
-which agents have an external reference.
-Abstention is limited for the same reason: on these eight vials no score separates a
-library that contains the answer from one that does not without error, the best reaching
-an area under the curve of 0.90 with a 95\% interval of 0.76 to 1.00. Three corrections to
-the level of theory, computed on the pre-correction geometries, repaired one agent and
-degraded two others; correcting two structures not at the global minimum lowered the
-result further. Conformer
-averaging, anharmonicity and frequency-dependent polarizabilities were not tested; the first
-is the larger omission.
+A computed reference library replaces a measurement with a forward model. How accurate
+that model must be before library search succeeds, and what its residual error does to the
+decision to abstain, has not been established against authentic material. Chemical warfare
+agents make the question answerable: the library, not the spectrometer, is the binding
+constraint, because authentic material is held by few laboratories. Eleven sealed vials
+spanning nerve, vesicant and fourth-generation agents were measured at 1064\,nm from raw
+detector counts. Thirty acquisitions of nine agents were queried against a measured and a
+calibrated 54-member density functional theory library under one pipeline, grid and
+metric, none fitted to identification. The measured library assigns all thirty correctly
+and the computed thirteen; excluding a mislabeled vial, twenty-seven of twenty-seven
+against thirteen. The measured arm is a within-vial repeatability ceiling; on another
+laboratory's published band lists the two reach three of five and two of five. Similarity
+to the correct entry falls from 0.983 to 0.703 while congener similarities are comparable:
+what fails is accuracy on the correct molecule, not separation between candidates. Class
+assignment is indistinguishable, and twelve metrics recover at most three of the seventeen
+errors. The deficit concentrates in the 600--850\,\wn{} window, the worst reproduced and
+the most intense, where the phosphorus agents score lower but not significantly.
+Abstention on the computed library fails for the same reason: of six scores none
+separates the class-absent condition without error, the best reaching an area under the
+curve of 0.90 (95\% interval 0.76 to 1.00). Raising the
+level of theory and correcting two non-minimum structures did not help; conformer
+averaging, anharmonicity and frequency-dependent polarizabilities remain untested.
 \end{abstract}
 
 \begin{keyword}
@@ -137,11 +136,29 @@ Two obstacles have kept this idea from being tested where it matters most.
 
 \textbf{Second, computed and measured Raman spectra are not directly comparable.} Harmonic frequencies from density functional theory systematically overestimate observed wavenumbers, and empirical scale factors are required to correct them.\cite{scott1996harmonic,rauhut1995transferable,halls2001harmonic,andersson2005newscale,merrick2007evaluation,alecu2010computational} A gas-phase single-conformer calculation carries no condensed-phase linewidth. And the quantity that electronic-structure codes report is the Raman activity $(\partial\alpha/\partial Q)^2$, not the scattered intensity a spectrometer records.\cite{komornicki1979efficient} Each discrepancy is individually well understood, but no procedure has been established for combining them into a library that can be queried with a measured spectrum. The obvious way to combine them, tuning the corrections until identification works, is also the way to make the resulting accuracy uninterpretable, since the reported performance then becomes the objective the parameters were chosen to maximize.
 
+\textbf{Third, how the comparison is scored is itself unsettled.} Library search reduces
+two spectra to a scalar, and the choice of that scalar is not neutral. Benchmarking common
+eight similarity measures against noise, baseline and wavenumber displacement,
+Mostafapour et al.\ find that it is difficult to name one that always works better than
+the others, and that the response to displacement is not monotone: beyond small shifts
+every measure they test reverses sign and reports spectra as \emph{more} alike the further
+apart their bands are placed.\cite{mostafapour2026raman} Their test bed is informative
+for what follows. It is synthetic throughout, and its principal dataset is built from
+semi-empirical (GFN2-xTB) vibrational line lists broadened with a Voigt profile --- that
+is, from a computed forward model of the same construction as the library examined here,
+perturbed by design rather than by physics. What a computed library adds is that the
+perturbations are not imposed: the frequency residual, the intensity model and the
+linewidth are each wrong by an unknown amount because the calculation makes them so. It
+also supplies the control a synthetic design cannot have, a measured library of the same
+molecules carried through the identical code. Whether the failure of a computed library
+belongs to the forward model or to the metric used to query it is therefore a question to
+be answered by sweeping the metric on real spectra rather than by choosing one.
+
 Here we measure both sides of that question. We measured Raman spectra of eleven vials of authentic chemical warfare agent spanning three classes: the nerve agents GD, GF and VX, the vesicants HD, HN1, HN2 and HN3, and the Novichok A-series agents A-230, A-232, A-234 and A-242. Ten of the eleven are consistent with the agent on their label, in the sense that nothing in their spectra contradicts it; the vial labeled HN2 is not, as Section~\ref{sec:materials} shows: the material measured was benzene. Excitation was at 1064 nm, chosen because near-infrared excitation suppresses the fluorescence background that otherwise dominates spectra of colored or partially degraded material and because it permits non-destructive measurement through containers.\cite{wiktelius2018portable} We then constructed a 54-member library at the B3LYP/6-311++G(d,p) level\cite{becke1993density,lee1988development,stephens1994abinitio} using ORCA,\cite{neese2020orca,neese2022software} comprising these agents together with organophosphorus analogs that serve as distractors, and asked what a library of measured reference spectra and a computed library each deliver on the same queries.
 
 The calibration that bridges the two contains \textbf{no parameter fitted to identification}. Frequency scale factors are obtained by minimizing the difference between measured and computed band positions, an observable independent of the performance we report, and the condensed-phase linewidth is taken from the measured band widths. The activity-to-intensity conversion introduces no freedom at all. Every accuracy below is therefore an outcome of the calibration rather than a target of it.
 
-Under that calibration, computed and measured band positions agree to 12.2 \wn{} over the 94 band pairs that match within the 35 \wn{} pairing tolerance, approximately 2.1 pixels on the native measurement grid. That figure is conditional on pairing: 82 of the 176 detected measured bands and 31 of the 125 computed bands find no partner, and charging each unpaired band the full tolerance gives 27.1 \wn{} instead. That residual is not an artifact of this instrument: of the thirty-one bands Kondo et al.\ report for authentic agents measured at the same excitation, twenty-two of the seven agents in common are reproduced here with a residual RMS of 5.5 \wn{}, below the 5.73 \wn{} sampling of the measurement (Section~S11 of the Supplementary Material).\cite{kondo2018analysis} Querying with thirty genuine acquisitions of nine sealed vials, under an identical pipeline, grid and metric, the measured library assigns all thirty correctly at the molecular level and the computed library assigns thirteen (27 of 27 and 13 of 27 with the three acquisitions of the benzene vial set aside). The similarity to the correct entry falls from 0.983 to 0.703 and the decision margin from 0.219 to 0.045, while mutual similarities among congeners are comparable in the two libraries: what the computed library lacks is accuracy on the correct molecule, not separation between candidates.
+Under that calibration, computed and measured band positions agree to 12.2 \wn{} over the 94 band pairs that match within the 35 \wn{} pairing tolerance, approximately 2.1 pixels on the native measurement grid. That figure is conditional on pairing: 82 of the 176 detected measured bands and 31 of the 125 computed bands find no partner, and charging each unpaired band the full tolerance gives 27.1 \wn{} instead. That residual is not an artifact of this instrument: of the thirty-one bands Kondo et al.\ report at the same excitation for the seven agents in common, twenty-two are reproduced here with a residual RMS of 5.5 \wn{}, below the 5.73 \wn{} sampling of the measurement (Section~S11 of the Supplementary Material).\cite{kondo2018analysis} Querying with thirty genuine acquisitions of nine sealed vials, under an identical pipeline, grid and metric, the measured library assigns all thirty correctly at the molecular level and the computed library assigns thirteen (27 of 27 and 13 of 27 with the three acquisitions of the benzene vial set aside). The similarity to the correct entry falls from 0.983 to 0.703 and the decision margin from 0.219 to 0.045, while mutual similarities among congeners are comparable in the two libraries: what the computed library lacks is accuracy on the correct molecule, not separation between candidates.
 
 Three findings extend beyond the specific system. (i) The loss is localized instead of stochastic, and it is localized to phosphorus: it concentrates in the 600--850 \wn{} window, which carries 29\% of the measured intensity, and within that window the seven phosphorus-containing agents average 0.643 against 0.908 for the three that contain none, with the ordering reversed in three of the four other windows. Conformational sampling does not order it, since the most flexible agent is the best in that window and the most rigid the worst. (ii) The same deficit governs what the method can say about its own reliability. When the query's entire toxicological class is deleted from the library the workflow does not decline but assigns confidently, and none of the six scores we tested separates that condition from the one in which the answer is present without error, their areas under the curve running from 0.67 to 0.90; the identical procedure on a measured library leaves the two conditions disjoint. Abstention therefore shares its cause with identification instead of forming a separate problem with a separate solution. (iii) Raising the level of theory does not repair it generally. Across ten agent--correction pairs spanning implicit solvation, a polarized triple-zeta basis on phosphorus and a range-separated functional, the assignment changes for one agent only: cyclosarin becomes correct under two independent corrections, while the same correction degrades the affected window for soman, its nearest structural neighbor, and for A-234. Both misassigned Novichok agents remain misassigned.
 
@@ -204,7 +221,7 @@ campaign, so $\Gamma$ should not be read as a condensed-phase linewidth.
 
 \subsection{Data quality criterion}
 
-A quality criterion was defined before the identification analysis: a measured spectrum was retained only if at least four bands reached 10\% of its strongest band in the 250--1800 \wn{} region. This is the criterion applied in the Supplementary Material, and it is the only criterion used. Ten of the eleven agents satisfied it, exhibiting 7 to 20 bands above that threshold. The vial labeled HN2 yielded a single band at that threshold and is the one failure. Its spectrum also lacks the low-frequency structure present in every other nitrogen mustard. An instrumental explanation is not supported: the vial was acquired between successful HN3 and HN1 acquisitions three and two minutes away. The dominant band is not a nitrogen mustard band. The four features that carry this spectrum lie at 605.6, 993.6, 1176.3 and 1585.4\,\wn{}, which are the four Raman-active fundamentals of liquid benzene (606, 992, 1178 and 1586\,\wn{}) to within 1.7\,\wn{} and in benzene's intensity order; the three positions a monosubstituted ring would require, 702, 787 and 1030\,\wn{}, are all below 1.6 standard deviations of the local noise, which separates benzene from toluene, chlorobenzene, pyridine and polystyrene (Section~S5.2 of the Supplementary Material). The vial therefore does not contain neat HN2. It is not empty of the labeled agent either: of the four bands Kondo et al.\ report for HN2 at this excitation, two are present at three standard deviations or better in every one of the three acquisitions (733.0 against their 729\,\wn{} and 1447.6 against their 1448\,\wn{}), and a third is present in two of three.\cite{kondo2018analysis} Those features fall below the absolute prominence floor used elsewhere in this work only because that floor is referenced to the benzene band, which carries 80\% of the intensity here; the instrument's automatic exposure control set 119\,ms for this vial against 1014\,ms for HN1 and 5840\,ms for HN3, so a minor component is pushed below detection by construction. What these data establish is that the material measured was not neat HN2 but benzene, and that HN2 dissolved in it can be neither confirmed nor excluded. Whether the label is wrong or the vial was not the neat material the protocol specifies is not resolved here, and an orthogonal assay or a re-measurement at a fixed longer exposure would settle it. Failing the criterion does not remove the vial from the analysis. It is retained in both libraries and among the thirty queries, so that the two libraries face an identical query set, and because its contents are not established every headline figure in this work is reported both with and without it. It is set aside where its unknown identity would leave a quantity undefined: from the per-agent window analyses, from the in-library and class-absent conditions of the abstention analysis, where it is reported as a condition of its own, and from the correlation against molecular size. It contributes no band pair to the frequency calibration, which is identical with and without it. The comparison that motivates the concern is given in the Results.
+A quality criterion was defined before the identification analysis: a measured spectrum was retained only if at least four bands reached 10\% of its strongest band in the 250--1800 \wn{} region. This is the criterion applied in the Supplementary Material, and it is the only criterion used. Ten of the eleven agents satisfied it, exhibiting 7 to 20 bands above that threshold. The vial labeled HN2 yielded a single band at that threshold and is the one failure. Its spectrum also lacks the low-frequency structure present in every other nitrogen mustard. An instrumental explanation is not supported: the vial was acquired between successful HN3 and HN1 acquisitions three and two minutes away. The dominant band is not a nitrogen mustard band. The four features that carry this spectrum lie at 605.6, 993.6, 1176.3 and 1585.4\,\wn{}, which are the four Raman-active fundamentals of liquid benzene (606, 992, 1178 and 1586\,\wn{}) to within 1.7\,\wn{} and in benzene's intensity order; the three positions a monosubstituted ring would require, 702, 787 and 1030\,\wn{}, sit at no more than 1.6 standard deviations of the local noise, which separates benzene from toluene, chlorobenzene, pyridine and polystyrene (Section~S5.2 of the Supplementary Material). The vial therefore does not contain neat HN2. It is not empty of the labeled agent either: of the four bands Kondo et al.\ report for HN2 at this excitation, two are present at three standard deviations or better in every one of the three acquisitions (733.0 against their 729\,\wn{} and 1447.6 against their 1448\,\wn{}), and a third is present in two of three.\cite{kondo2018analysis} Those features fall below the absolute prominence floor used elsewhere in this work only because that floor is referenced to the benzene band, which carries 80\% of the intensity here; the instrument's automatic exposure control set 119\,ms for this vial against 1014\,ms for HN1 and 5840\,ms for HN3, so a minor component is pushed below detection by construction. What these data establish is that the material measured was not neat HN2 but benzene, and that HN2 dissolved in it can be neither confirmed nor excluded. Whether the label is wrong or the vial was not the neat material the protocol specifies is not resolved here, and an orthogonal assay or a re-measurement at a fixed longer exposure would settle it. Failing the criterion does not remove the vial from the analysis. It is retained in both libraries and among the thirty queries, so that the two libraries face an identical query set, and because its contents are not established every headline figure in this work is reported both with and without it. It is set aside where its unknown identity would leave a quantity undefined: from the per-agent window analyses, from the in-library and class-absent conditions of the abstention analysis, where it is reported as a condition of its own, and from the correlation against molecular size. It contributes one of the 94 band pairs to the frequency calibration, and holding it out leaves the fitted factors and the position RMSE unchanged at 1.014, 0.980 and 12.17\,\wn{}. The comparison that motivates the concern is given in the Results.
 
 \subsection{Quantum-chemical calculations}
 
@@ -284,10 +301,24 @@ on that native axis: the computed spectra are brought down onto the measured gri
 the measurement is never interpolated onto a finer one. A band-position residual of
 12.2\,\wn{} is therefore approximately 2.1 pixels, and we read it as such.
 
-\textbf{The wavenumber axis agrees with an independent measurement of the same
-compounds.} No external wavenumber standard was run on this instrument. In its place we
-compare against the only published Raman measurements of authentic agents at this
-excitation: Kondo et al.\ report assigned band positions for twenty-two agents at
+\textbf{The wavenumber axis agrees with an in-campaign reference liquid and with an
+independent measurement of the same compounds.} No certified Raman shift standard was run
+on this instrument. Benzene is not among the eight materials ASTM E1840 recommends for
+that purpose, and that guide addresses neither traceability nor
+uncertainty.\cite{ntziouni2022standards} An in-campaign check is nevertheless available,
+because the vial labeled HN2 contains liquid benzene and was acquired between the HN3 and
+HN1 acquisitions, three and two minutes away. Its four strong bands fall at 605.6, 993.6,
+1176.3 and 1585.4\,\wn{} against the benzene fundamentals at 606, 992, 1178 and
+1586\,\wn{},\cite{zhang2011benzene} a mean residual of $-0.3$\,\wn{} and an RMS of
+1.2\,\wn{} spanning 606 to 1586\,\wn{}, which contains 72 of the 94 paired bands. The
+three weaker of the four stand at 15 to 39 standard deviations of the local noise, so
+their positions are well determined even though only the ring-breathing band clears the
+10\,\% criterion of Section~\ref{sec:materials}. Over that span an additive error on the
+measured axis is bounded at about 2\,\wn{}, below half the 5.73\,\wn{} sampling. Twenty-one
+of the 22 uncovered pairs lie below 606\,\wn{}, which is the region in which the
+calibration is least determined, so the bound is silent exactly where it would be most
+useful. We also compare against the only published Raman measurements of
+authentic agents at this excitation: Kondo et al.\ report assigned band positions for twenty-two agents at
 785\,nm and 1064\,nm, from material synthesized in house and confirmed by nuclear
 magnetic resonance and gas chromatography--mass spectrometry above 98\%
 purity.\cite{kondo2018analysis} Seven of their agents are in this set. Of the thirty-one
@@ -390,7 +421,10 @@ The 3.5\% difference between the low- and high-wavenumber factors excludes a
 \textit{uniform} axis gain error, which would displace every region equally. It does not
 exclude an additive offset, and an additive offset is the one error that would bias this
 study toward its own conclusion: it cancels exactly in a measured-to-measured comparison
-and not at all in a measured-to-computed one.
+and not at all in a measured-to-computed one. The benzene acquisitions bound that offset
+at about 2\,\wn{} over 606 to 1586\,\wn{}, narrower than every non-zero value in the scan
+below, so what follows reports a sensitivity over offsets the measurement does not
+support.
 
 We therefore did not leave it as a caveat. Fitting an affine map $\nu_\mathrm{meas} = g\,\nu_\mathrm{harm} + \delta$ to the same band set, which pairs 93 of them under that map, with the same
 non-circular objective and the same number of free parameters as the two-region scaling,
@@ -410,8 +444,11 @@ computed library between 12 and 16 of 30, while the measured library stays at 30
 (Supplementary Material, S4.4). We report the adopted two-region figure of 13 of 30 as the
 headline, and note that the better-fitting calibration and the more favorable axis offsets
 both give a higher number: the reported deficit is therefore conservative with respect to
-the calibration, not produced by it. A wavenumber-standard measurement would settle the
-question and we recommend it for any replication.
+the calibration, not produced by it. The benzene bound above makes the offset arm of that
+scan a sensitivity analysis rather than a live alternative; we report it because it is the
+affine map, which the bound does not touch, that supplies the competing calibration. A certified shift standard would settle the question
+across the full window rather than at four positions, and we recommend it for any
+replication.
 
 \begin{figure}[htbp]
 \centering
@@ -477,7 +514,12 @@ A-232 $\rightarrow$ A-242, A-234 $\rightarrow$ A-242, HN1 or A-232, and HN1 $\ri
 G to G, A-series to A-series and vesicant to vesicant, with the single A-234 $\rightarrow$ HN1
 acquisition the only crossing of a class boundary among them. The exception is HN2, whose
 three acquisitions are assigned to a Novichok agent at a similarity to their own computed
-entry of 0.084. A measured library identifies the vial correctly, because a replicate of that vial is in it, and a measured library alone therefore cannot tell that the sample is not what the protocol specifies; the computed library is what flags it here, and the band assignment of Section~S5.2 of the Supplementary Material is what explains it.
+entry of 0.084. A measured library identifies the vial correctly, because a replicate of that vial is in it, and it does so with the three
+highest decision margins anywhere in this work: 0.830, 0.832 and 0.833, against a mean of
+0.219 over the thirty queries and a next-highest value of 0.291. The top-1 confidence a
+measured library reports is therefore a measure of the internal consistency of the
+reference set and not of the correctness of the reference entry, and it is highest exactly
+where the entry is wrong. A measured library alone cannot tell that the sample is not what the protocol specifies; the computed library is what flags it here, and the band assignment of Section~S5.2 of the Supplementary Material is what explains it.
 We report this as evidence about the sample rather than about the method, and set the vial
 aside from the analyses that follow where indicated.
 
@@ -542,11 +584,11 @@ correction, so no window reaches the 0.05 level under any correction. This desig
 essentially no power, and we report the contrast as an effect size with its sign
 structure rather than as a test result. The phosphorus split is also confounded with
 toxicological class, with the number of detected bands, with integration time and with
-which agents have an independent published reference: the two phosphorus agents that do
-have one, GD at 0.884 and VX at 0.962, sit inside the range of the phosphorus-free group,
-and the contrast is carried by GF, whose geometry Section~\ref{sec:geometry} shows was
-wrong, together with the four A-series agents, for which no external reference and no
-orthogonal assay exists. Ten molecules cannot separate these.
+which agents have an independent published reference. The two phosphorus agents that do
+have one, GD at 0.884 and VX at 0.962, sit inside the range of the phosphorus-free group.
+The contrast is carried by GF, whose geometry Section~\ref{sec:geometry} shows was wrong,
+and by the four A-series agents, for which no external reference and no orthogonal assay
+exists. Ten molecules cannot separate these.
 
 \textbf{Conformational flexibility does not order the deficit.} If it arose simply from
 representing a flexible molecule by a single conformer, the agents with the most
@@ -556,7 +598,7 @@ nine queried agents). So does the proper measure. A GFN2 metadynamic conformer c
 all eleven computed molecules, from which we take the 298\,K conformational entropy
 $S_\mathrm{conf} = -R\sum_i p_i \ln p_i$ rather than the raw conformer count, which does
 not reproduce between runs, gives $r$ = +0.33 against the same cosine and a negative
-leave-one-out $R^2$: the association, such as it is, runs the wrong way. The more directly relevant quantity gives the same answer: the 298\,K population carried by the single structure the library actually uses, which for five of the ten agents is under a tenth, correlates with the window cosine at $r$ = $-$0.28. VX is the
+leave-one-out $R^2$: the association, such as it is, runs the wrong way. The more directly relevant quantity gives the same answer: the largest 298\,K population any single conformer carries, which bounds what the one structure in the library can represent and which for five of the ten agents is under a tenth, correlates with the window cosine at $r$ = $-$0.28. VX is the
 extreme case. It is the most flexible agent in the set, with 727 conformers within
 6\,kcal\,mol$^{-1}$ and a conformational perplexity $\exp(S_\mathrm{conf}/R)$ of 146, and it is also the best of the
 phosphorus agents in this window at 0.962; GF, with a perplexity of 3.4, is the
@@ -580,7 +622,13 @@ A cosine between spectra broadened to 22\,\wn{} is close to a monotone function 
 band-position residual, and the residual reported above is 0.55 of that width, which is
 where a cosine is most sensitive to position. A reader is entitled to ask whether the
 computed library fails or whether full-profile cosine is simply the wrong instrument for
-reading it. We tested that directly.
+reading it. The question is not rhetorical: benchmarking eight common measures against
+noise, baseline and wavenumber displacement on synthetic spectra, Mostafapour et al.\
+report that none is uniformly best, and that past small displacements every one of them
+inverts, scoring spectra as more alike as their bands are moved further
+apart.\cite{mostafapour2026raman} The residual here is a displacement of 0.55 of the
+linewidth, so the warning applies directly. We tested it on real spectra, with a measured
+library carried through the identical code as the control.
 
 \textbf{No metric recovers the computed library, and the peak-list metrics make it
 worse} (Figure~\ref{fig:metrics}a,b). Against the adopted cosine the computed library
@@ -681,7 +729,7 @@ and the fraction of measured bands matched. Thresholds were set by nested
 leave-one-agent-out, so that no threshold is chosen on the queries it is applied to.
 
 \textbf{No threshold separates the two situations on the computed library without error}
-(Figure~\ref{fig:abstention}a--c). The best single score reaches an area under the curve of 0.904, and none achieves complete separation on the observed data. All six lie between 0.67 and 0.90, so the discrimination is not absent; what is absent is a threshold that separates the two conditions without error. Resampling agents rather than acquisitions, so that the three to five interrogations of one sealed vial are not counted as independent, leaves the point estimates unchanged --- an area under the curve is a rank statistic over all pairs and does not depend on the resampling unit --- and attaches a 95\% interval of 0.756 to 1.000 to the best score. The intervals are wide: this is a statement about what eight vials establish, not a proof that no score could separate them. The pooled figure also averages three deletions that are not equally
+(Figure~\ref{fig:abstention}a--c). The best single score reaches an area under the curve of 0.904, and none achieves complete separation on the observed data. All six lie between 0.67 and 0.90, so the discrimination is not absent; what is absent is a threshold that separates the two conditions without error. Resampling agents rather than acquisitions, so that the three to five interrogations of one sealed vial are not counted as independent, leaves the point estimates unchanged. An area under the curve is a rank statistic over all pairs and does not depend on the resampling unit. The resampling attaches a 95\% interval of 0.756 to 1.000 to the best score. The intervals are wide: this is a statement about what eight vials establish, not a proof that no score could separate them. The pooled figure also averages three deletions that are not equally
 hard, and the average conceals the difference. Stratified by the class removed, deleting the nerve agents is detected, by three of the six scores completely, and deleting the vesicants likewise, by five of the six; deleting the Novichok agents is detected by none, no score reaching 0.81. Each of the first two strata contains only two vials, however, so a perfect separation there is what two clusters against two will often produce under an uninformative score, and we report the stratification as a pattern that the design cannot test rather than as a finding. The A-series supplies 14 of the 27 queries and dominates the pooled value. Candidate count does not explain the difference: deleting the vesicants and deleting the Novichok agents each leave about fifty candidates in the library, and only the second is undetected. The abstention failure is therefore specific to the A-series rather than general, which is where the computed library is also least accurate (Section~S7.4 of the Supplementary
 Material). Driving the class-absent acceptance rate to
 zero requires a conjunction of two scores, and costs 63\% of the legitimate queries: the
@@ -703,10 +751,17 @@ to incorrect entries, so no threshold on those similarities separates a library 
 contains the answer from one that does not without error. When the forward model is accurate, open-set
 behavior follows without further machinery, and reliable abstention therefore depends on
 the accuracy of the calculation and not on the design of the detector. One counterpart
-limit should be stated explicitly. The threshold 0.729 is an upper bound obtained on one
-instrument, one session and one vial per agent, and is not a transferable operating
-value; what this comparison establishes is the contrast between the two libraries and not
-that particular number.
+limit should be stated explicitly, and it is the same limit that qualifies the
+identification result. The 0.842 that anchors the measured-library interval is the
+similarity of an acquisition to a replicate of the same vial recorded in the same session,
+so it is a within-vial repeatability ceiling rather than a library-search figure, exactly
+as the measured library's thirty of thirty is. The threshold 0.729 is correspondingly an
+upper bound obtained on one instrument, one session and one vial per agent, and is not a
+transferable operating value. We did not apply the cross-provenance control of
+Section~S11.2 of the Supplementary Material to this analysis, which would require
+class-absent conditions built from another laboratory's band lists, so the measured-library
+abstention result is a statement about replicate-level library entries and the contrast
+between the two libraries, not about either threshold as a number to deploy.
 
 \begin{figure}[htbp]
 \centering
@@ -770,7 +825,9 @@ error is molecule-specific in sign, no single global adjustment addresses it.
 \centering
 \includegraphics[width=\linewidth]{theory.png}
 \caption{No generalizable fix. (a) Change in the 600--850\,\wn{} cosine for the ten
-agent--correction trials, sorted: three improve the window substantially and three degrade it.
+agent--correction trials, sorted: three improve the window substantially and three degrade
+it. A trial is counted unchanged at $|\Delta| \leq 0.02$ and substantially improved at
+$\Delta > 0.10$; the same gate is quoted in Section~S8 of the Supplementary Material.
 (b) Measured, baseline and tight-basis spectra of GF across the affected window; the larger
 phosphorus basis moves the dominant computed band onto the measured one. (c) Change by
 spectral region for the six molecules given the larger phosphorus basis; the
@@ -868,6 +925,40 @@ available to us. Ensemble averaging over conformers, anharmonic treatment and fr
 energies, the window-resolved before-and-after comparison and the calibration sensitivity
 are given in the Supplementary Material (S9).
 
+\subsection{What these numbers support in practice}
+
+Three statements survive for a laboratory that has to decide what to do with a portable
+1064\,nm instrument and no measured reference for the agent in front of it.
+
+\textbf{Class is usable; molecule is not.} At the toxicological class level the computed
+library is correct for 26 of 30 acquisitions, 26 of 27 once the benzene vial is set aside,
+and on the agent as the unit for 8 of 8 --- indistinguishable from the measured library on
+these data. A computed library can therefore support the decisions that turn on class,
+which is most of what a first responder has to settle in the first minutes. Two
+qualifications travel with that statement and should not be separated from it. The
+agent-level figure rests on eight species, so its exact binomial interval runs from 0.63
+to 1.00, and the one surviving class error is the A-234 acquisition assigned to HN1, a
+Novichok-to-vesicant crossing of exactly the kind that would change a prophylaxis
+decision; we attribute it to an unsettled sample rather than to the calculation, but it is
+the error type that matters operationally and these data cannot exclude it. What the
+computed library cannot support is a molecular identification, and the 13 of 30 reported
+here is what a molecular claim is worth.
+
+\textbf{A computed library is a screening prior, not an answer.} The correct molecule is
+in the top three of the 54 candidates for 22 of the 30 queries, or 22 of the 27 with the
+benzene vial set aside, as the rank ladder above gives it. That is a usable
+reduction of the candidate set to hand to a confirmatory method, and it is the form in
+which a computed library is worth deploying: as a prior that narrows what the
+chromatography--mass spectrometry run has to look for, not as the identification itself.
+
+\textbf{A measured library's confidence does not certify its own entries.} The three
+largest decision margins in this work belong to the vial whose contents contradict its
+label. High top-1 confidence against a measured library means the query matches the
+reference, and nothing more; where the reference is wrong, the confidence is higher, not
+lower. A computed library is what flagged the discrepancy here. That is a second use for it,
+distinct from identification and from the class-level screening above: an independent
+check on the provenance of a measured reference set.
+
 \subsection{Scope and limitations}
 
 \textbf{The measurement set is small and singly sourced.} Eleven agents, one instrument,
@@ -880,12 +971,12 @@ performance figure.
 \textbf{What the measured library delivers on queries of another provenance is roughly
 half of its figure here, and the contrast with the computed library survives at that
 level.} The only external queries available for authentic agents at this excitation are
-the band lists Kondo et al.\ publish for the seven agents in common. Used as queries
-against our two libraries, with a self-sparsified control that reduces each agent's own
-measured spectrum to its published band count so that sparsity and provenance can be told
-apart, the measured library is correct for three to five of the seven and the computed
-library for two to three; on the five agents with more than one acquisition, for which the
-control is not circular, the comb cosine gives three of five against two of five
+the band lists Kondo et al.\ publish for the seven agents in common. We used them as
+queries against our two libraries. A self-sparsified control, which reduces each agent's
+own measured spectrum to its published band count, separates the effect of sparsity from
+that of provenance. The measured library is correct for three to five of the seven and the
+computed library for two to three. On the five agents with more than one acquisition, for
+which the control is not circular, the comb cosine gives three of five against two of five
 (Section~S11.2 of the Supplementary Material). Two things follow. The 30 of 30 of
 Section~\ref{sec:headtohead} is a within-vial repeatability ceiling and not what a
 measured library delivers on material it has not itself measured; and the direction of the
@@ -997,7 +1088,7 @@ it is binding. A field Raman analyzer cannot identify what no one has been permi
 measure, and no improvement in the spectrometer changes that; a computed library is not
 subject to that constraint. But on these agents the computed library, and not the
 spectroscopy, is what limits the answer, and the gap it leaves is not closed by the
-routine escalation of the level of theory. Closing it will require either accuracy in the computed vibrational description that the escalations tested here do not deliver, or the measured reference spectra that a computed library was meant to replace. What this work tests is a single-conformer, gas-phase, harmonic library broadened with one Lorentzian width. Two parts of the standard ladder are therefore untested: Boltzmann averaging over the conformer ensemble, and anharmonic treatment. The first is not a small omission on these molecules. In a GFN2 census of the deposited ensembles, the structure the library uses carries under a tenth of the 298\,K population for five of the ten agents. The largest single intervention anywhere in this work is a change of structure at fixed level of theory, not a change of level of theory at fixed structure.
+routine escalation of the level of theory. Closing it will require either accuracy in the computed vibrational description that the escalations tested here do not deliver, or the measured reference spectra that a computed library was meant to replace. What this work tests is a single-conformer, gas-phase, harmonic library broadened with one Lorentzian width. Two parts of the standard ladder are therefore untested: Boltzmann averaging over the conformer ensemble, and anharmonic treatment. The first is not a small omission on these molecules. In a GFN2 census of the deposited ensembles, no single conformer carries as much as a tenth of the 298\,K population for five of the ten agents, which bounds what the one structure in the library can represent. The largest single intervention anywhere in this work is a change of structure at fixed level of theory, not a change of level of theory at fixed structure.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1014,6 +1105,7 @@ Writing -- review \& editing.
 \textbf{Jinkwang Jeong:} Project administration, Writing -- review \& editing.
 \textbf{Rosy Oh:} Formal analysis, Writing -- review \& editing.
 \textbf{Hyein Kim:} Investigation, Data curation.
+\textbf{Soohwan Kim:} Validation, Writing -- review \& editing.
 \textbf{Ku Kang:} Conceptualization, Supervision, Writing -- original draft,
 Writing -- review \& editing.
 
@@ -1056,7 +1148,7 @@ negative: a library computed from molecular structures does not substitute for m
 reference spectra. The authors judge that the work provides no uplift to the synthesis,
 acquisition or use of chemical weapons, and that its publication serves the defensive
 purpose of improving detection and verification. Raw acquisition files of the authentic
-agents are routed to the OPCW Central Analytical Database rather than to an open archive,
+agents are retained under the facility's own records rather than placed in an open archive,
 as stated under Data availability.
 
 \section*{Declaration of competing interest}
@@ -1077,7 +1169,7 @@ of the Republic of Korea.
 
 The analysis code, the preprocessed spectra, the calibrated computed library and the
 ORCA inputs and outputs are available at \url{https://github.com/bisu9082/ramanforge}, at the
-tagged release \texttt{v1.3.0} from which every number in this work was produced. Raw
+tagged release \texttt{v1.4.0} from which every number in this work was produced. Raw
 acquisition files of the authentic agents are not in that deposit, for the reason stated in
 Section S12 of the Supplementary Material. We do not claim deposition in the OPCW Central
 Analytical Database: that database accepts spectra only for material the depositing
