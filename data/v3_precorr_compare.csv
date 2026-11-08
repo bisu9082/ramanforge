@@ -1,0 +1,4 @@
+condition,library,s_low,s_high,closed,open,n
+corrected (adopted),54,1.014,0.98,13,13,30
+"pre-correction, held calibration",54,1.018,0.988,17,16,30
+"pre-correction, refitted calibration",54,1.022,0.98,15,12,30

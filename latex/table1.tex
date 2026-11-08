@@ -1,0 +1,20 @@
+\begin{table}[htbp]
+\centering
+\caption{The same thirty acquisitions against a measured and a calibrated computed library, under one pipeline, one native measurement grid and one metric, with no parameter fitted to identification. The right-hand pair sets aside the three acquisitions of the vial labeled HN2, whose contents are benzene and therefore not established; excluding it raises the computed library's similarity to the correct entry and leaves its molecular count unchanged. Similarities and margins are means over the queries. Produced by \texttt{code/v3\_table1.py}.}
+\label{tab:headline}
+\small
+\begin{tabular}{lcccc}
+\toprule
+ & \multicolumn{2}{c}{All 30 acquisitions} & \multicolumn{2}{c}{27, benzene vial set aside} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+ & Measured & Computed & Measured & Computed \\
+\midrule
+Molecular top-1 & 30/30 & 13/30 & 27/27 & 13/27 \\
+Class top-1 & 30/30 & 26/30 & 27/27 & 26/27 \\
+Similarity to the correct entry & 0.983 & 0.703 & 0.981 & 0.772 \\
+Decision margin & 0.219 & 0.045 & 0.150 & 0.046 \\
+\bottomrule
+\end{tabular}
+
+\begin{flushleft}\footnotesize The measured arm compares acquisitions of one vial recorded in one session, so it is a within-vial repeatability ceiling rather than a transferable identification rate; on another laboratory's published band lists the two libraries reach three of five and two of five (Section~S11.2 of the Supplementary Material). The molecular figure runs from 12 to 16 of 30 across the leave-one-agent-out calibration envelope (Table~S-scalescan).\end{flushleft}
+\end{table}

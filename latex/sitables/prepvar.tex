@@ -1,0 +1,22 @@
+\begin{table}[htbp]
+\centering
+\caption{Two preprocessing choices the adopted pipeline does not make, run end to end. Standard-normal-variate normalization replaces maximum normalization on both libraries. The responsivity ramp multiplies the measured spectra by a log-linear function of wavenumber with the stated end-to-end ratio over 250--1800\,\wn{}, standing in for the spectral-response correction no intensity standard was available to make.}
+\label{tab:si-prepvar}
+\small
+\begin{tabular}{llrrr}
+\toprule
+Variant & Detail & Measured mol. & Computed mol. & Computed class \\
+\midrule
+adopted (maximum normalization) & -- & 30/30 & 13/30 & 26/30 \\
+standard normal variate & both libraries & 30/30 & 13/30 & 25/30 \\
+responsivity ramp & end-to-end ratio 0.33 & 29/30 & 13/30 & 19/30 \\
+responsivity ramp & end-to-end ratio 0.50 & 30/30 & 13/30 & 22/30 \\
+responsivity ramp & end-to-end ratio 1.00 & 30/30 & 13/30 & 26/30 \\
+responsivity ramp & end-to-end ratio 1.50 & 30/30 & 13/30 & 26/30 \\
+responsivity ramp & end-to-end ratio 2.00 & 30/30 & 14/30 & 27/30 \\
+responsivity ramp & end-to-end ratio 3.00 & 30/30 & 11/30 & 27/30 \\
+\bottomrule
+\end{tabular}
+
+\begin{flushleft}\footnotesize Maximum normalization anchors every cosine to the tallest band and is the choice most able to manufacture the reported deficit; under SNV the computed library reaches 13 of 30, so it does not. A responsivity error is multiplicative in wavenumber and applied to the measured side only, so it is the error class that would flatter the measured arm and penalize the computed one; over end-to-end ratios from 0.33 to 3, far wider than any plausible residual on this instrument, the computed figure moves only between 11 and 14 of 30 while the measured arm is unchanged. Neither choice accounts for the result. Produced by \texttt{code/v3\_preproc\_variants.py}.\end{flushleft}
+\end{table}

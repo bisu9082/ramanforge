@@ -1,0 +1,5 @@
+Eleven vials of authentic agent measured at 1064 nm from raw detector counts
+A single-conformer harmonic DFT library assigns 13 of 30 queries; measured, 30
+No calibration parameter was fitted to identification performance
+Open-set abstention is limited by forward-model accuracy, not detector design
+Correcting two wrong computed structures lowers the DFT result, not raises it

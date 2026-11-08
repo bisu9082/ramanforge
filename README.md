@@ -2,9 +2,9 @@
 
 Data and analysis code for:
 
-> **A calibrated density functional theory Raman library does not reach molecular identification of authentic
-> chemical warfare agents**
-> Doo-Hee Lee†, Seongchan Lee†, Sungbong Kim, Jinkwang Jeong, Rosy Oh, Hyein Kim, Ku Kang*
+> **A calibrated single-conformer harmonic density functional theory Raman library does not reach
+> molecular identification of authentic chemical warfare agents**
+> Doo-Hee Lee†, Seongchan Lee†, Sungbong Kim, Jinkwang Jeong, Rosy Oh, Hyein Kim, Soohwan Kim, Ku Kang*
 > *Spectrochimica Acta Part A: Molecular and Biomolecular Spectroscopy* (submitted)
 > † equal contribution · \* corresponding author
 
@@ -67,6 +67,13 @@ reproduce this work.
 ORCA inputs and outputs for all 57 computed structures are under `orca/` (62 MB); see
 `orca/README.md` for what is there and why some of the working comments in the inputs are
 in Korean.
+
+`orca/inputs_ens/` and `orca/outputs_ens/` hold the fifteen conformer frequency
+calculations behind Table S-ensemble — GF (2 conformers), GD (4) and A-230 (9),
+covering 80 per cent of each agent's 298 K population, 62 h in total. They are
+generated from the CREST ensembles by `python3 code/v3_ensemble_prepare.py prepare`
+and consumed by `python3 code/v3_ensemble_prepare.py build`, which is the one table
+`run_all.sh` does not regenerate, because it would mean recomputing those fifteen jobs.
 
 ## Reproducing the results
 

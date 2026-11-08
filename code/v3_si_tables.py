@@ -113,9 +113,10 @@ made.append(table(
          "would leave a quantity undefined: from the per-agent window analyses, from the "
          "in-library and class-absent conditions of Section~S7, where it is reported as a "
          "condition of its own, and from the correlation against molecular size in "
-         "Figure~\\ref{fig:si-step4}. It contributes no "
-         "band pair to the frequency calibration, which is therefore identical with and "
-         "without it (Table~\\ref{tab:si-loao}). Section~S6 gives the independent evidence "
+         "Figure~\\ref{fig:si-step4}. It contributes one of the 94 "
+         "band pairs to the frequency calibration, and holding it out leaves the fitted "
+         "factors and the position RMSE unchanged at 1.0140, 0.9800 and 12.17\\,\\wn{} "
+         "(Table~\\ref{tab:si-loao}). Section~S5.2 gives the independent evidence "
          "from the computed library and Section~S11 the external evidence."))
 
 # ------------------------- gamma : the linewidth is measured, not fitted
@@ -141,10 +142,17 @@ made.append(table(
          f"excluded from this table. Over the {len(G)} the median is "
          f"{G.gamma.median():.1f}\\,\\wn{{}} with an interquartile range of "
          f"{G.gamma.quantile(.25):.1f}--{G.gamma.quantile(.75):.1f}\\,\\wn{{}}. "
-         "We adopt $\\Gamma$ = 22\\,\\wn{}. The extremes are not trustworthy: the vial "
-         "labeled HN2 has only one band above the 10\\% criterion of "
-         "Table~\\ref{tab:si-quality}, so its fitted width rests on weak features, and HD "
-         "and VX have a single acquisition each. This is an "
+         "We adopt $\\Gamma$ = 22\\,\\wn{}. Two entries need comment. HD and VX have a single "
+         "acquisition each, so their values carry no within-vial spread. The vial labeled "
+         "HN2 has only one band above the 10\\% criterion of Table~\\ref{tab:si-quality} and "
+         "so fails that criterion, but the criterion counts strong bands and does not bear "
+         "on how well the four it does carry are determined: they stand at 15 to 468 "
+         "standard deviations of the local noise (Table~\\ref{tab:si-hn2identity}) and its "
+         "three fits are the three best in this table at $R^2$ = 0.983 against a next-best "
+         "0.935. Since that vial is liquid benzene, whose intrinsic widths here are a few "
+         "\\wn{}, its 9.1--9.3\\,\\wn{} is the closest thing in this campaign to a measurement "
+         "of the instrument response, and it is the basis of the bound quoted in the main "
+         "text. This is an "
          "apparent width that includes the instrument response function. No "
          "identification result was consulted in obtaining it."))
 
@@ -853,8 +861,8 @@ new.append(table(
     "the resampling unit. Intervals are 5000 bootstrap replicates over agents.",
     "tab:si-aucci", "lcccc",
     ["Score", "Measured AUC", "95\\% CI", "Computed AUC", "95\\% CI"], rows,
-    note="Resampling agents rather than acquisitions does not change the point estimates, "
-         "which are rank statistics over all pairs; it widens the intervals, by removing "
+    note="Resampling agents rather than acquisitions changes the point estimates by at "
+         "most 0.049 (Table~\\ref{tab:si-abstpaired}) and widens the intervals, by removing "
          "the threefold inflation that "
          "treating the acquisitions as independent would introduce. On the measured "
          "library three scores separate the two conditions completely and the bootstrap never "

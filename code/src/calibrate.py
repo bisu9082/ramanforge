@@ -13,9 +13,14 @@ Calibration terms
         I ∝ (ν0-ν)^4 / ν · 1/(1-exp(-hcν/kT))   (Bose-Einstein)
   4) (optional) linear baseline : approximates the measured fluorescence background
 
-The parameters are fitted by maximizing the cosine against the measured anchor
-(fit_calibration) and those values are applied to the whole library (apply); that is, they
-are not fitted molecule by molecule, so there is no risk of overfitting or circularity.
+SUPERSEDED. This module belongs to the v2 analysis and is retained only so that the v2
+figures can be regenerated. Its calibration is fitted by maximizing agreement with the
+measured anchor, and fit_calibration_discriminative below is fitted on identification
+performance itself. Both are CIRCULAR with respect to the accuracy the manuscript reports,
+and the manuscript rejects them for that reason (Section 2.6 and Table S-calibgrid, where
+the identification-maximizing grid search reaches 16 of 30 at s = 0.968 and is declined).
+The v3 pipeline does not import this module. The calibration actually used is fitted to
+band positions and band widths only, in code/v3_step3_headtohead.py.
 """
 from __future__ import annotations
 from dataclasses import dataclass, asdict
@@ -107,7 +112,10 @@ def fit_calibration_discriminative(
         fwhms=(8, 10, 12, 15, 20, 25, 30),
         scattering: bool = True):
     """
-    Calibration fit based on **identification performance** (recommended).
+    Calibration fit based on **identification performance**.
+
+    CIRCULAR -- DO NOT USE. Fitting the calibration on the quantity you then report
+    makes that quantity uninterpretable. Kept only for v2 reproducibility.
 
     lib_peaks : {library name: DFT peaks array}
     exp_specs : {measured name: spectrum on the grid}

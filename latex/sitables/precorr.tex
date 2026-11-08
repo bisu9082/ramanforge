@@ -1,0 +1,17 @@
+\begin{table}[htbp]
+\centering
+\caption{The effect of correcting the GF and A-232 geometries and supplying the missing VX calculation, scored under both defensible treatments of the pre-correction calibration. Held carries the calibration that was in force before the correction; refitted applies the same non-circular objective to the pre-correction library. The closed set is the eleven measured agents, the open set the full library.}
+\label{tab:si-precorr}
+\small
+\begin{tabular}{lccc}
+\toprule
+Condition & $s_\mathrm{low}$, $s_\mathrm{high}$ & Closed set & Open set \\
+\midrule
+corrected (adopted) & 1.014, 0.980 & 13/30 & 13/30 \\
+pre-correction, held calibration & 1.018, 0.988 & 17/30 & 16/30 \\
+pre-correction, refitted calibration & 1.022, 0.980 & 15/30 & 12/30 \\
+\bottomrule
+\end{tabular}
+
+\begin{flushleft}\footnotesize Under the held calibration the correction lowers both figures, from 17 to 13 in the closed set and from 16 to 13 in the open set. Under the refitted calibration it lowers the closed set, from 15 to 13, and raises the open set by one, from 12 to 13. The two differ because the held comparison changes the geometry and the calibration together while the refitted one changes only the geometry. We report both rather than choose: what survives either treatment is that correcting a verified structural error did not recover the identification, and that the closed-set figure fell. Removing VX from the pre-correction library changes no assignment under either calibration. Produced by \texttt{code/v3\_precorr\_compare.py}.\end{flushleft}
+\end{table}

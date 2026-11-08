@@ -11,7 +11,7 @@ calculation of the corresponding agent, and compares the following.
   1) measured↔computed cosine over the 600–850 region   ← the primary criterion
   2) self-similarity cosine over the full region
   3) decomposition by region (delta relative to the baseline)
-  4) whether the molecular top-1 for that agent flips (53-species open set)
+  4) whether the molecular top-1 for that agent flips (open set, full library)
 
 The calibration (s_low, s_high) is **refitted separately** under the two conditions;
 when the basis set, the functional or the solvent changes, the optimal scale changes too,
@@ -135,7 +135,7 @@ def main():
             line += f"{r[f'new_{n}'] - r[f'base_{n}']:>+12.3f}"
         print(line)
 
-    print("\nopen-set molecules top-1 (53):")
+    print(f"\nopen-set molecules top-1 ({len(base_lib)}):")
     for _, r in R.iterrows():
         mark = "✓" if r["correct_new"] else "✗"
         was = "✓" if r["correct_base"] else "✗"

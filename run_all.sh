@@ -41,6 +41,15 @@ run v3_agent_stats                    # per-agent accuracy, McNemar, bootstrap i
 run v3_detect_sensitivity             # band-detection criterion sensitivity, both sides
 run v3_calibgrid                      # the declined identification-tuned calibration
 run v3_lomo_measured                  # leave-one-molecule-out, measured library
+# Table S-ensemble is produced by:  python3 code/v3_ensemble_prepare.py build
+# It is not in this loop because it needs orca/outputs_ens/, which holds 15 frequency
+# calculations (62 h) that are deposited rather than recomputed here.
+run v3_precorr_compare                # Table S-precorr: the correction under both calibrations
+run v3_table1                         # Table 1 of the main text
+run v3_preproc_variants               # Table S-prepvar: SNV and responsivity variants
+run v3_abstention_paired              # Table S-abstpaired: paired class-absent test
+run v3_detector_config                # Table S-detconfig: per-acquisition gain, offset, CCD T
+run v3_scalescan                      # Table S-scalescan: 2-D scan of the LOAO envelope
 run v3_axis_checks                    # affine calibration and the axis-offset scan
 run v3_preproc_symmetry               # preprocessing applied symmetrically
 run v3_loao_topk                      # leave-one-agent-out identification, top-k ranks

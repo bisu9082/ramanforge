@@ -511,8 +511,8 @@ def main():
     ax.set_yticklabels([r.replace("\u2013", "–") for r in PF["region"]], fontsize=11.5)
     ax.set_xlim(0, 1.24); ax.set_xticks([0, 0.2, 0.4, 0.6, 0.8, 1.0])
     ax.set_xlabel("measured vs computed cosine")
-    ax.set_title("Phosphorus-containing (n = 7) against phosphorus-free (n = 3) agents, by window",
-                 fontsize=13)
+    ax.set_title("Phosphorus-containing (n = 7) against\nphosphorus-free (n = 3) agents, by window",
+                 fontsize=13, loc="center")
     ax.text(-0.26, 1.05, "f", transform=ax.transAxes, fontsize=26, fontweight="bold")
 
     fig.savefig(os.path.join(ROOT, "figures", "v3_fig_headtohead.png"), dpi=200)

@@ -7,8 +7,10 @@ Two things are built:
      into the substitution positions ([*:1] and the like) of the backbone SMILES templates. This
      generalizes the 4 positions×{Me,Et,Pr}=3^4=81 of Kim 2026 (extensible to >1000).
 
-Note: the backbone SMILES are kept here in TEMPLATES rather than in config. Sensitive structures
-   are filled in by Ku directly (placeholders are provided). The actual calculations are run locally only.
+SUPERSEDED (v2). The v3 pipeline does not import this module. The structures actually
+   computed are published in computed_library/MANIFEST.csv as isomeric SMILES with
+   InChIKeys, and the ORCA inputs are in orca/inputs/. The placeholder convention below
+   is obsolete.
 """
 from __future__ import annotations
 import argparse, itertools, os, csv
@@ -32,7 +34,7 @@ TEMPLATES = {
     # the R2=Me row contains the five experimentally validated species of Kim 2026 (GB/EtGB/nPrGB/iBuGB/GF) -> validation anchor
     # chemical space for the AL replay benchmark (spectral database and detection research; computational only)
     "OP_grid": "[*:1]OP([*:2])(=O)F",
-    # the A-series backbone is added here (placeholder):
+    # Obsolete placeholder; see computed_library/MANIFEST.csv for the published structures.
     # "A_series": "<to be supplied>",
 }
 R_GROUPS = {              # labels: substituent alkyl fragments (shared by the O and P positions)

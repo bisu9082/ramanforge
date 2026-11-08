@@ -1,0 +1,39 @@
+\begin{table}[htbp]
+\centering
+\caption{Molecular top-1 of 30 over the leave-one-agent-out calibration envelope,
+scanned continuously on the 0.002 grid. The eleven held-out refits of
+Table~\ref{tab:si-loao} span $s_\mathrm{low}$ = 1.006--1.024 and
+$s_\mathrm{high}$ = 0.980--0.984 but land on only four distinct values of
+$s_\mathrm{low}$, leaving the interior of their own range unsampled. The adopted
+calibration is in bold. Produced by \texttt{code/v3\_scalescan.py}.}
+\label{tab:si-scalescan}
+\small
+\begin{tabular}{lccc}
+\toprule
+ & \multicolumn{3}{c}{$s_\mathrm{high}$} \\
+\cmidrule(lr){2-4}
+$s_\mathrm{low}$ & 0.980 & 0.982 & 0.984 \\
+\midrule
+1.006 & 13 & 13 & 13 \\
+1.008 & 13 & 13 & 13 \\
+1.010 & 13 & 13 & 13 \\
+1.012 & 13 & 13 & 13 \\
+\textbf{1.014} & \textbf{13} & 13 & 13 \\
+1.016 & 16 & 16 & 16 \\
+1.018 & 16 & 16 & 16 \\
+1.020 & 12 & 12 & 13 \\
+1.022 & 12 & 12 & 12 \\
+1.024 & 12 & 12 & 12 \\
+\bottomrule
+\end{tabular}
+
+\begin{flushleft}\footnotesize The molecular figure runs from 12 to 16 of 30 across
+the envelope and the adopted calibration returns 13. $s_\mathrm{high}$ moves it at
+one point only; the variation is carried entirely by $s_\mathrm{low}$. The maximum at
+$s_\mathrm{low}$ = 1.016 and 1.018 is reached because all three HN1 acquisitions move
+from HN3 to HN1; those values lie 0.2 and 0.4\,\% from the adopted 1.014 and inside
+the held-out range, so the adopted figure is not the most favorable one available
+within the calibration's own uncertainty. We report it because it is the value the
+non-circular objective selects, and we state the envelope rather than a robustness
+claim the eleven-point check cannot support.\end{flushleft}
+\end{table}

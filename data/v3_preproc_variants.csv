@@ -1,0 +1,9 @@
+variant,detail,measured,computed,cls
+adopted (maximum normalization),--,30,13,26
+standard normal variate,both libraries,30,13,25
+responsivity ramp,end-to-end ratio 0.33,29,13,19
+responsivity ramp,end-to-end ratio 0.50,30,13,22
+responsivity ramp,end-to-end ratio 1.00,30,13,26
+responsivity ramp,end-to-end ratio 1.50,30,13,26
+responsivity ramp,end-to-end ratio 2.00,30,14,27
+responsivity ramp,end-to-end ratio 3.00,30,11,27

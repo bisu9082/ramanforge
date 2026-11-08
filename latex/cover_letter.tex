@@ -1,0 +1,167 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{mathptmx}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+\setlength{\parskip}{0.55em}
+\setlength{\parindent}{0pt}
+\pagestyle{empty}
+\newcommand{\wn}{cm$^{-1}$}
+
+\begin{document}
+
+{\large Spectrochimica Acta Part A: Molecular and Biomolecular Spectroscopy}
+
+3 November 2026
+
+Dear Editors,
+
+We submit for consideration as a Full Length Article the manuscript entitled
+``A calibrated single-conformer harmonic density functional theory Raman library does
+not reach molecular identification of authentic chemical warfare agents.''
+
+The question this manuscript answers is one about vibrational spectroscopy rather than
+about chemical weapons. Library search identifies a molecule by matching a measurement
+against reference spectra, so a computed reference library replaces a measurement with a
+forward model: a harmonic frequency calculation, an empirical frequency scaling, an
+activity-to-intensity conversion and an assumed lineshape. How accurate does that chain
+have to be before it can stand in for a measured reference, and what does its residual
+error do to the search and to the decision to abstain? Those questions have been asked of
+computed libraries for monolayer materials and inorganic solids, but never against a
+measured control on authentic material, and the answer cannot be obtained from a simulant,
+because a Raman spectrum reports on exactly the molecular skeleton a simulant alters.
+
+Chemical warfare agents are the system in which the question is both answerable and
+consequential. Authentic material can be measured in only a handful of licensed
+laboratories, so the reference library rather than the spectrometer is the binding
+constraint, and the agents of greatest concern are precisely those least likely to appear
+in any commercial library. Eleven sealed vials spanning nerve, vesicant and
+fourth-generation classes were measured at 1064\,nm from raw detector counts in an OPCW
+designated laboratory. Under one pipeline, one grid and one metric, the measured library
+assigns all thirty query acquisitions correctly and the calibrated 54-member computed
+library assigns thirteen.
+
+The closest recent work is the DFT--spectroscopy integrated identification method of Jeong
+et al.\ (\textit{Analytical Chemistry} \textbf{96}, 694, 2024), demonstrated on simulants
+rather than on agents, and the authentic-agent Raman measurements of Kondo et al.\
+(\textit{Forensic Science International} \textbf{291}, 23, 2018), which used measured
+references only. What this manuscript adds is the controlled head-to-head comparison the
+field has not had: the same queries, the same preprocessing, the same native measurement
+grid and the same metric, with only the origin of the library changed.
+
+Three findings carry the argument. First, the gap is in accuracy on the correct molecule
+and not in the separation between candidates: similarity to the correct entry falls from
+0.983 to 0.703 and the decision margin from 0.219 to 0.045, while mutual similarities
+among congeners are comparable in the two libraries. Second, the deficit is localized
+rather than diffuse: the 600--850\,\wn{} window is at once the worst reproduced of the five
+and the one carrying the largest share of the measured intensity, and within it the
+phosphorus-containing agents score lower, though not significantly at this sample size. Third, the same deficit governs
+abstention: when the query's entire toxicological class is removed from the library the
+workflow does not decline but assigns confidently, the best of six scores reaching an area
+under the curve of only 0.90, with a 95\% interval of 0.76 to 1.00, whereas the identical
+procedure on a measured library separates the two conditions completely --- in the plain top-1 cosine the two populations
+are disjoint, the lowest class-present value being 0.842 and the highest class-absent
+value 0.729.
+
+Three controls make the result difficult to attribute elsewhere. No parameter in the
+calibration is fitted to identification; the frequency scale comes from band positions, an
+observable independent of the reported performance, and refitting it with each agent held
+out moves it by at most 0.81\,\%. Twelve similarity metrics, scored with the measured
+library carried through the identical code as a control, recover at most three of the
+seventeen errors, which leaves the metric unable to account for the deficit. And a GFN2
+conformer search over all eleven agents found that two computed structures, GF and A-232,
+were not at the global minimum; reoptimizing both at the same level of theory confirms
+errors of 4.57 and 9.47\,kcal\,mol$^{-1}$, and the one calculation that was missing, for
+VX, has been supplied. Correcting all three lowers the computed-library result --- from
+seventeen of thirty in the closed set and sixteen in the open set to thirteen --- rather
+than recovering it, while the calibration residual is unchanged. The deficit therefore
+survives correction of verified structural error, which is the strongest form in which we
+can state the paper's claim.
+
+We also draw the editor's attention to a methodological correction we made before
+submission. In an earlier reduction of these data the band-detection criterion was applied
+to the measured spectra but not, as the Methods then stated, to the computed ones, which
+were taken from the raw harmonic line list. The criterion is now applied to both sides and
+the whole analysis has been re-run: the fitted scale factors move from 1.016/0.990 to
+1.014/0.980 and a number of secondary quantities change, but the computed library still
+assigns thirteen of thirty. One claim did not survive the correction and has been
+withdrawn: we no longer assert a direction to the band-set mismatch in the
+600--850\,\wn{} window, and the census is now reported in both directions. Section S1 of
+the Supplementary Material sets out every quantity that moved.
+
+One finding concerns the samples rather than the method, and we draw the editor's
+attention to it because it shapes how the results are reported. The vial labeled HN2
+yields a spectrum whose four strong bands are the Raman-active fundamentals of liquid
+benzene to within 1.7\,\wn{}, in benzene's own intensity order, while the three positions
+a monosubstituted ring would require are absent. The material measured was therefore
+benzene; HN2 dissolved in it is neither confirmed nor excluded, and we make no claim that
+the label is wrong. Two things follow that we report rather than conceal. The vial was
+acquired between two others, so it doubles as an in-campaign check on the wavenumber axis
+--- mean residual $-0.3$\,\wn{}, RMS 1.2\,\wn{} across 606 to 1586\,\wn{} --- which bounds
+any additive axis offset over that span below half the sampling interval. And the measured library identifies
+this vial with the three highest decision margins in the study, 0.830 to 0.833 against a
+mean of 0.219, which is the clearest demonstration we can give that top-1 confidence
+against a measured library certifies consistency with the reference set and not the
+correctness of the reference entry. The pre-registered quality criterion flagged this vial and the computed library explained
+it; we
+retain those three acquisitions in both arms and report every headline figure with and
+without them: twenty-seven of twenty-seven against thirteen of twenty-seven when they are
+set aside, an exclusion that raises the computed figure rather than lowering it.
+
+Two consequences generalize beyond this system. Reliable open-set behavior is usually
+treated as a detector-design problem; here it follows from the accuracy of the forward
+model, and no detector design substitutes for it. And escalating the level of theory does
+not close the gap: across ten agent--correction pairs spanning implicit solvation, a larger
+phosphorus basis and a range-separated functional, the top-1 assignment changes for one
+agent only, and that repair degrades its nearest structural neighbor. We also state what
+the computed library does support, because a negative headline should not obscure it: at
+the toxicological class level it is correct for 26 of 30 acquisitions, indistinguishable
+from the measured library, and the correct molecule is within the top three of 54
+candidates for 22 of 30.
+
+The study rests on eleven agents measured on one instrument in a single campaign, with no
+non-agent materials measured, so no false-positive rate is claimed and the measured-library
+figure is an upper bound rather than a transferable performance; the manuscript states
+these boundaries explicitly rather than leaving them to be inferred. The analysis code, the
+preprocessed spectra, the calibrated computed library and the ORCA inputs and outputs are
+deposited at \url{https://github.com/bisu9082/ramanforge} at the tagged release
+\texttt{v1.4.0}, from which every number in the manuscript was produced.
+
+On the fit to \textit{Spectrochimica Acta Part A} we want to be explicit, because the
+subject matter can be mistaken for an application paper. Nothing here is a routine
+application of a spectroscopic technique or of a computational method. The calculation,
+the instrument and the cosine are deliberately standard; what is new is the experiment
+built around them. We designed an identification test in which no calibration parameter is
+fitted to the reported performance, and used it to measure the accuracy a forward model
+must reach before library search succeeds --- and to show that open-set abstention is
+bounded by that same accuracy rather than by the design of the detector. That is a result
+about the limits of computed vibrational spectroscopy and about how spectra may be
+compared, not about chemical weapons, and it is directly continuous with work this journal
+has published. Mostafapour and co-workers (\textit{Spectrochim. Acta A} \textbf{344},
+126702, 2026) recently showed that no spectral similarity metric is uniformly reliable and
+that past small wavenumber displacements every metric they tested inverts, scoring spectra
+as more alike the further apart their bands are moved. Their test bed is synthetic, and
+its principal dataset is a semi-empirical vibrational line list broadened with a Voigt
+profile --- a computed forward model of the same construction as the library we examine,
+perturbed by design. This manuscript is the measured counterpart of that study: the same
+question on real spectra of real molecules, with the perturbations supplied by the
+calculation rather than imposed, with a measured library carried through the identical
+code as the control their design cannot have, and with the physical origin identified ---
+a band-position residual 0.55 times the linewidth, which is precisely the regime in which
+they report metrics to misbehave. We also report, as a negative result of the kind this journal
+has room for, that escalating the level of theory does not repair it.
+
+The work is original, is not under consideration elsewhere, and all authors have read and
+approved the submission. Doo-Hee Lee and Seongchan Lee contributed equally to this work.
+The authors declare no competing interests.
+
+Sincerely, on behalf of all authors,
+
+\vspace{1.2em}
+Ku Kang, Ph.D.\\
+Corresponding author\\
+CBRN Defence Research Institute, Ministry of National Defense, Republic of Korea\\
+E-mail: \href{mailto:bisu9082@gmail.com}{bisu9082@gmail.com}
+
+\end{document}

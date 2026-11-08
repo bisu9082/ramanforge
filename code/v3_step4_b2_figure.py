@@ -194,7 +194,7 @@ def main():
 
     # ---------- f : top-1 outcome ----------
     ax = fig.add_subplot(gs[1, 2]); ax.axis("off")
-    ax.text(0.5, 1.06, "Open-set top-1 (53-member library)", ha="center",
+    ax.text(0.5, 1.06, f"Open-set top-1 ({len(lib)}-member library)", ha="center",
             fontsize=15.5, transform=ax.transAxes)
     ax.text(0.27, 0.95, "baseline", fontsize=12, color="0.35", transform=ax.transAxes)
     ax.text(0.70, 0.95, "V2 tight-P", fontsize=12, color="0.35", transform=ax.transAxes)

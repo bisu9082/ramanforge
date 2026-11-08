@@ -77,9 +77,11 @@ is not the useful number. Two vials are not stationary across their own repeats:
 that are stationary. In both cases the count rate rises by more than an order of magnitude
 between the first acquisition and the rest and then settles, so the spectra of the early
 acquisitions are of a different state of the sample, not a noisier measurement of the same
-one. A within-vial difference of {1 - worst.cos_min:.3f} is larger than the decision margin
-of the measured library, 0.219, so these acquisitions are not interchangeable and are
-treated separately in Section~\\ref{{si:ident}}.\\end{{flushleft}}
+one. A within-vial difference of {1 - worst.cos_min:.3f} is of the same order as the mean decision margin
+of the measured library, 0.219, and larger than that margin for most individual queries;
+with the vial labeled HN2 set aside the margin is 0.150 and the within-vial difference
+exceeds it outright. These acquisitions are not interchangeable and are treated separately
+in Section~\\ref{{si:ident}}.\\end{{flushleft}}
 \\end{{table}}
 """
     open(os.path.join(ROOT, "latex", "sitables", "repeat.tex"), "w").write(tex)

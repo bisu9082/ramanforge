@@ -1,0 +1,19 @@
+\begin{table}[htbp]
+\centering
+\caption{Boltzmann-averaged conformer ensembles for the three agents where the calculation is affordable. Conformers are taken in order of decreasing 298\,K weight until the cumulative population reaches 80\,\%, and each is given a full geometry optimization and numerical frequency calculation at the library's own level of theory. The \emph{dominant} column is the 600--850\,\wn{} cosine of the single most populated conformer, which is the structure the library entry is meant to represent. Re-optimizing it independently at the same level reproduces the library entry exactly for GF and to within 0.009 for GD and 0.002 for A-230, which is the internal consistency of the geometry optimization. \emph{Sub-dominant} is the population-weighted mean of that cosine over the remaining averaged conformers.}
+\label{tab:si-ensemble}
+\small
+\begin{tabular}{lrrrccccc}
+\toprule
+ & & & Coverage & \multicolumn{3}{c}{600--850\,\wn{} cosine} & \multicolumn{2}{c}{Full-range cosine} \\
+\cmidrule(lr){5-7}\cmidrule(lr){8-9}
+Agent & Conformers & Averaged & (\%) & Dominant & Sub-dominant & Ensemble & Single & Ensemble \\
+\midrule
+GF & 28 & 2 & 81.9 & 0.323 & 0.570 & 0.440 & 0.517 & 0.602 \\
+GD & 12 & 4 & 82.6 & 0.883 & 0.646 & 0.875 & 0.864 & 0.858 \\
+A-230 & 26 & 9 & 84.2 & 0.663 & 0.670 & 0.669 & 0.811 & 0.819 \\
+\bottomrule
+\end{tabular}
+
+\begin{flushleft}\footnotesize Averaging changes the identification for no query: the computed library assigns 13 of 30 at the molecular level and 26 of 30 at the class level before averaging and 13 and 26 after. What it changes is the agreement in the diagnostic window, and the direction is set by whether the sub-dominant populated conformers agree with the measurement better or worse than the dominant one. For GF they are better by 0.247 and the window gains 0.117; for A-230 they are equivalent, differing by 0.007, and it gains 0.009; for GD they are worse by 0.237 and it gains nothing, losing 0.006 over the full range. That quantity is not available from a conformer census: it is the spectra of the sub-dominant conformers, which is what the census is being used to avoid computing. The population statistics of Table~\ref{tab:si-confpop} do not predict this: GF and GD have the same population concentration to within 0.002, their dominant conformers carrying 0.589 and 0.587 of the 298\,K population, and averaging raises the GF window by 0.117 while leaving GD's unmoved; A-230, whose dominant conformer carries only 0.198, gains 0.009. They bound how much a single structure can represent without predicting whether averaging will help. Produced by \texttt{code/v3\_ensemble\_prepare.py}.\end{flushleft}
+\end{table}

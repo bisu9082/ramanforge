@@ -1,0 +1,20 @@
+\begin{table}[htbp]
+\centering
+\caption{The class-absent test is paired, and is reported here as such. Each of the 27 acquisitions is scored twice, once against the full computed library and once with its own toxicological class deleted, so the two conditions are one sample under two treatments. The second column counts the acquisitions that move in the expected direction; the third is the exact two-sided sign test over the non-tied pairs. The two AUC columns are the same rank statistic computed on the acquisition and on the agent mean. The vial labeled HN2 is a condition of its own and is excluded, as elsewhere.}
+\label{tab:si-abstpaired}
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Score & Moves as expected & Sign test & AUC (acquisition) & AUC (agent) \\
+\midrule
+top-1 cosine & 26/26 & $<10^{-7}$ & 0.809 & 0.83 \\
+margin & 19/26 & 0.029 & 0.758 & 0.78 \\
+peak-to-sidelobe & 24/27 & 0.0000 & 0.904 & 0.91 \\
+library-normalized $z$ & 26/26 & $<10^{-7}$ & 0.826 & 0.88 \\
+unmixing residual & 26/26 & $<10^{-7}$ & 0.781 & 0.80 \\
+band-match fraction & 13/24 & 0.839 & 0.669 & 0.66 \\
+\bottomrule
+\end{tabular}
+
+\begin{flushleft}\footnotesize On the paired statistic 5 of the six scores separate the two conditions at the 5\,\% level, and three do so without a single acquisition out of order. The paired test is the stronger statement and we report it as the primary one; the AUC is retained as an effect size because it is what the open-set literature quotes. The two AUC columns differ by at most 0.049, so the rank statistic is close to but not independent of the resampling unit, which is an empirical property of these data and not a theorem. None of this changes the conclusion of Table~\ref{tab:si-absten}: the scores order the two conditions, and no threshold separates them without error. Produced by \texttt{code/v3\_abstention\_paired.py}.\end{flushleft}
+\end{table}

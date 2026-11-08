@@ -95,9 +95,13 @@ that method's error --- Table~\\ref{{tab:si-a232}} documents a 3.55\\,kcal\\,mol
 error on one configurational coordinate in this set --- so they bound the problem rather
 than quantify it. What they establish is that a single-conformer library spectrum is not a
 good representation of a neat liquid for most of these molecules, and that Boltzmann
-averaging is the untested part of the standard treatment with the most room to move. We
-did not run it: an ensemble spectrum requires a frequency calculation per populated
-conformer, which for VX alone is of order a hundred.\\end{{flushleft}}
+averaging is the part of the standard treatment with the most room to move. We ran it on
+the three agents where it is affordable --- GF, GD and A-230, fifteen frequency
+calculations covering 80\\,\\% of each population --- and Table~\\ref{{tab:si-ensemble}} gives
+the result: no assignment changes, and the window agreement moves in a direction these
+population statistics do not predict. For the rest it remains out of reach, because an
+ensemble spectrum requires a frequency calculation per populated conformer, which for VX
+alone is of order a hundred.\\end{{flushleft}}
 \\end{{table}}
 """
     open(os.path.join(ROOT, "latex", "sitables", "confpop.tex"), "w").write(tex)
