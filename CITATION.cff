@@ -20,7 +20,8 @@ authors:
   - family-names: Kang
     given-names: Ku
     email: bisu9082@gmail.com
-license: MIT
-version: "1.4.0"
-date-released: "2026-11-03"
+license: CC-BY-4.0
+license-url: "https://creativecommons.org/licenses/by/4.0/"
+version: "1.5.1"
+date-released: "2026-11-09"
 repository-code: "https://github.com/bisu9082/ramanforge"

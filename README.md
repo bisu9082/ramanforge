@@ -178,6 +178,9 @@ Code: MIT (see `LICENSE`). Data and figures: CC BY 4.0.
 
 ## Citation
 
-Release `v1.4.0` is the state from which every number in the manuscript was produced.
+Release `v1.5.1` is the state from which every number in the manuscript was produced.
+Code is under the MIT licence (`LICENSE`); the data -- the preprocessed spectra, the
+calibrated computed library, the ORCA inputs and outputs, the conformer energies and
+everything under `data/` -- are under CC BY 4.0 (`LICENSE-DATA`).
 `CITATION.cff` carries the version and the repository; the article DOI will be added here
 when it is issued.

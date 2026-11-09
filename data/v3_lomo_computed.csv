@@ -1,0 +1,9 @@
+agent,cls,n,in_correct,lomo_correct,dest
+HN1,Blister,3,3,3,--
+HN3,Blister,3,3,3,--
+GD,Nerve,4,4,0,computed HN2 (Blister) $\times$4
+GF,Nerve,3,3,3,--
+A-230,Novichok,3,3,1,an OP analog (Nerve) $\times$2
+A-232,Novichok,3,3,3,--
+A-234,Novichok,5,4,4,an OP analog (Nerve) $\times$1
+A-242,Novichok,3,3,2,an OP analog (Nerve) $\times$1

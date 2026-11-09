@@ -86,6 +86,33 @@ def prepare(agent, ensemble, target):
     return len(keep)
 
 
+HARTREE = 627.5094740631          # kcal/mol per Hartree
+
+
+def gibbs_weights(paths):
+    """298 K Boltzmann weights from the B3LYP Gibbs energies of the completed jobs.
+
+    The conformers were SELECTED by the GFN2 census, which is what made the
+    selection affordable, but each selected structure was then given a full
+    optimization and frequency calculation at the library's own level of theory, so
+    its Gibbs energy is available and is the one the weights should use. The two
+    surfaces do not agree: for GF the GFN2 ordering is inverted at B3LYP.
+    """
+    G = []
+    for path in paths:
+        g = None
+        for ln in open(path, errors="ignore"):
+            if "Final Gibbs free energy" in ln:
+                try: g = float(ln.split()[5])
+                except Exception: pass
+        if g is None:
+            raise RuntimeError(f"no Gibbs free energy in {path}")
+        G.append(g)
+    G = np.asarray(G, float)
+    w = np.exp(-(G - G.min()) * HARTREE / KT)
+    return w / w.sum()
+
+
 def build():
     import v3_step3_headtohead as H
     X, acq = H.load_measured()
@@ -112,9 +139,11 @@ def build():
                   "the Boltzmann weights would be wrong, so this agent is skipped")
             continue
 
-        _, w = weights(job)
-        order = np.argsort(-w)[:len(outs)]
-        ww = w[order] / w[order].sum()
+        _, w = weights(job)                     # GFN2 census: selection only
+        gfn2 = w[np.argsort(-w)[:len(outs)]]
+        gfn2 = gfn2 / gfn2.sum()
+        ww = gibbs_weights(outs)                # B3LYP dG: the weights actually used
+        order = np.argsort(-ww)                 # B3LYP need not preserve the GFN2 order
         meas = np.mean([s for _, s in acq[agent]], 0)
         base = H.synth_native(lib[H.JOB[agent]], X, SLOW, SHIGH)
 
@@ -123,19 +152,22 @@ def build():
             s = H.synth_native(H.parse_raman(path), X, SLOW, SHIGH)
             per.append(cos(meas[win], s[win]))
             spec = s * wi if spec is None else spec + s * wi
+        per = [per[i] for i in order]           # decreasing B3LYP weight
+        wo = ww[order]
         ens[H.JOB[agent]] = spec
         # Population-weighted dispersion of the window cosine across the averaged
         # conformers. The raw range is misleading: a conformer that disagrees
         # strongly but carries 5 per cent of the population cannot move the average.
         pa = np.asarray(per)
-        wsd = float(np.sqrt(np.sum(ww * (pa - np.sum(ww * pa)) ** 2)))
+        wsd = float(np.sqrt(np.sum(wo * (pa - np.sum(wo * pa)) ** 2)))
 
-        cov = float(w[order].sum() * 100)
+        cov = float(gfn2.sum() * 100) if False else float(w[np.argsort(-w)[:len(outs)]].sum() * 100)
         rows.append(dict(agent=NICE[agent], n_conformers=int(len(w)),
                          n_averaged=len(outs), coverage=cov,
+                         w_gfn2_top=float(gfn2.max()), w_b3lyp_top=float(wo[0]),
                          spread=max(per) - min(per), wsd=wsd,
                          dominant=per[0],
-                         subdominant=float(np.sum(ww[1:] / ww[1:].sum() * np.asarray(per[1:])))
+                         subdominant=float(np.sum(wo[1:] / wo[1:].sum() * np.asarray(per[1:])))
                          if len(per) > 1 else float("nan"),
                          window_base=cos(meas[win], base[win]),
                          window_ens=cos(meas[win], spec[win]),
@@ -174,51 +206,56 @@ def write_table(rows, counts):
     D = pd.DataFrame(rows)
     D.to_csv(os.path.join(ROOT, "data", "v3_ensemble.csv"), index=False)
     body = [f"{r.agent} & {r.n_conformers} & {r.n_averaged} & {r.coverage:.1f} & "
-            f"{r.dominant:.3f} & {r.subdominant:.3f} & {r.window_ens:.3f} & "
-            f"{r.full_base:.3f} & {r.full_ens:.3f} \\\\" for r in D.itertuples()]
+            f"{r.w_gfn2_top:.3f} & {r.w_b3lyp_top:.3f} & "
+            f"{r.window_base:.3f} & {r.dominant:.3f} & {r.subdominant:.3f} & "
+            f"{r.window_ens:.3f} & {r.full_base:.3f} & {r.full_ens:.3f} \\\\"
+            for r in D.itertuples()]
     mb, cb = counts["baseline"]; me, ce = counts["ensemble"]
     cap = ("Boltzmann-averaged conformer ensembles for the three agents where the "
-           "calculation is affordable. Conformers are taken in order of decreasing "
-           "298\\,K weight until the cumulative population reaches 80\\,\\%, and each is "
-           "given a full geometry optimization and numerical frequency calculation at "
-           "the library's own level of theory. The \\emph{dominant} column is the "
-           "600--850\\,\\wn{} cosine of the single most populated conformer, which is the "
-           "structure the library entry is meant to represent. Re-optimizing it "
-           "independently at the same level reproduces the library entry exactly for "
-           "GF and to within 0.009 for GD and 0.002 for A-230, which is the internal "
-           "consistency of the geometry optimization. \\emph{Sub-dominant} is the "
-           "population-weighted mean of that cosine over the remaining averaged "
-           "conformers.")
+           "calculation is affordable. Conformers are \\emph{selected} by the deposited "
+           "GFN2 census, in order of decreasing 298\\,K weight until the cumulative "
+           "population reaches 80\\,\\% (the coverage column), and each selected structure "
+           "is then given a full geometry optimization and numerical frequency "
+           "calculation at the library's own level of theory. The Boltzmann weights are "
+           "taken from the resulting B3LYP Gibbs energies and not from the GFN2 energies "
+           "that made the selection: the two leading-weight columns are the weight each "
+           "surface gives the same leading structure, and for GF they disagree "
+           "completely. \\emph{Library} is the 600--850\\,\\wn{} cosine of the entry the "
+           "library actually holds; \\emph{dominant} is that of the most populated "
+           "conformer on the B3LYP surface; \\emph{sub-dom.} is the weighted mean over the "
+           "remaining averaged conformers.")
     note = ("Averaging changes the identification for no query: the computed library "
             f"assigns {mb} of 30 at the molecular level and {cb} of 30 at the class level "
-            f"before averaging and {me} and {ce} after. What it changes is the agreement "
-            "in the diagnostic window, and the direction is set by whether the "
-            "sub-dominant populated conformers agree with the measurement better or worse "
-            "than the dominant one. For GF they are better by 0.247 and the window gains "
-            "0.117; for A-230 they are equivalent, differing by 0.007, and it gains 0.009; "
-            "for GD they are worse by 0.237 and it gains nothing, losing 0.006 over the "
-            "full range. That quantity is not available from a conformer census: it is the "
-            "spectra of the sub-dominant conformers, which is what the census is being "
-            "used to avoid computing. The population statistics of "
-            "Table~\\ref{tab:si-confpop} do not predict this: GF and GD have the same "
-            "population concentration to within 0.002, their dominant conformers "
-            "carrying 0.589 and 0.587 of the 298\\,K population, and averaging raises "
-            "the GF window by 0.117 while leaving GD's unmoved; A-230, whose dominant "
-            "conformer carries only 0.198, gains 0.009. They bound how much a single "
-            "structure can represent without predicting whether averaging will help. "
-            "Produced by "
+            f"before averaging and {me} and {ce} after. It also changes the agreement "
+            "very little. In each of the three the ensemble lies within 0.003 of its own "
+            "most populated conformer in the window --- 0.569 against 0.570 for GF, 0.880 "
+            "against 0.877 for GD, 0.668 against 0.672 for A-230 --- so to that tolerance "
+            "the population-weighted mean over the structures carrying 80\\,\\% of the "
+            "population is the leading structure alone. For GD and A-230 that is the "
+            "whole effect, +0.006 and +0.007 in the window. GF moves by +0.246, and that "
+            "is a change of structure rather than an average: the GFN2 census gives the "
+            "library's structure 0.719 of the two-conformer weight while the B3LYP "
+            "surface gives it 0.032, placing the other conformer 1.68\\,kcal\\,mol$^{-1}$ "
+            "lower in energy and 2.02\\,kcal\\,mol$^{-1}$ lower in Gibbs energy. The "
+            "population statistics of Table~\\ref{tab:si-confpop} cannot see this, because "
+            "they are computed on the surface that gets the ordering wrong. All three GF "
+            "acquisitions remain assigned to soman under either structure. Produced by "
             "\\texttt{code/v3\\_ensemble\\_prepare.py}.")
     tex = ("\\begin{table}[htbp]\n\\centering\n"
            "\\caption{" + cap + "}\n"
            "\\label{tab:si-ensemble}\n\\small\n"
-           "\\begin{tabular}{lrrrccccc}\n\\toprule\n"
-           " & & & Coverage & \\multicolumn{3}{c}{600--850\\,\\wn{} cosine} & "
+           "\\resizebox{\\textwidth}{!}{%\n"
+           "\\begin{tabular}{lrrrcccccccc}\n\\toprule\n"
+           " & & & Cov. & \\multicolumn{2}{c}{Leading weight} & "
+           "\\multicolumn{4}{c}{600--850\\,\\wn{} cosine} & "
            "\\multicolumn{2}{c}{Full-range cosine} \\\\\n"
-           "\\cmidrule(lr){5-7}\\cmidrule(lr){8-9}\n"
-           "Agent & Conformers & Averaged & (\\%) & Dominant & Sub-dominant & Ensemble & "
-           "Single & Ensemble \\\\\n\\midrule\n"
-           + "\n".join(body) + "\n\\bottomrule\n\\end{tabular}\n\n"
-           "\\begin{flushleft}\\footnotesize " + note + "\\end{flushleft}\n\\end{table}\n")
+           "\\cmidrule(lr){5-6}\\cmidrule(lr){7-10}\\cmidrule(lr){11-12}\n"
+           "Agent & Conf. & Avg. & (\\%) & GFN2 & B3LYP & "
+           "Library & Dominant & Sub-dom. & Ensemble & Library & Ensemble \\\\\n"
+           "\\midrule\n" + "\n".join(body) + "\n\\bottomrule\n"
+           "\\end{tabular}\n}\n\n"
+           "\\begin{flushleft}\\footnotesize " + note + "\\end{flushleft}\n"
+           "\\end{table}\n")
     open(os.path.join(ROOT, "latex", "sitables", "ensemble.tex"), "w").write(tex)
     print("saved data/v3_ensemble.csv + latex/sitables/ensemble.tex")
 

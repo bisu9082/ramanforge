@@ -369,8 +369,10 @@ made.append(table(
     ["Score", "In-library", "Class absent", "HN2", "AUC", "Separable?",
      "AUC (meas.)", "Sep.?", "Decline IN", "Decline LOCO"], rows,
     note="Against the computed library no score separates the two conditions without error. Driving the "
-         "class-absent acceptance to zero requires a conjunction of the library-normalized "
-         "$z$ and the top-1 cosine, and costs 63\\% of the legitimate queries. Against the "
+         "class-absent acceptance to zero needs no conjunction: five of the six scores reach it "
+         "alone, at a cost in refused legitimate queries of 37\\% for the peak-to-sidelobe ratio, "
+         "41\\% for the top-1 cosine, 44\\% for the unmixing residual and 63\\% for the margin and "
+         "the library-normalized $z$; the band-match fraction refuses all of them. Against the "
          "measured library three scores separate completely: in the plain top-1 cosine the "
          "lowest in-library value is 0.842 and the highest class-absent value 0.729, so the "
          "two populations are disjoint and any threshold in between accepts all 27 and "

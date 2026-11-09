@@ -1,0 +1,23 @@
+\begin{table}[htbp]
+\centering
+\caption{Do the favourable instrument-model choices compound? The identification is rerun under every combination of the frequency map (the adopted two-region scaling or the monotone affine map, refitted on the same non-circular band-position objective in each cell), the linewidth (22, 30, 40, 50\,\wn{}), the similarity metric (cosine or a cosine allowing $\pm$3 pixels of alignment) and a log-linear spectral-responsivity ramp of end-to-end ratio 1.0 or 2.0 on the measured side --- 2$\times$4$\times$2$\times$2 = 32 combinations. Each of the four factors on its own moves the molecular count to 16 of 30.}
+\label{tab:si-jointenv}
+\small
+\begin{tabular}{lcc}
+\toprule
+Condition & Molecular top-1 & Class top-1 \\
+\midrule
+Adopted (two-region, $\Gamma$ = 22\,\wn{}, cosine, no ramp) & 13/30 & 26/30 \\
+\midrule
+affine map alone & 16/30 & 23/30 \\
+$\Gamma$ = 50\,\wn{} alone & 16/30 & 25/30 \\
+shift-tolerant cosine alone & 16/30 & 25/30 \\
+responsivity ramp 2.0 alone & 14/30 & 27/30 \\
+\midrule
+\textbf{Joint maximum over all 32 combinations} & \textbf{19/30} & 22/30 \\
+\textbf{Joint minimum} & \textbf{12/30} & 21/30 \\
+\bottomrule
+\end{tabular}
+
+\begin{flushleft}\footnotesize They do not compound. The joint maximum over all 32 combinations is 19 of 30 at the molecular level, reached with the two-region map, $\Gamma$ = 30\,\wn{}, the shift-tolerant cosine and ramp 1.0; the joint minimum is 12 of 30. So the whole envelope of the forward model's free choices is 12--19 of 30, 40--63\%, against the measured library's 30 of 30; the direction of the result is not a product of any of them. The combination that maximizes the molecular count also \emph{lowers} the class count, from 26 of 30 at the adopted settings to 22 of 30, so the favourable corner of this space buys molecular agreement with class agreement rather than adding the two gains together. Produced by \texttt{code/v3\_joint\_envelope.py}, the slowest script in the deposit because the affine map is refitted in every cell.\end{flushleft}
+\end{table}

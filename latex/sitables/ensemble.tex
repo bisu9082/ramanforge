@@ -1,19 +1,21 @@
 \begin{table}[htbp]
 \centering
-\caption{Boltzmann-averaged conformer ensembles for the three agents where the calculation is affordable. Conformers are taken in order of decreasing 298\,K weight until the cumulative population reaches 80\,\%, and each is given a full geometry optimization and numerical frequency calculation at the library's own level of theory. The \emph{dominant} column is the 600--850\,\wn{} cosine of the single most populated conformer, which is the structure the library entry is meant to represent. Re-optimizing it independently at the same level reproduces the library entry exactly for GF and to within 0.009 for GD and 0.002 for A-230, which is the internal consistency of the geometry optimization. \emph{Sub-dominant} is the population-weighted mean of that cosine over the remaining averaged conformers.}
+\caption{Boltzmann-averaged conformer ensembles for the three agents where the calculation is affordable. Conformers are \emph{selected} by the deposited GFN2 census, in order of decreasing 298\,K weight until the cumulative population reaches 80\,\% (the coverage column), and each selected structure is then given a full geometry optimization and numerical frequency calculation at the library's own level of theory. The Boltzmann weights are taken from the resulting B3LYP Gibbs energies and not from the GFN2 energies that made the selection: the two leading-weight columns are the weight each surface gives the same leading structure, and for GF they disagree completely. \emph{Library} is the 600--850\,\wn{} cosine of the entry the library actually holds; \emph{dominant} is that of the most populated conformer on the B3LYP surface; \emph{sub-dom.} is the weighted mean over the remaining averaged conformers.}
 \label{tab:si-ensemble}
 \small
-\begin{tabular}{lrrrccccc}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrcccccccc}
 \toprule
- & & & Coverage & \multicolumn{3}{c}{600--850\,\wn{} cosine} & \multicolumn{2}{c}{Full-range cosine} \\
-\cmidrule(lr){5-7}\cmidrule(lr){8-9}
-Agent & Conformers & Averaged & (\%) & Dominant & Sub-dominant & Ensemble & Single & Ensemble \\
+ & & & Cov. & \multicolumn{2}{c}{Leading weight} & \multicolumn{4}{c}{600--850\,\wn{} cosine} & \multicolumn{2}{c}{Full-range cosine} \\
+\cmidrule(lr){5-6}\cmidrule(lr){7-10}\cmidrule(lr){11-12}
+Agent & Conf. & Avg. & (\%) & GFN2 & B3LYP & Library & Dominant & Sub-dom. & Ensemble & Library & Ensemble \\
 \midrule
-GF & 28 & 2 & 81.9 & 0.323 & 0.570 & 0.440 & 0.517 & 0.602 \\
-GD & 12 & 4 & 82.6 & 0.883 & 0.646 & 0.875 & 0.864 & 0.858 \\
-A-230 & 26 & 9 & 84.2 & 0.663 & 0.670 & 0.669 & 0.811 & 0.819 \\
+GF & 28 & 2 & 81.9 & 0.719 & 0.968 & 0.323 & 0.570 & 0.323 & 0.569 & 0.517 & 0.678 \\
+GD & 12 & 4 & 82.6 & 0.711 & 0.504 & 0.874 & 0.877 & 0.877 & 0.880 & 0.864 & 0.867 \\
+A-230 & 26 & 9 & 84.2 & 0.236 & 0.221 & 0.660 & 0.672 & 0.666 & 0.668 & 0.811 & 0.818 \\
 \bottomrule
 \end{tabular}
+}
 
-\begin{flushleft}\footnotesize Averaging changes the identification for no query: the computed library assigns 13 of 30 at the molecular level and 26 of 30 at the class level before averaging and 13 and 26 after. What it changes is the agreement in the diagnostic window, and the direction is set by whether the sub-dominant populated conformers agree with the measurement better or worse than the dominant one. For GF they are better by 0.247 and the window gains 0.117; for A-230 they are equivalent, differing by 0.007, and it gains 0.009; for GD they are worse by 0.237 and it gains nothing, losing 0.006 over the full range. That quantity is not available from a conformer census: it is the spectra of the sub-dominant conformers, which is what the census is being used to avoid computing. The population statistics of Table~\ref{tab:si-confpop} do not predict this: GF and GD have the same population concentration to within 0.002, their dominant conformers carrying 0.589 and 0.587 of the 298\,K population, and averaging raises the GF window by 0.117 while leaving GD's unmoved; A-230, whose dominant conformer carries only 0.198, gains 0.009. They bound how much a single structure can represent without predicting whether averaging will help. Produced by \texttt{code/v3\_ensemble\_prepare.py}.\end{flushleft}
+\begin{flushleft}\footnotesize Averaging changes the identification for no query: the computed library assigns 13 of 30 at the molecular level and 26 of 30 at the class level before averaging and 13 and 26 after. It also changes the agreement very little. In each of the three the ensemble lies within 0.003 of its own most populated conformer in the window --- 0.569 against 0.570 for GF, 0.880 against 0.877 for GD, 0.668 against 0.672 for A-230 --- so to that tolerance the population-weighted mean over the structures carrying 80\,\% of the population is the leading structure alone. For GD and A-230 that is the whole effect, +0.006 and +0.007 in the window. GF moves by +0.246, and that is a change of structure rather than an average: the GFN2 census gives the library's structure 0.719 of the two-conformer weight while the B3LYP surface gives it 0.032, placing the other conformer 1.68\,kcal\,mol$^{-1}$ lower in energy and 2.02\,kcal\,mol$^{-1}$ lower in Gibbs energy. The population statistics of Table~\ref{tab:si-confpop} cannot see this, because they are computed on the surface that gets the ordering wrong. All three GF acquisitions remain assigned to soman under either structure. Produced by \texttt{code/v3\_ensemble\_prepare.py}.\end{flushleft}
 \end{table}
