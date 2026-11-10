@@ -1,6 +1,6 @@
 \begin{table}[htbp]
 \centering
-\caption{Do the favourable instrument-model choices compound? The identification is rerun under every combination of the frequency map (the adopted two-region scaling or the monotone affine map, refitted on the same non-circular band-position objective in each cell), the linewidth (22, 30, 40, 50\,\wn{}), the similarity metric (cosine or a cosine allowing $\pm$3 pixels of alignment) and a log-linear spectral-responsivity ramp of end-to-end ratio 1.0 or 2.0 on the measured side --- 2$\times$4$\times$2$\times$2 = 32 combinations. Each of the four factors on its own moves the molecular count to 16 of 30.}
+\caption{Do the favourable instrument-model choices compound? The identification is rerun under every combination of the frequency map, the linewidth (22, 30, 40, 50\,\wn{}), the similarity metric (cosine or a cosine allowing $\pm$3 pixels of alignment) and a log-linear spectral-responsivity ramp of end-to-end ratio 1.0 or 2.0 on the measured side --- 32 combinations. Only the affine arm is refitted in each cell, on the same non-circular band-position objective; the two-region factors are held at the values fitted at $\Gamma$ = 22\,\wn{} without a ramp, so the two arms are not treated symmetrically and the two-region half of this grid is a sensitivity to the metric and the linewidth at a fixed calibration rather than a refitted comparison. The ramp axis is sampled at two values here; Table~\ref{tab:si-prepvar} scans it from 0.33 to 3.0 and reaches 11 of 30, below the minimum of this grid.}
 \label{tab:si-jointenv}
 \small
 \begin{tabular}{lcc}
@@ -10,14 +10,20 @@ Condition & Molecular top-1 & Class top-1 \\
 Adopted (two-region, $\Gamma$ = 22\,\wn{}, cosine, no ramp) & 13/30 & 26/30 \\
 \midrule
 affine map alone & 16/30 & 23/30 \\
+$\Gamma$ = 30\,\wn{} alone & 13/30 & 25/30 \\
+$\Gamma$ = 40\,\wn{} alone & 16/30 & 25/30 \\
 $\Gamma$ = 50\,\wn{} alone & 16/30 & 25/30 \\
 shift-tolerant cosine alone & 16/30 & 25/30 \\
 responsivity ramp 2.0 alone & 14/30 & 27/30 \\
 \midrule
-\textbf{Joint maximum over all 32 combinations} & \textbf{19/30} & 22/30 \\
-\textbf{Joint minimum} & \textbf{12/30} & 21/30 \\
+Pareto-optimal: two-region, $\Gamma$ = 30\,\wn{}, shift-tolerant cosine, ramp 1.0 & \textbf{19/30} & \textbf{22/30} \\
+Pareto-optimal: two-region, $\Gamma$ = 40\,\wn{}, shift-tolerant cosine, ramp 1.0 & \textbf{19/30} & \textbf{22/30} \\
+Pareto-optimal: two-region, $\Gamma$ = 50\,\wn{}, shift-tolerant cosine, ramp 1.0 & \textbf{19/30} & \textbf{22/30} \\
+Pareto-optimal: two-region, $\Gamma$ = 40\,\wn{}, plain cosine, ramp 2.0 & \textbf{17/30} & \textbf{27/30} \\
+\midrule
+Range over the 32 cells & 12--19/30 & 21--27/30 \\
 \bottomrule
 \end{tabular}
 
-\begin{flushleft}\footnotesize They do not compound. The joint maximum over all 32 combinations is 19 of 30 at the molecular level, reached with the two-region map, $\Gamma$ = 30\,\wn{}, the shift-tolerant cosine and ramp 1.0; the joint minimum is 12 of 30. So the whole envelope of the forward model's free choices is 12--19 of 30, 40--63\%, against the measured library's 30 of 30; the direction of the result is not a product of any of them. The combination that maximizes the molecular count also \emph{lowers} the class count, from 26 of 30 at the adopted settings to 22 of 30, so the favourable corner of this space buys molecular agreement with class agreement rather than adding the two gains together. Produced by \texttt{code/v3\_joint\_envelope.py}, the slowest script in the deposit because the affine map is refitted in every cell.\end{flushleft}
+\begin{flushleft}\footnotesize They do not compound. Taken one at a time the molecular count goes to: affine map 16, $\Gamma$ = 30\,\wn{} 13, $\Gamma$ = 40\,\wn{} 16, $\Gamma$ = 50\,\wn{} 16, shift-tolerant cosine 16, responsivity ramp 2.0 14 --- so 4 of the six single changes reach 16 of 30 and the others do not. Over the whole grid the molecular count spans 12 to 19 of 30 (40--63\%) and the class count 21 to 27 of 30, against the measured library's 30 of 30 at both levels, so the direction of the result is not a product of any of these choices. The molecular maximum of 19 of 30 is a plateau, not a point: it is reached in 3 cells, the shift-tolerant cosine on the two-region map at $\Gamma$ = 30, 40, 50\,\wn{}, all with the class count at 22 of 30. We state one thing against ourselves. The adopted cell is not on the Pareto front of this grid: 14 of the 32 cells are at least as good at both levels and strictly better at one, and the front itself contains 17 of 30 molecular with 27 of 30 class, which beats the adopted cell on both. The adopted cell is therefore not the most favourable choice available, and it is not the least favourable either; it is chosen a priori, $\Gamma$ = 22\,\wn{} being the measured median linewidth and no ramp being the no-correction default, and we report the range rather than defending the point. Produced by \texttt{code/v3\_joint\_envelope.py}, which is outside the default path of \texttt{run\_all.sh} because it refits the affine map in every cell.\end{flushleft}
 \end{table}

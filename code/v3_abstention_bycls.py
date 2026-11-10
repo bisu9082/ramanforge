@@ -79,7 +79,7 @@ Deleted class & $n$ & """ + " & ".join(NAME[s] for s in SC) + """ \\\\
 Deleting the nerve agents is detected: three of the six scores separate that deletion
 perfectly on the """ + str(int(ner.n_in)) + """ queries available. Deleting the Novichok
 agents is not: no score exceeds """ + f"{max(getattr(nov, s) for s in SC):.2f}" + """, and the
-A-series supplies """ + str(int(nov.n_in)) + """ of the thirty queries, so it dominates the
+A-series supplies """ + str(int(nov.n_in)) + """ of the 27 queries in this analysis, so it dominates the
 pooled value. The abstention failure reported in Section~\\ref{si:absten} is therefore
 specific to the A-series rather than general, which is consistent with the identification
 result: the A-series is also where the computed library is least accurate. Each stratum

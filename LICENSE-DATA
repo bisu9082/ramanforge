@@ -6,7 +6,7 @@ data/ -- are released under the Creative Commons Attribution 4.0 International l
 The analysis code under code/ is released under the MIT licence; see LICENSE.
 
 Attribution: Lee, Lee, Kim, Jeong, Oh, Kim, Kim and Kang, "ramanforge: measured versus
-computed Raman libraries for authentic chemical warfare agents", release v1.5.1.
+computed Raman libraries for authentic chemical warfare agents", release v1.5.2.
 
 One entry is not a reference spectrum of the agent on its label: see
 data/WARNING_HN2_IS_BENZENE.md.

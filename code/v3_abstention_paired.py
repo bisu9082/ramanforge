@@ -70,7 +70,12 @@ def main():
     R.to_csv(os.path.join(ROOT, "data", "v3_abstention_paired.csv"), index=False)
 
     def fmt_p(p):
-        return "$<10^{-7}$" if p < 1e-7 else (f"{p:.4f}" if p < 0.001 else f"{p:.3f}")
+        if p < 1e-7: return "$<10^{-7}$"
+        if p < 1e-3: return f"${p:.1e}$".replace("e-0", r"\\times 10^{-") + "}$" \
+                     if False else "$%.0f\\times10^{%d}$" % (
+                         p / 10 ** int(f"{p:e}".split("e")[1]),
+                         int(f"{p:e}".split("e")[1]))
+        return f"{p:.3f}"
 
     body = [f"{NICE[r.score]} & {r.k}/{r.n} & {fmt_p(r.p_sign)} & "
             f"{r.auc_acquisition:.3f} & {r.auc_agent:.2f} \\\\" for r in R.itertuples()]

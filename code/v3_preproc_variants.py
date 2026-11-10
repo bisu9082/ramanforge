@@ -118,7 +118,8 @@ def main():
            "measured side only, so it is the error class that would flatter the measured "
            "arm and penalize the computed one; over end-to-end ratios from 0.33 to 3, far "
            "wider than any plausible residual on this instrument, the computed figure "
-           f"moves only between {lo} and {hi} of 30 while the measured arm is unchanged. "
+           f"moves only between {lo} and {hi} of 30 while the measured arm holds at 30 of "
+           f"30 except at the most compressive ramp, where it is 29. "
            "Neither choice accounts for the result. Produced by "
            "\\texttt{code/v3\\_preproc\\_variants.py}.\\end{flushleft}\n\\end{table}\n")
     open(os.path.join(ROOT, "latex", "sitables", "prepvar.tex"), "w").write(tex)

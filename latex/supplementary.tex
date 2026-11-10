@@ -1057,13 +1057,14 @@ is conservative with respect to this choice.\end{flushleft}
 
 \subsection{Do the favourable choices compound?}
 
-Each of the one-at-a-time sensitivities reported above moves the molecular count to 16 of
-30 on its own. Table~\ref{tab:si-jointenv} runs them together.
+Four of the six one-at-a-time sensitivities reported above move the molecular count to 16
+of 30 on their own; a linewidth of 30\,\wn{} leaves it at 13 and the responsivity ramp
+takes it to 14. Table~\ref{tab:si-jointenv} runs them together.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{table}[htbp]
 \centering
-\caption{Do the favourable instrument-model choices compound? The identification is rerun under every combination of the frequency map (the adopted two-region scaling or the monotone affine map, refitted on the same non-circular band-position objective in each cell), the linewidth (22, 30, 40, 50\,\wn{}), the similarity metric (cosine or a cosine allowing $\pm$3 pixels of alignment) and a log-linear spectral-responsivity ramp of end-to-end ratio 1.0 or 2.0 on the measured side --- 2$\times$4$\times$2$\times$2 = 32 combinations. Each of the four factors on its own moves the molecular count to 16 of 30.}
+\caption{Do the favourable instrument-model choices compound? The identification is rerun under every combination of the frequency map, the linewidth (22, 30, 40, 50\,\wn{}), the similarity metric (cosine or a cosine allowing $\pm$3 pixels of alignment) and a log-linear spectral-responsivity ramp of end-to-end ratio 1.0 or 2.0 on the measured side --- 32 combinations. Only the affine arm is refitted in each cell, on the same non-circular band-position objective; the two-region factors are held at the values fitted at $\Gamma$ = 22\,\wn{} without a ramp, so the two arms are not treated symmetrically and the two-region half of this grid is a sensitivity to the metric and the linewidth at a fixed calibration rather than a refitted comparison. The ramp axis is sampled at two values here; Table~\ref{tab:si-prepvar} scans it from 0.33 to 3.0 and reaches 11 of 30, below the minimum of this grid.}
 \label{tab:si-jointenv}
 \small
 \begin{tabular}{lcc}
@@ -1073,16 +1074,22 @@ Condition & Molecular top-1 & Class top-1 \\
 Adopted (two-region, $\Gamma$ = 22\,\wn{}, cosine, no ramp) & 13/30 & 26/30 \\
 \midrule
 affine map alone & 16/30 & 23/30 \\
+$\Gamma$ = 30\,\wn{} alone & 13/30 & 25/30 \\
+$\Gamma$ = 40\,\wn{} alone & 16/30 & 25/30 \\
 $\Gamma$ = 50\,\wn{} alone & 16/30 & 25/30 \\
 shift-tolerant cosine alone & 16/30 & 25/30 \\
 responsivity ramp 2.0 alone & 14/30 & 27/30 \\
 \midrule
-\textbf{Joint maximum over all 32 combinations} & \textbf{19/30} & 22/30 \\
-\textbf{Joint minimum} & \textbf{12/30} & 21/30 \\
+Pareto-optimal: two-region, $\Gamma$ = 30\,\wn{}, shift-tolerant cosine, ramp 1.0 & \textbf{19/30} & \textbf{22/30} \\
+Pareto-optimal: two-region, $\Gamma$ = 40\,\wn{}, shift-tolerant cosine, ramp 1.0 & \textbf{19/30} & \textbf{22/30} \\
+Pareto-optimal: two-region, $\Gamma$ = 50\,\wn{}, shift-tolerant cosine, ramp 1.0 & \textbf{19/30} & \textbf{22/30} \\
+Pareto-optimal: two-region, $\Gamma$ = 40\,\wn{}, plain cosine, ramp 2.0 & \textbf{17/30} & \textbf{27/30} \\
+\midrule
+Range over the 32 cells & 12--19/30 & 21--27/30 \\
 \bottomrule
 \end{tabular}
 
-\begin{flushleft}\footnotesize They do not compound. The joint maximum over all 32 combinations is 19 of 30 at the molecular level, reached with the two-region map, $\Gamma$ = 30\,\wn{}, the shift-tolerant cosine and ramp 1.0; the joint minimum is 12 of 30. So the whole envelope of the forward model's free choices is 12--19 of 30, 40--63\%, against the measured library's 30 of 30; the direction of the result is not a product of any of them. The combination that maximizes the molecular count also \emph{lowers} the class count, from 26 of 30 at the adopted settings to 22 of 30, so the favourable corner of this space buys molecular agreement with class agreement rather than adding the two gains together. Produced by \texttt{code/v3\_joint\_envelope.py}, the slowest script in the deposit because the affine map is refitted in every cell.\end{flushleft}
+\begin{flushleft}\footnotesize They do not compound. Taken one at a time the molecular count goes to: affine map 16, $\Gamma$ = 30\,\wn{} 13, $\Gamma$ = 40\,\wn{} 16, $\Gamma$ = 50\,\wn{} 16, shift-tolerant cosine 16, responsivity ramp 2.0 14 --- so 4 of the six single changes reach 16 of 30 and the others do not. Over the whole grid the molecular count spans 12 to 19 of 30 (40--63\%) and the class count 21 to 27 of 30, against the measured library's 30 of 30 at both levels, so the direction of the result is not a product of any of these choices. The molecular maximum of 19 of 30 is a plateau, not a point: it is reached in 3 cells, the shift-tolerant cosine on the two-region map at $\Gamma$ = 30, 40, 50\,\wn{}, all with the class count at 22 of 30. We state one thing against ourselves. The adopted cell is not on the Pareto front of this grid: 14 of the 32 cells are at least as good at both levels and strictly better at one, and the front itself contains 17 of 30 molecular with 27 of 30 class, which beats the adopted cell on both. The adopted cell is therefore not the most favourable choice available, and it is not the least favourable either; it is chosen a priori, $\Gamma$ = 22\,\wn{} being the measured median linewidth and no ramp being the no-correction default, and we report the range rather than defending the point. Produced by \texttt{code/v3\_joint\_envelope.py}, which is outside the default path of \texttt{run\_all.sh} because it refits the affine map in every cell.\end{flushleft}
 \end{table}
 
 \begin{table}[htbp]
@@ -1797,7 +1804,7 @@ responsivity ramp & end-to-end ratio 3.00 & 30/30 & 11/30 & 27/30 \\
 \bottomrule
 \end{tabular}
 
-\begin{flushleft}\footnotesize Maximum normalization anchors every cosine to the tallest band and is the choice most able to manufacture the reported deficit; under SNV the computed library reaches 13 of 30, so it does not. A responsivity error is multiplicative in wavenumber and applied to the measured side only, so it is the error class that would flatter the measured arm and penalize the computed one; over end-to-end ratios from 0.33 to 3, far wider than any plausible residual on this instrument, the computed figure moves only between 11 and 14 of 30 while the measured arm is unchanged. Neither choice accounts for the result. Produced by \texttt{code/v3\_preproc\_variants.py}.\end{flushleft}
+\begin{flushleft}\footnotesize Maximum normalization anchors every cosine to the tallest band and is the choice most able to manufacture the reported deficit; under SNV the computed library reaches 13 of 30, so it does not. A responsivity error is multiplicative in wavenumber and applied to the measured side only, so it is the error class that would flatter the measured arm and penalize the computed one; over end-to-end ratios from 0.33 to 3, far wider than any plausible residual on this instrument, the computed figure moves only between 11 and 14 of 30 while the measured arm holds at 30 of 30 except at the most compressive ramp, where it is 29. Neither choice accounts for the result. Produced by \texttt{code/v3\_preproc\_variants.py}.\end{flushleft}
 \end{table}
 
 \section{Abstention and the class-absent condition}
@@ -1869,7 +1876,7 @@ A-242 & Novichok & 3 & 3/3 & 2/3 & an OP analog (Nerve) $\times$1 \\
 \end{tabular}
 }
 
-\begin{flushleft}\footnotesize With the molecule present the computed library is class-correct for 26 of 27 acquisitions and for 7 of 8 agents; with it absent, 19 of 27 and 4 of 8. The loss is not spread evenly and it is not in a harmless direction. All four acquisitions of soman are assigned to the computed nitrogen-mustard entry, a nerve-agent-to-vesicant crossing of the kind that changes a prophylaxis decision, and the three Novichok errors go to organophosphorus analogs, i.e. to the nerve class. A paired exact test at the agent level gives $b$ = 4, $c$ = 0, two-sided $p$ = 0.125, the same power limit as the molecular-level test. The top-1 cosine does not flag the errors: over the deleted-molecule condition the class-correct acquisitions run 0.650--0.871 with a median of 0.777 and the class-incorrect ones 0.648--0.793 with a median of 0.787, so the wrong answers are if anything the more confident, and 7 of the 8 sit above the lowest class-correct value. No threshold on that score separates them. Produced by \texttt{code/v3\_lomo\_computed.py}.\end{flushleft}
+\begin{flushleft}\footnotesize With the molecule present the computed library is class-correct for 26 of 27 acquisitions and for 7 of 8 agents; with it absent, 19 of 27 and 4 of 8. The loss is not spread evenly and it is not in a harmless direction. All four acquisitions of soman are assigned to the computed nitrogen-mustard entry, a nerve-agent-to-vesicant crossing of the kind that changes a prophylaxis decision. The other four errors are Novichok acquisitions assigned to organophosphorus analogs, a crossing within the organophosphorus anticholinesterases, which does not change the immediate treatment. The agent-level figure depends on the agent-level rule: requiring every acquisition of an agent to be correct it falls from 7 of 8 to 4 of 8, and on the majority rule used elsewhere in this work from 8 of 8 to 6 of 8. A paired exact test gives $b$ = 3, $c$ = 0, two-sided $p$ = 0.250 on the strict rule and $b$ = 2, $c$ = 0, $p$ = 0.500 on the majority rule. Restricting the computed library to the same eleven entries the measured library offers, so both arms go from eleven candidates to ten, gives 22 of 27 and 6 of 8 (7 of 8 on the majority rule): three of the four non-soman errors are captures by distractors, while soman's four and a further A-234 crossing to the computed HN1 entry survive the control. The top-1 cosine does not flag the errors: over the deleted-molecule condition the class-correct acquisitions run 0.650--0.871 with a median of 0.777 and the class-incorrect ones 0.648--0.793 with a median of 0.787, so the wrong answers are if anything the more confident, and 7 of the 8 sit above the lowest class-correct value. No threshold on that score separates them. Produced by \texttt{code/v3\_lomo\_computed.py}.\end{flushleft}
 \end{table}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage
@@ -1988,7 +1995,7 @@ Score & Moves as expected & Sign test & AUC (acquisition) & AUC (agent) \\
 \midrule
 top-1 cosine & 26/26 & $<10^{-7}$ & 0.809 & 0.83 \\
 margin & 19/26 & 0.029 & 0.758 & 0.78 \\
-peak-to-sidelobe & 24/27 & 0.0000 & 0.904 & 0.91 \\
+peak-to-sidelobe & 24/27 & $5\times10^{-5}$ & 0.904 & 0.91 \\
 library-normalized $z$ & 26/26 & $<10^{-7}$ & 0.826 & 0.88 \\
 unmixing residual & 26/26 & $<10^{-7}$ & 0.781 & 0.80 \\
 band-match fraction & 13/24 & 0.839 & 0.669 & 0.66 \\
@@ -2066,7 +2073,7 @@ Novichok & 14 & 0.72 & 0.48 & 0.74 & 0.80 & 0.72 & 0.57 \\
 Deleting the nerve agents is detected: three of the six scores separate that deletion
 perfectly on the 7 queries available. Deleting the Novichok
 agents is not: no score exceeds 0.80, and the
-A-series supplies 14 of the thirty queries, so it dominates the
+A-series supplies 14 of the 27 queries in this analysis, so it dominates the
 pooled value. The abstention failure reported in Section~\ref{si:absten} is therefore
 specific to the A-series rather than general, which is consistent with the identification
 result: the A-series is also where the computed library is least accurate. Each stratum
@@ -2464,7 +2471,7 @@ A-230 & 26 & 9 & 84.2 & 0.236 & 0.221 & 0.660 & 0.672 & 0.666 & 0.668 & 0.811 & 
 \end{tabular}
 }
 
-\begin{flushleft}\footnotesize Averaging changes the identification for no query: the computed library assigns 13 of 30 at the molecular level and 26 of 30 at the class level before averaging and 13 and 26 after. It also changes the agreement very little. In each of the three the ensemble lies within 0.003 of its own most populated conformer in the window --- 0.569 against 0.570 for GF, 0.880 against 0.877 for GD, 0.668 against 0.672 for A-230 --- so to that tolerance the population-weighted mean over the structures carrying 80\,\% of the population is the leading structure alone. For GD and A-230 that is the whole effect, +0.006 and +0.007 in the window. GF moves by +0.246, and that is a change of structure rather than an average: the GFN2 census gives the library's structure 0.719 of the two-conformer weight while the B3LYP surface gives it 0.032, placing the other conformer 1.68\,kcal\,mol$^{-1}$ lower in energy and 2.02\,kcal\,mol$^{-1}$ lower in Gibbs energy. The population statistics of Table~\ref{tab:si-confpop} cannot see this, because they are computed on the surface that gets the ordering wrong. All three GF acquisitions remain assigned to soman under either structure. Produced by \texttt{code/v3\_ensemble\_prepare.py}.\end{flushleft}
+\begin{flushleft}\footnotesize Averaging changes the identification for no query: the computed library assigns 13 of 30 at the molecular level and 26 of 30 at the class level before averaging and 13 and 26 after. It also changes the agreement very little. In each of the three the ensemble lies within 0.005 of its own most populated conformer in the window --- 0.569 against 0.570 for GF, 0.880 against 0.877 for GD, 0.668 against 0.672 for A-230 --- so to that tolerance the population-weighted mean over the structures carrying 80\,\% of the population is the leading structure alone. The Library and Dominant columns separate the two effects, and they show that the entry the library holds is below the most populated conformer in all three agents: by 0.003 for GD, 0.012 for A-230 and 0.247 for GF. Averaging then contributes +0.003 for GD, $-$0.005 for A-230 and $-$0.002 for GF, so the window gains of +0.006 and +0.007 for GD and A-230 are small structure changes partly offset by smaller averaging effects, not averaging effects. GF moves by +0.246, and that is a change of structure rather than an average: the GFN2 census gives the library's structure 0.719 of the two-conformer weight while the B3LYP surface gives it 0.032, placing the other conformer 1.68\,kcal\,mol$^{-1}$ lower in energy and 2.02\,kcal\,mol$^{-1}$ lower in Gibbs energy. The population statistics of Table~\ref{tab:si-confpop} cannot see this, because they are computed on the surface that gets the ordering wrong. All three GF acquisitions remain assigned to soman under either structure. Produced by \texttt{code/v3\_ensemble\_prepare.py}.\end{flushleft}
 \end{table}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage
@@ -2833,7 +2840,7 @@ Abstention, computed library, best AUC & 0.904 & unchanged \\
 The preprocessing module, the analysis scripts that generate every table and figure in
 this work, the calibrated computed library, and the ORCA inputs and outputs are deposited
 at \url{https://github.com/bisu9082/ramanforge}, at the tagged release
-\texttt{v1.5.1} from which every number in this work was produced. The code is released
+\texttt{v1.5.2} from which every number in this work was produced. The code is released
 under the MIT licence and the data under CC BY 4.0.
 
 Raw acquisition files of the authentic agents are not included in that deposit. They are
