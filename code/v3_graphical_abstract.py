@@ -1,14 +1,14 @@
 """
 Graphical abstract. Writes figures/graphical_abstract.png and .pdf.
 
-Six conditions, all on the same thirty acquisitions under the same metric: the result as
-reported, the best of the twelve similarity metrics, the affine wavenumber calibration, the
-imposed axis offset, symmetric preprocessing, and the calibration refitted with each agent
-held out. The counts are those of Sections 3.1 and 3.3-3.5 and of Tables S-metrics,
+Seven conditions, all on the same thirty acquisitions: the result as reported, the best of
+the twelve similarity metrics, the affine wavenumber calibration, the imposed axis offset,
+symmetric preprocessing, the calibration refitted with each agent held out, and the joint
+envelope over all 32 combinations of map, linewidth, metric and ramp (v3_joint_envelope.py). The counts are those of Sections 3.1 and 3.3-3.5 and of Tables S-metrics,
 S-affine, S-offsetscan, S-aslssym and S-loaoident; they are written out here rather than
 recomputed, since each comes from a different script. Where a condition spans a range the
-range is printed; every condition that differs from the adopted calibration returns a
-higher count, so 13 is the lowest of the available figures and not a selected one.
+range is printed. The adopted 13 is not the lowest available figure (the offset scan and
+the held-out refits reach 12) and not the highest (the joint envelope reaches 19).
 """
 import os
 import matplotlib; matplotlib.use("Agg")
@@ -21,12 +21,12 @@ ax=fig.add_axes([0.085,0.20,0.885,0.58]); ax.set_facecolor(BG)
 
 COND=["as reported","best of 12\nsimilarity metrics","affine wavenumber\ncalibration",
       "axis offset imposed\n$-$20 to $+$30 cm$^{-1}$","preprocessing applied\nsymmetrically",
-      "calibration refitted\nleaving each agent out"]
+      "calibration refitted\nleaving each agent out","all choices combined\n(32 settings)"]
 # Round-4: the affine calibration and the axis-offset scan no longer return the adopted
 # figure. Both of the conditions that differ return a HIGHER count, so the adopted 13 is
 # the lower of the available values; the band is drawn from the minimum over conditions.
-COMP=[13,16,16,16,13,13]
-LO  =[13,16,16,12,13,12]   # lowest value each condition attains, where it is a range
+COMP=[13,16,16,16,13,13,19]
+LO  =[13,16,16,12,13,12,12]   # lowest value each condition attains, where it is a range
 x=np.arange(len(COND))
 ax.fill_between([-0.55,len(COND)-0.45],[min(LO),min(LO)],[30,30],color=ORANGE,alpha=0.055,zorder=0)
 ax.plot([-0.55,len(COND)-0.45],[30,30],color=BLUE,lw=2.6,zorder=3)
@@ -38,7 +38,7 @@ for xi,v,lo in zip(x,COMP,LO):
                 ha="center",fontsize=11.5,color=ORANGE,fontweight="bold")
 ax.text(-0.42,30.75,"same-vial measured library   30 / 30",fontsize=12,color=BLUE,
         va="bottom",fontweight="bold")
-ax.text(len(COND)-0.52,21.3,"the gap no repair tested here closes",fontsize=11.5,color=ORANGE,
+ax.text(len(COND)-0.52,24.0,"the gap no repair tested here closes",fontsize=11.5,color=ORANGE,
         ha="right",style="italic")
 ax.set_xticks(x); ax.set_xticklabels(COND,fontsize=9.3,color=INK2,linespacing=1.45)
 ax.set_xlim(-0.55,len(COND)-0.45); ax.set_ylim(8,33.5)
@@ -51,7 +51,7 @@ fig.text(0.085,0.905,"A single-conformer harmonic DFT library does not replace m
          fontsize=15.5,color=INK,fontweight="bold",va="bottom")
 fig.text(0.085,0.845,"Eleven vials of authentic chemical warfare agent  ·  1064 nm  ·  identical pipeline, grid and metric; only the library differs",
          fontsize=10.3,color=INK2,va="bottom")
-fig.text(0.085,0.055,"Every entry is the same thirty acquisitions under the same metric, after two wrong computed structures were corrected.",
+fig.text(0.085,0.055,"Every entry queries the same thirty acquisitions, after two wrong computed structures were corrected.",
          fontsize=9.6,color=INK2)
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 fig.savefig(os.path.join(ROOT, "figures", "graphical_abstract.png"), dpi=200, facecolor=BG)

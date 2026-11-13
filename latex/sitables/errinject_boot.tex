@@ -1,0 +1,22 @@
+\begin{table}[htbp]
+\centering
+\caption{Uncertainty of the error-injection thresholds. For each error the point at which
+the expected molecular top-1 falls through 90\,\% of the queries (27 of 30) is located by
+linear interpolation along a one-dimensional path, with the other errors absent (last row:
+intensity error fixed at $\tau$ = 0.30). The interval resamples the 9 queried vials (the vial labeled HN2 included) with
+replacement (4000 replicates), the vial being the independent unit; 200 draws per condition.
+Last column: the computed library's measured error and whether it lies inside the interval.
+Produced by \texttt{code/v3\_error\_injection\_boot.py}.}
+\label{tab:si-errinject-boot}
+\small
+\begin{tabular}{lccc}
+\toprule
+Error & Crossing & 95\% interval over vials & Computed library \\
+\midrule
+band position, other errors absent & 0.35$\,\Gamma$ (7.6\,\wn{}) & 0.23--0.50$\,\Gamma$ (5.1--11.0\,\wn{}) & 0.55$\,\Gamma$ (outside) \\
+band-set mismatch, other errors absent & 20\,\% & 16--31\,\% & 28\,\% (inside) \\
+intensity error $\tau$, other errors absent & 0.47 & 0.35--0.71 & 0.58 (inside) \\
+band position at $\tau$ = 0.30 & 0.27$\,\Gamma$ (5.9\,\wn{}) & 0.13--0.46$\,\Gamma$ (2.8--10.1\,\wn{}) & --- \\
+\bottomrule
+\end{tabular}
+\end{table}

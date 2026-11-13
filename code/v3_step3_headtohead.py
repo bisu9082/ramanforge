@@ -418,8 +418,8 @@ def main():
     from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 
     fig = plt.figure(figsize=(20, 11))
-    gs = fig.add_gridspec(2, 3, hspace=0.62, wspace=0.40,
-                          left=0.06, right=0.965, top=0.93, bottom=0.07)
+    gs = fig.add_gridspec(2, 3, hspace=0.80, wspace=0.40,
+                          left=0.06, right=0.965, top=0.95, bottom=0.075)
 
     # ---------- a ----------
     ax = fig.add_subplot(gs[0, 0])
@@ -446,11 +446,11 @@ def main():
             color=P["dark_teal"], label="measured")
     ax.barh(yy + .2, [G.loc[a, "dft_self"] for a in ags], .38,
             color=P["warm_red"], label="computed")
-    ax.set_yticks(yy); ax.set_yticklabels(ags); ax.invert_yaxis()
+    ax.set_yticks(yy); ax.set_yticklabels([a.replace("A2", "A-2") for a in ags]); ax.invert_yaxis()
     ax.set_xlabel("cosine to the correct entry"); ax.set_xlim(0, 1.0)
     ax.set_title("Similarity to the right answer", fontsize=16)
     ax.legend(frameon=False, fontsize=11, ncol=2, loc="upper center",
-              bbox_to_anchor=(0.5, -0.16))
+              bbox_to_anchor=(0.5, -0.27))
     ax.text(-0.17, 1.05, "b", transform=ax.transAxes, fontsize=26, fontweight="bold")
 
     # ---------- c ----------
@@ -467,7 +467,7 @@ def main():
     ax.invert_yaxis(); ax.set_xlim(0, 1.28); ax.set_xticks([0, .2, .4, .6, .8, 1.0])
     ax.set_xlabel("cosine"); ax.set_title("Where the computed library loses", fontsize=15)
     ax.legend(frameon=False, fontsize=10, ncol=1, loc="upper center",
-              bbox_to_anchor=(0.5, -0.16))
+              bbox_to_anchor=(0.5, -0.27))
     ax.text(-0.20, 1.05, "c", transform=ax.transAxes, fontsize=26, fontweight="bold")
 
     # ---------- d, e : colourbars moved to an inset outside the axes so the axis width matches a and b ----------
@@ -480,8 +480,8 @@ def main():
         ax = fig.add_subplot(gs[1, idx])
         im = ax.imshow(mat, vmin=0, vmax=1, cmap="YlGnBu", aspect="auto")
         ax.set_xticks(range(len(AGENTS)))
-        ax.set_xticklabels(AGENTS, rotation=90, fontsize=11)
-        ax.set_yticks(range(len(AGENTS))); ax.set_yticklabels(AGENTS, fontsize=11)
+        ax.set_xticklabels([a.replace("A2", "A-2") for a in AGENTS], rotation=90, fontsize=11)
+        ax.set_yticks(range(len(AGENTS))); ax.set_yticklabels([a.replace("A2", "A-2") for a in AGENTS], fontsize=11)
         ax.set_title(title, fontsize=15)
         cax = inset_axes(ax, width="3.5%", height="100%", loc="lower left",
                          bbox_to_anchor=(1.02, 0., 1, 1), bbox_transform=ax.transAxes,
@@ -496,9 +496,9 @@ def main():
     yy = np.arange(len(PF))[::-1]
     ax.barh(yy + 0.19, PF["pf"], 0.36, color=P["warm_red"])
     ax.barh(yy - 0.19, PF["nop"], 0.36, color=P["sage"])
-    ax.text(0.025, yy[0] + 0.19, f"P-containing (n = {N_PF})", va="center", ha="left",
+    ax.text(0.025, yy[0] + 0.19, f"P (n = {N_PF})", va="center", ha="left",
             fontsize=11, color="white", fontweight="bold")
-    ax.text(0.025, yy[0] - 0.19, f"no phosphorus (n = {N_NOP})", va="center", ha="left",
+    ax.text(0.025, yy[0] - 0.19, f"no P (n = {N_NOP})", va="center", ha="left",
             fontsize=11, color="white", fontweight="bold")
     for i, r in enumerate(PF.itertuples()):
         y0 = yy[i]
@@ -515,6 +515,8 @@ def main():
                  fontsize=13, loc="center")
     ax.text(-0.26, 1.05, "f", transform=ax.transAxes, fontsize=26, fontweight="bold")
 
+    from figfonts import scale_fonts
+    print(f"smallest label at 7 in: {scale_fonts(fig, 1.43):.2f} pt")
     fig.savefig(os.path.join(ROOT, "figures", "v3_fig_headtohead.png"), dpi=200)
     print("\nsaved figures/v3_fig_headtohead.png + data/v3_headtohead.csv, "
           "v3_nested_calibration.csv, v3_aseries_margins.csv, v3_headtohead_meta.json")

@@ -65,7 +65,7 @@ def main():
     # ---------- a : verdict on all ten pairs ----------
     ax = fig.add_subplot(gs[0, 0])
     T = R.assign(delta=R["new_600–850"] - R["base_600–850"]).sort_values("delta")
-    lbl = [f"{NICE[r.agent]}  {VNICE[r.variant]}" for r in T.itertuples()]
+    lbl = [f"{NICE[r.agent]}  {VNICE[r.variant].split(' ', 1)[-1]}" for r in T.itertuples()]
     # One stated gate, applied symmetrically, and identical to the gate quoted in the
     # Supplementary Material: |delta| <= 0.02 is unchanged, |delta| > 0.10 substantial.
     # Round-4 used +/-0.10 and returned "0 degraded" over three visibly negative bars;
@@ -80,7 +80,7 @@ def main():
                 ha="left" if d > 0 else "right", fontsize=11.5)
     ax.axvline(0, color="k", lw=1.6)
     ax.set_yticks(y); ax.set_yticklabels(lbl, fontsize=11.5)
-    ax.set_xlim(-0.42, 0.42)
+    ax.set_xlim(-0.42, 0.50)
     ax.set_xlabel("$\\Delta$ cosine, 600–850 cm$^{-1}$")
     ax.set_title("Ten agent–correction trials", fontsize=15.5)
     _nunch = int((T.delta.abs() <= _UNCH).sum())
@@ -90,11 +90,8 @@ def main():
     assert _nimp + _nmod + _nunch + _ndeg == len(T)
     # Gate thresholds are stated in the figure caption, not here: spelling them out in
     # the annotation makes the longest line wide enough to run under the bars.
-    ax.text(0.03, 0.905,
-            f"{_nimp} improved substantially\n{_nmod} improved modestly\n"
-            f"{_nunch} unchanged\n{_ndeg} degraded",
-            transform=ax.transAxes, ha="left", va="top", linespacing=1.5,
-            fontsize=12.0, style="italic", color=P["brown"])
+    # The counts per category are stated in the caption, with the colour key; written
+    # inside the panel at journal font size they ran over the bars.
     letter(ax, "a", -0.34)
 
     # ---------- b : GF 600–850 ----------
@@ -163,14 +160,18 @@ def main():
         ax.plot(r.err_base, i, "o", ms=8, mfc="white", mec=P["brown"], mew=2, zorder=4)
         ax.plot(r.err_new, i, "o", ms=8, color=c, zorder=5)
         lab = "0" if abs(r.shift) < 1.0 else f"{r.shift:+.0f}"
-        ax.text((r.err_base + r.err_new) / 2, i + 0.26, lab,
-                fontsize=11.5, color=c, ha="center", va="bottom")
+        if max(r.err_base, r.err_new) < 0:
+            ax.text(min(r.err_base, r.err_new) - 4, i, lab,
+                    fontsize=11.5, color=c, ha="right", va="center")
+        else:
+            ax.text(max(r.err_base, r.err_new) + 4, i, lab,
+                    fontsize=11.5, color=c, ha="left", va="center")
     ax.axvline(0, color="k", lw=2)
     ax.set_yticks(y); ax.set_yticklabels([NICE[a] for a in Bs.agent], fontsize=12.5)
     ax.set_ylim(-0.85, len(Bs) + 1.7)
     ax.set_xlim(-72, 104)
     ax.set_xlabel("computed $-$ measured band position (cm$^{-1}$)")
-    ax.set_title("A one-directional shift meets scattered errors",
+    ax.set_title("Fixed-sign shift, scattered errors",
                  fontsize=15.5, pad=12)
     ax.text(0, -0.82, "measured", fontsize=11, color="0.35", ha="center", va="bottom")
     def _rng(v, fmt="{:+.1f}"):
@@ -232,15 +233,17 @@ def main():
             transform=ax.transAxes, clip_on=False)
     ax.text(0.03, 0.115,
             f"Global scale factors {R.s_low.min():.3f}–{R.s_low.max():.3f} / "
-            f"{R.s_high.min():.3f}–{R.s_high.max():.3f} and global position\n"
-            f"RMSE {R.pos_rmse.min():.1f}–{R.pos_rmse.max():.1f} cm$^{{-1}}$ across all ten "
-            "runs: no global\ncorrection reaches a molecule-specific error.",
+            f"{R.s_high.min():.3f}–{R.s_high.max():.3f}\nand global position RMSE "
+            f"{R.pos_rmse.min():.1f}–{R.pos_rmse.max():.1f} cm$^{{-1}}$\nacross all ten "
+            "runs: no global correction\nreaches a molecule-specific error.",
             fontsize=11.5, color=P["brown"], style="italic", va="top",
             transform=ax.transAxes, linespacing=1.5)
-    letter(ax, "f", -0.08)
+    letter(ax, "f", -0.14)
 
     # No figure-level title: the manuscript caption carries it.
     out = os.path.join(ROOT, "figures", "v3_fig_b2.png")
+    from figfonts import scale_fonts
+    print(f"smallest label at 7 in: {scale_fonts(fig, 1.25):.2f} pt")
     fig.savefig(out, dpi=200)
     print("saved figures/v3_fig_b2.png")
 

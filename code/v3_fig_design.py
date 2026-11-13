@@ -58,15 +58,15 @@ def main():
     ax = fig.add_subplot(gs[0, :]); ax.axis("off")
     ax.text(-0.012, 1.02, "a", transform=ax.transAxes, fontsize=25, fontweight="bold")
 
-    W, H = 0.145, 0.24
+    W, H = 0.165, 0.26
     yM, yC = 0.62, 0.16
-    xs = [0.035, 0.225, 0.415, 0.605]
+    xs = [0.015, 0.208, 0.401, 0.594]
     ax.text(0.012, yM + H + 0.05, "MEASUREMENT", fontsize=13, fontweight="bold",
             color=P["dark_teal"], transform=ax.transAxes)
     ax.text(0.012, yC - 0.075, "CALCULATION", fontsize=13, fontweight="bold",
             color=P["brown"], transform=ax.transAxes)
 
-    meas = [("11 vials of authentic agent\nneat, sealed", P["pale_teal"]),
+    meas = [("11 sealed vials:\n10 agents + benzene", P["pale_teal"]),
             ("Raman, 1064 nm\nraw detector counts", P["pale_teal"]),
             (f"{PRE['n_genuine']} genuine of 55 files\n23 derived, excluded", P["pale_teal"]),
             ("preprocessing\nspecified in full", P["teal"])]
@@ -75,17 +75,17 @@ def main():
             ("harmonic lines\n+ Raman activities", "#EBDFD2"),
             ("calibration\n3 corrections", P["tan"])]
     for i, ((tm, cm), (tc_, cc)) in enumerate(zip(meas, comp)):
-        box(ax, xs[i], yM, W, H, tm, cm, fs=11.5)
-        box(ax, xs[i], yC, W, H, tc_, cc, fs=11.5)
+        box(ax, xs[i], yM, W, H, tm, cm, fs=13)
+        box(ax, xs[i], yC, W, H, tc_, cc, fs=13)
         if i < 3:
             arrow(ax, xs[i] + W + 0.004, yM + H / 2, xs[i + 1] - 0.004, yM + H / 2)
             arrow(ax, xs[i] + W + 0.004, yC + H / 2, xs[i + 1] - 0.004, yC + H / 2)
 
     xj = 0.795
-    box(ax, xj, 0.30, 0.175, 0.42,
+    box(ax, xj, 0.17, 0.195, 0.66,
         "SAME native grid\n270 points, 250\u20131800 cm$^{-1}$\n\nSAME cosine metric\n\n"
         "30 genuine acquisitions\nof 9 agents",
-        "white", ec=P["dark_teal"], fs=11.5, bold=False)
+        "white", ec=P["dark_teal"], fs=13, bold=False)
     arrow(ax, xs[3] + W + 0.004, yM + H / 2, xj - 0.004, 0.62, col=P["dark_teal"])
     arrow(ax, xs[3] + W + 0.004, yC + H / 2, xj - 0.004, 0.40, col=P["brown"])
 
@@ -93,7 +93,7 @@ def main():
             "No calibration parameter is fitted to identification: the frequency scale comes "
             "from band positions, the linewidth from measured band widths,\nand the "
             "activity-to-intensity conversion has no free parameter.",
-            ha="center", va="top", fontsize=12, style="italic", color=P["brown"],
+            ha="center", va="top", fontsize=13, style="italic", color=P["brown"],
             transform=ax.transAxes, linespacing=1.5)
 
     # ========== b : the agent set ==========
@@ -103,19 +103,20 @@ def main():
     xx = np.arange(len(ORDER))
     ax.bar(xx, n, 0.6, color=[CCOL[CLS[a]] for a in ORDER])
     for i, a in enumerate(ORDER):
-        ax.text(i, n[i] + 0.12, str(n[i]), ha="center", fontsize=12)
+        ax.text(i, n[i] + 0.12, str(n[i]), ha="center", fontsize=13)
         if n[i] < 3:
-            ax.text(i, 0.45, "not\nqueried", ha="center", va="center", fontsize=9.5,
-                    color="white", fontweight="bold")
+            ax.text(i, n[i] + 0.75, "not\nqueried", ha="center", va="bottom", fontsize=13,
+                    color="0.35", linespacing=1.2)
         if a == "HN2":
             ax.text(i, n[i] + 0.75, "label not\nsupported", ha="center", va="bottom",
-                    fontsize=10, color=P["warm_red"], fontweight="bold", linespacing=1.3)
-    ax.set_xticks(xx); ax.set_xticklabels([NICE[a] for a in ORDER], fontsize=12)
+                    fontsize=13, color=P["warm_red"], fontweight="bold", linespacing=1.2)
+    ax.set_xticks(xx); ax.set_xticklabels([NICE[a] for a in ORDER], fontsize=13)
     ax.set_ylabel("genuine acquisitions", fontsize=14)
-    ax.set_ylim(0, 7.4); ax.set_yticks([0, 2, 4, 6])
+    ax.set_ylim(0, 7.9); ax.set_yticks([0, 2, 4, 6])
+    ax.tick_params(labelsize=13)
     ax.set_title("Eleven vials, three toxicological classes", fontsize=15)
     hs = [plt.Rectangle((0, 0), 1, 1, fc=CCOL[c]) for c in ["Nerve", "Vesicant", "Novichok"]]
-    ax.legend(hs, ["nerve", "vesicant", "Novichok"], frameon=False, fontsize=11.5,
+    ax.legend(hs, ["nerve", "vesicant", "Novichok"], frameon=False, fontsize=13,
               ncol=3, loc="upper left", bbox_to_anchor=(0.0, 1.0))
 
     # ========== c : the two libraries ==========
@@ -123,24 +124,25 @@ def main():
     ax.text(-0.09, 1.05, "c", transform=ax.transAxes, fontsize=25, fontweight="bold")
     ax.text(0.5, 1.02, "The two libraries", ha="center", fontsize=15,
             transform=ax.transAxes)
-    box(ax, 0.02, 0.50, 0.44, 0.34,
+    box(ax, 0.02, 0.48, 0.44, 0.42,
         f"MEASURED\n\n{_NMEAS} entries\none per vial",
-        P["pale_teal"], fs=12)
-    box(ax, 0.54, 0.50, 0.44, 0.34,
-        f"COMPUTED\n\n{_NLIB} entries\n{_NAG} agents + {_NLIB - _NAG} analogs",
-        P["tan"], fs=12)
-    ax.text(0.5, 0.40,
+        P["pale_teal"], fs=13)
+    box(ax, 0.54, 0.48, 0.44, 0.42,
+        f"COMPUTED\n\n{_NLIB} entries\n{_NAG} agents\n+ {_NLIB - _NAG} analogs",
+        P["tan"], fs=13)
+    ax.text(0.5, 0.42,
             f"{_NCLS['Nerve']} nerve  /  {_NCLS['Blister']} vesicant  /  "
             f"{_NCLS['Novichok']} Novichok\n"
-            f"{100 * _NCLS['Nerve'] / _NLIB:.0f}% of the computed library carries the "
-            "nerve-agent label",
-            ha="center", va="top", fontsize=11.5, color=P["brown"],
+            f"{100 * _NCLS['Nerve'] / _NLIB:.0f}% of the computed library\n"
+            "carries the nerve-agent label",
+            ha="center", va="top", fontsize=13, color=P["brown"],
             transform=ax.transAxes, linespacing=1.6)
-    ax.text(0.5, 0.10, "A query is never present in the library\nit is matched against.",
-            ha="center", va="bottom", fontsize=11.5, style="italic",
-            color=P["dark_teal"], transform=ax.transAxes, linespacing=1.6)
+    ax.text(0.5, -0.06, "A query is never present in the library\nit is matched against.",
+            ha="center", va="bottom", fontsize=13, style="italic",
+            color=P["dark_teal"], transform=ax.transAxes, linespacing=1.4)
 
-    fig.suptitle("Two libraries, one comparison", fontsize=19, y=0.975)
+    from figfonts import scale_fonts
+    print(f"smallest label at 7 in: {scale_fonts(fig, 1.0):.2f} pt")
     fig.savefig(os.path.join(ROOT, "figures", "v3_fig_design.png"), dpi=200)
     print("saved figures/v3_fig_design.png")
 

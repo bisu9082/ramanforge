@@ -1,0 +1,28 @@
+{
+ "R": 100,
+ "seed": 20261113,
+ "tau_alone": [
+  {
+   "tau": 0.35,
+   "mol_mean": 28.4
+  },
+  {
+   "tau": 0.4,
+   "mol_mean": 27.82
+  },
+  {
+   "tau": 0.45,
+   "mol_mean": 26.89
+  },
+  {
+   "tau": 0.5,
+   "mol_mean": 26.77
+  }
+ ],
+ "tau_alone_max_for_27": 0.4,
+ "sigma_for_27": {
+  "shift_rho0.5": 0.3,
+  "shift_rho1.0": 0.2,
+  "scale_rho1.0": 0.3
+ }
+}

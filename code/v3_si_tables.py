@@ -105,9 +105,9 @@ made.append(table(
      "Top-band share", "Decision"], rows,
     note="The vial labeled HN2 is the one failure, and the reason is spectral content "
          "rather than acquisition quality: its signal-to-noise ratio is the highest of the "
-         "eleven vials and its count rate the second highest. The previous version of this "
-         "work attributed the failure to a poor measurement, which these figures do not "
-         "support. Failing the criterion does not remove the vial from the analysis: it is "
+         "eleven vials and its count rate the second highest, so these figures do not "
+         "support attributing the failure to a poor measurement. Failing the criterion "
+         "does not remove the vial from the analysis: it is "
          "retained in both libraries and among the thirty queries, so that the two "
          "libraries face an identical query set. It is set aside where its unknown identity "
          "would leave a quantity undefined: from the per-agent window analyses, from the "
@@ -427,7 +427,7 @@ made.append(table(
     "tab:si-sessionsim", "lrr",
     ["Pair type", "$n$", "Mean cosine"], rows,
     note="Computed on the 32 genuine acquisitions only; the derived copies present in the "
-         "delivered files were excluded, which the previous version of this analysis did "
+         "delivered files were excluded, which is the criterion applied throughout this work"
          f"not do. The three groups are the {rows[0][1]}, {rows[1][1]} and {rows[2][1]} "
          "pairwise comparisons that 32 acquisitions of eleven vials admit, so they are not "
          "independent observations and we quote no test on them; the separation is larger "

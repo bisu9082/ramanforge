@@ -20,9 +20,11 @@ run () {   # run <script> [VAR=value ...]
 
 if [[ -d data/raw || "${RAMANFORGE_RAW:-0}" == 1 ]]; then
   run v3_step1_audit                  # raw acquisition audit
+  run v3_augmented_provenance         # the 23 augmented files: parent, factor, offset
   run v3_step2_preprocess             # preprocessing; writes data/v3_measured.npz
 else
   echo 'v3_step1_audit          skipped (data/raw not present)'
+  echo 'v3_augmented_provenance skipped (data/raw not present)'
   echo 'v3_step2_preprocess     skipped (data/raw not present)'
 fi
 
@@ -60,6 +62,10 @@ run v3_scalescan                      # Table S-scalescan: 2-D scan of the LOAO 
 # It is not in this loop because it refits the affine map in each of 16 cells and takes a
 # few minutes; it answers whether the favourable one-at-a-time choices compound (they do
 # not: the envelope is 12-19 of 30).
+# Table S-modescale is produced by:  python3 code/v3_mode_scaling.py
+# It reads the deposited ORCA normal-mode displacements and fits the frequency scale by
+# P-X bond-stretch character on the same band-position objective (RMSE 13.7 cm-1,
+# 13/30 molecular, 22/30 class); it is run on its own for the same reason as above.
 run v3_axis_checks                    # affine calibration and the axis-offset scan
 run v3_preproc_symmetry               # preprocessing applied symmetrically
 run v3_loao_topk                      # leave-one-agent-out identification, top-k ranks
@@ -68,6 +74,7 @@ run v3_geomwindow                     # window-resolved effect of the geometry c
 run v3_calibsens                      # sensitivity of the corrected library to the calibration
 run v3_freqcheck                      # vibrational check of every library member
 run v3_repeatability                  # within-vial repeatability, per vial
+run v3_early_acq_check                # early vs later acquisitions of A-234 and A-242
 run v3_hn2_identity                   # what the vial labeled HN2 contains
 run v3_fig_hn2                        # figures/v3_fig_hn2.png          (Figure S-hn2)
 run v3_export_library                 # computed_library/ line lists and MANIFEST.csv
@@ -87,6 +94,11 @@ run v3_fig_step4                      # figures/v3_fig_step4.png        (Figure 
 run v3_fig_a232                       # figures/v3_fig_a232.png         (Figure 6)
 run v3_graphical_abstract             # figures/graphical_abstract.png and .pdf
 run v3_si_tables                      # every SI table, into latex/sitables/
+run v3_error_injection                # data/v3_error_injection*.csv/json (error-injection test, ~minutes)
+run v3_error_injection_ext            # data/v3_error_injection_ext*.csv/json (systematic error, tau alone)
+run v3_error_injection_boot           # data/v3_error_injection_boot*.csv/json (vial-level bootstrap intervals)
+run v3_errinject_table                # latex/sitables/errinject*.tex (grid, tau, ext, boot)
+run v3_fig_errinject                  # figures/v3_fig_errinject.png  (Figure: accuracy requirement)
 
 echo
 echo 'All steps completed. Tables are in latex/sitables/, figures in figures/.'

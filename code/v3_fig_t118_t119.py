@@ -40,9 +40,9 @@ for i, k in enumerate(LBL):
     a.text(i - w/2, MEAS[k][0] + 0.6, str(MEAS[k][0]), ha="center", fontsize=11, color=P["dark_teal"])
     a.text(i + w/2, COMP[k][0] + 0.6, str(COMP[k][0]), ha="center", fontsize=11, color=P["warm_red"])
 a.set_xticks(x); a.set_xticklabels(LBL, rotation=30, ha="right")
-a.set_ylabel("molecular top-1 (of 30)"); a.set_ylim(0, 34)
+a.set_ylabel("molecular top-1 (of 30)"); a.set_ylim(0, 40)
 a.axhline(30, ls=":", lw=1, color="0.5")
-a.legend(loc="lower right", frameon=False)
+a.legend(loc="upper right", frameon=False, ncol=2)
 a.set_title("(a) No metric rescues the computed library", loc="left", fontsize=14)
 
 # (b) self-similarity
@@ -83,7 +83,7 @@ d = ax[1, 1]; xu = np.arange(len(U))
 d.bar(xu - w/2, U.unm_calc * 100, w, color=P["warm_red"], label="computed intensity with\nno measured partner")
 d.bar(xu + w/2, U.unm_meas * 100, w, color=P["dark_teal"], label="measured intensity with\nno computed partner")
 d.set_xticks(xu); d.set_xticklabels([s.replace("A2", "A-2") for s in U.agent], rotation=30, ha="right")
-d.set_ylabel("share of window intensity (%)"); d.set_ylim(0, 118)
+d.set_ylabel("share of window intensity (%)"); d.set_ylim(0, 150); d.set_yticks([0, 20, 40, 60, 80, 100])
 d.legend(loc="upper left", frameon=False, fontsize=11)
 d.set_title("(d) The two band sets differ, in both directions", loc="left", fontsize=14)
 
@@ -91,5 +91,7 @@ for A in ax.ravel():
     A.spines[["top", "right"]].set_visible(False)
 plt.tight_layout()
 out = os.path.join(ROOT, "figures", "v3_fig_metrics_decomp.png")
+from figfonts import scale_fonts
+print(f"smallest label at 7 in: {scale_fonts(plt.gcf(), 1.12):.2f} pt")
 plt.savefig(out, dpi=200, bbox_inches="tight")
 print("saved", out)

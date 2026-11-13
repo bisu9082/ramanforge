@@ -1,0 +1,23 @@
+\begin{table}[htbp]
+\centering
+\caption{The same test with intensity error added: multiplicative log-normal noise of s.d.\
+$\tau$ on every band height, with and without the band-set mismatch of the computed library
+(28\,\% of band intensity removed). Mean molecular top-1 of 30 over 100 draws; bold, at least
+27 of 30.}
+\label{tab:si-errinject-tau}
+\small
+\begin{tabular}{lcccc}
+\toprule
+ & \multicolumn{2}{c}{$\tau$ = 0.30} & \multicolumn{2}{c}{$\tau$ = 0.58 (computed library)} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+$\sigma/\Gamma$ & no mismatch & 28\,\% mismatch & no mismatch & 28\,\% mismatch \\
+\midrule
+0.0 & \textbf{28.9} & 23.4 & 25.2 & 20.8 \\
+0.2 & \textbf{27.6} & 22.2 & 25.1 & 19.6 \\
+0.4 & 25.2 & 19.8 & 22.4 & 16.8 \\
+0.6 & 21.7 & 16.3 & 19.1 & 14.6 \\
+0.8 & 18.7 & 14.2 & 15.8 & 12.3 \\
+1.0 & 15.1 & 12.6 & 14.6 & 10.8 \\
+\bottomrule
+\end{tabular}
+\end{table}

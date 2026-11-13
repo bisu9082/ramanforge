@@ -22,6 +22,10 @@ authors:
     email: bisu9082@gmail.com
 license: CC-BY-4.0
 license-url: "https://creativecommons.org/licenses/by/4.0/"
-version: "1.5.2"
-date-released: "2026-11-09"
+version: "1.5.3"
+date-released: "2026-11-12"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.24107632"
+    description: "Archived release v1.5.2"
 repository-code: "https://github.com/bisu9082/ramanforge"

@@ -322,8 +322,9 @@ def main():
                 ax.text(-0.33, 0.5, tag, transform=ax.transAxes, fontsize=17,
                         rotation=90, va="center", ha="center", fontweight="bold",
                         color=P["brown"])
-    fig.suptitle("Abstention fails for the same reason identification fails",
-                 fontsize=19, y=0.965)
+    # No figure-level title: the manuscript caption carries it.
+    from figfonts import scale_fonts
+    print(f"smallest label at 7 in: {scale_fonts(fig, 1.0):.2f} pt")
     fig.savefig(os.path.join(ROOT, "figures", "v3_fig_abstention.png"), dpi=200)
     print("\nsaved figures/v3_fig_abstention.png + data/v3_abstention_*.csv")
 

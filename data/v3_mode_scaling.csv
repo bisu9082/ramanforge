@@ -1,0 +1,4 @@
+map,params,rmse,pairs,molecular,cls,n
+two-region (adopted),1.014 / 0.980,12.16746696825337,94,13,26,30
+affine,0.954 / +36,11.128711355121618,93,16,23,30
+mode-dependent (P--X),0.994 / 1.002,13.680776422574924,85,13,22,30

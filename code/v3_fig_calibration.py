@@ -53,7 +53,7 @@ def main():
 
     fig = plt.figure(figsize=(20, 10.5))
     gs = fig.add_gridspec(2, 3, hspace=0.50, wspace=0.40,
-                          left=0.075, right=0.945, top=0.885, bottom=0.095)
+                          left=0.075, right=0.945, top=0.93, bottom=0.10)
 
     # ---------- a : effect of the three corrections (GF) ----------
     ax = fig.add_subplot(gs[0, 0])
@@ -69,7 +69,7 @@ def main():
                                                        fontsize=12)
     ax.set_xlabel("Raman shift (cm$^{-1}$)")
     ax.set_title("What the three corrections do (GF)", fontsize=15)
-    ax.set_xlim(250, 1800)
+    ax.set_xlim(250, 1800); ax.set_xticks([400, 800, 1200, 1600])
     letter(ax, "a", -0.24)
 
     # ---------- b : cumulative cosine by correction stage ----------
@@ -116,8 +116,9 @@ def main():
                    extent=[sl[0], sl[-1], sh[0], sh[-1]])
     ax.plot(SL, SH, "*", ms=22, mfc=P["gold"], mec="k", mew=1.4, zorder=5)
     ax.annotate(f"({SL:.3f}, {SH:.3f})\n{M['pos_rmse']:.1f} cm$^{{-1}}$",
-                xy=(SL, SH), xytext=(SL - 0.021, SH - 0.026), fontsize=11.5,
-                color="white", fontweight="bold")
+                xy=(SL, SH), xytext=(SL + 0.004, SH - 0.0175), fontsize=11.5,
+                color="k", fontweight="bold",
+                bbox=dict(fc="white", ec="none", alpha=0.75, boxstyle="round,pad=0.25"))
     ax.set_xlabel("$s_\\mathrm{low}$ ($<$800 cm$^{-1}$)")
     ax.set_ylabel("$s_\\mathrm{high}$ ($\\geq$800 cm$^{-1}$)")
     ax.set_title("The objective actually minimized", fontsize=15)
@@ -152,7 +153,7 @@ def main():
         if best[0] is None:
             print(f"  ! {lo}-{hi}: too few paired bands, excluded")
             continue
-        opt.append(best[0]); lab.append(f"{lo}--{hi}")
+        opt.append(best[0]); lab.append(f"{lo}\u2013{hi}")
     xx = np.arange(len(opt))
     cols = [P["warm_red"] if o > 1.0 else P["dusty"] for o in opt]
     ax.bar(xx, [o - 1 for o in opt], 0.55, bottom=1, color=cols)
@@ -164,12 +165,12 @@ def main():
     ax.axhline(SH, color=P["dusty"], ls="--", lw=1.5)
     ax.text(len(opt) - 0.3, SL, "$s_\\mathrm{low}$", va="bottom", ha="right",
             fontsize=12, color=P["warm_red"])
-    ax.text(len(opt) - 0.3, SH, "$s_\\mathrm{high}$", va="top", ha="right",
+    ax.text(len(opt) - 0.3, SH, "$s_\\mathrm{high}$", va="bottom", ha="right",
             fontsize=12, color=P["dusty"])
     ax.axvline(0.5, color="0.6", lw=1.2, ls=":")
     ax.set_xticks(xx); ax.set_xticklabels(lab, rotation=25, fontsize=11)
     ax.set_xlim(-0.6, len(opt) - 0.15)
-    ax.set_ylim(0.9855, 1.0235)
+    ax.set_ylim(0.9785, 1.0235)
     ax.set_ylabel("best single scale factor")
     ax.set_title("The optimum is not uniform", fontsize=15, pad=14)
     letter(ax, "d", -0.22)
@@ -184,11 +185,11 @@ def main():
     ax.axhline(SH, color=P["dusty"], ls=":", lw=1.4)
     ax.set_xticks(xx); ax.set_xticklabels([NICE.get(h, h) for h in N.held_out],
                                           rotation=90, fontsize=11)
-    ax.set_ylim(0.980, 1.028)
+    ax.set_ylim(0.980, 1.035)
     ax.set_xlabel("agent held out of the calibration")
     ax.set_ylabel("refitted scale factor")
     ax.set_title("No agent drives the calibration", fontsize=15)
-    ax.text(0.97, 0.52, f"$s_\\mathrm{{low}}$ range {N.s_low.max()-N.s_low.min():.3f}\n"
+    ax.text(0.97, 0.30, f"$s_\\mathrm{{low}}$ range {N.s_low.max()-N.s_low.min():.3f}\n"
                         f"$s_\\mathrm{{high}}$ range {N.s_high.max()-N.s_high.min():.3f}",
             transform=ax.transAxes, ha="right", fontsize=11.5, color=P["brown"],
             bbox=dict(fc="white", ec="0.82", boxstyle="round,pad=0.4"))
@@ -217,8 +218,8 @@ def main():
     ax.legend(frameon=False, fontsize=11, loc="upper right", borderaxespad=0.6)
     letter(ax, "f", -0.20)
 
-    fig.suptitle("A calibration with no parameter fitted to identification",
-                 fontsize=19, y=0.955)
+    from figfonts import scale_fonts
+    print(f"smallest label at 7 in: {scale_fonts(fig, 1.25):.2f} pt")
     out = os.path.join(ROOT, "figures", "v3_fig_calibration.png")
     fig.savefig(out, dpi=200)
     print("saved figures/v3_fig_calibration.png")

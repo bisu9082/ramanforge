@@ -1,0 +1,17 @@
+\begin{table}[htbp]
+\centering
+\caption{Frequency scaling resolved by mode type, which is the form the scaling literature recommends and which Rahimi et al.\ report as the most accurate of the three they compare against measured Raman. The diagnostic window of this work is built from P--F, P=O, P--O and P--C stretching, so modes are split by P--X bond-stretch character: for each mode the squared projection of the relative displacement of every P-bonded atom pair onto its bond axis, normalized by the total squared displacement, and a mode is \emph{P--X} above 0.05. That character is sharply structured where a generic stretch-versus-bend split is not: no mode of a 25-atom organophosphate is more than about 30\,\% pure bond stretch, while for cyclosarin the P--X character is 0.00--0.02 below 600\,\wn{} and 0.09--0.28 across 697--820\,\wn{}. All three maps carry two free parameters and are fitted on the same non-circular objective, measured against computed band positions under one-to-one assignment within 35\,\wn{}; the factors are searched over a global grid, not hill-climbed from one start.}
+\label{tab:si-modescale}
+\small
+\begin{tabular}{llrrcc}
+\toprule
+Scaling map & Parameters & RMSE (\wn{}) & Pairs & Molecular & Class \\
+\midrule
+two-region (adopted) & 1.014 / 0.980 & 12.17 & 94 & 13/30 & 26/30 \\
+affine & 0.954 / +36 & 11.13 & 93 & 16/30 & 23/30 \\
+mode-dependent (P--X) & 0.994 / 1.002 & 13.68 & 85 & 13/30 & 22/30 \\
+\bottomrule
+\end{tabular}
+
+\begin{flushleft}\footnotesize Mode-dependent scaling does not improve on the adopted map: it returns 13.68\,\wn{} against 12.17, and the same 13 of 30 at the molecular level with a lower class count, 22 of 30 against 26. The reason is visible in the mode census deposited as \texttt{data/v3\_mode\_census.csv}: both classes straddle the 800\,\wn{} boundary --- P--X modes span 446.9--1629.8\,\wn{} and the rest 4.9--3157.7 --- so neither can reproduce the pattern the two-region map encodes, which is that harmonic B3LYP under-scales low-wavenumber modes and over-scales high ones. On these molecules mode character and wavenumber are not aligned, and the effect the calibration has to correct is the second. We read this as a limit on the transferability of the mode-dependent recommendation rather than as a correction to it: Rahimi et al.\ fit conformer-resolved species small enough for mode character and wavenumber to coincide. The identification reported in this work, 13 of 30, is what both of the mode-motivated maps return; the affine map returns 16 of 30 and is the more favourable choice we decline. Produced by \texttt{code/v3\_mode\_scaling.py}.\end{flushleft}
+\end{table}
